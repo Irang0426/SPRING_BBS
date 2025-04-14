@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 package com.bbs.demo;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +11,6 @@ public class HelloController {
         return "Hello, 2조!";
     }
 }
-=======
 //package com.bbs.demo;
 //
 //import org.springframework.stereotype.Controller;
@@ -29,4 +27,3 @@ public class HelloController {
 //    	return "index";		// templates/index.html을 렌더링
 //    }
 //}
->>>>>>> 67ab94ea125d9f2b175fb8c924754bbaf386a4d6
