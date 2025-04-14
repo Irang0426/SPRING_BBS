@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>파일 업로드 등록</title>
+</head>
+<body>
+    <nav>
+        <a href="index.html">홈</a> |
+        <a href="board_list.html">게시판</a> |
+        <a href="upload_list.html">파일 업로드</a> |
+        <a href="login.html">로그인</a> |
+        <a href="register.html">회원가입</a> |
+        <a href="admin_users.html">관리자</a>
+    </nav>
+    <hr>
+    
+    <h2>파일 첨부 게시글 작성</h2>
+    <form action="upload_list.html" method="post" enctype="multipart/form-data">
+        <input type='file'><br>
+        <input type='text' placeholder='제목'><br>
+        <textarea placeholder='내용'></textarea><br>
+        <button type='submit'>업로드</button>
+    </form>
+    
+</body>
+</html>

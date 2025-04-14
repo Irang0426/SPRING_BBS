@@ -1,10 +1,45 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Hello Page</title>
+    <title>홈</title>
 </head>
 <body>
-    <h1>Hello, World! (with HTML) 2조</h1>
+    <nav>
+        <a href="index.html">홈</a> |
+        <a href="board_list.html">게시판</a> |
+        <a href="upload_list.html">파일 업로드</a> |
+        <a href="login.html">로그인</a> |
+        <a href="register.html">회원가입</a> |
+        <a href="admin_users.html">관리자</a>
+    </nav>
+    <hr>
+
+    <h2>사이트 통계</h2>
+    <ul>
+        <li>전체 회원 수: <strong>35명</strong></li>
+        <li>전체 게시글 수: <strong>87건</strong></li>
+        <li>파일 업로드 게시글 수: <strong>12건</strong></li>
+        <li>댓글 수: <strong>215건</strong></li>
+    </ul>
+
+    <h2>📌 최근 가입한 회원</h2>
+    <div>
+        <p><strong>닉네임:</strong> springdev2025</p>
+        <p><strong>가입일:</strong> 2025-04-12</p>
+        <p><strong>이메일:</strong> springdev2025@test.com</p>
+    </div>
+
+    <h2>📝 최근 작성된 게시글</h2>
+    <div>
+        <h3><a href="board_read.html">Thymeleaf 기본 문법 정리</a></h3>
+        <p><strong>작성자:</strong> user5 | <strong>작성일:</strong> 2025-04-11</p>
+        <p>Thymeleaf는 HTML 템플릿에서 변수를 출력하거나 조건문 등을 처리할 수 있도록 도와주는 템플릿 엔진입니다...</p>
+    </div>
+    <div>
+        <h3><a href="board_read.html">Spring Boot와 MyBatis 연동하기</a></h3>
+        <p><strong>작성자:</strong> admin | <strong>작성일:</strong> 2025-04-10</p>
+        <p>MyBatis는 SQL을 XML 또는 어노테이션으로 분리하여 사용할 수 있게 해주는 프레임워크입니다. 이번 게시글에서는...</p>
+    </div>
 </body>
 </html>
