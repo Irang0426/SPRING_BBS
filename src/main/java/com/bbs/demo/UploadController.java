@@ -2,6 +2,7 @@ package com.bbs.demo;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class UploadController {
@@ -19,6 +20,11 @@ public class UploadController {
     @GetMapping("/upload/read")
     public String upload_read() {
         return "upload_read";
+    }
+
+    @PostMapping("/upload")
+    public String upload() {
+        return "upload_list";
     }
 
 }
