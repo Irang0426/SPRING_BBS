@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>파일 업로드 게시판</title>
@@ -16,10 +16,22 @@
     <hr>
     
     <h2>파일 업로드 게시판</h2>
-    <a href="upload_register.html">[파일 등록]</a>
+    <a href="/upload/register">[파일 등록]</a>
     <table border="1">
-        <tr><th>번호</th><th>제목</th><th>첨부파일</th></tr>
-        <tr><td>1</td><td><a href="upload_read.html">SB Admin2 템플릿</a></td><td><a href="#">template.zip</a></td></tr>
+        <tr>
+            <th>번호</th>
+            <th>제목</th>
+            <th>첨부파일</th>
+        </tr>
+        <td>
+            <a th:href="@{/upload/read(id=${item.id})}"
+               th:text="${title}">제목</a>
+        </td>
+        <td>
+            <a th:href="@{/upload/download(file=${item.fileName})}"
+               th:text="${content}">파일명</a>
+        </td>
+        </tr>
     </table>
     
 </body>
