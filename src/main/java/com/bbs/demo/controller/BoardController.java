@@ -12,28 +12,28 @@ import java.io.IOException;
 public class BoardController {
 
     @GetMapping("/board/register")
-    public String upload_register() {
-        return "upload_register";
+    public String board_register() {
+        return "board_register";
     }
 
     @GetMapping("/board/list")
-    public String upload_list() {
-        return "upload_list";
+    public String board_list() {
+        return "board_list";
     }
 
     @GetMapping("/board/read")
-    public String upload_read() {
-        return "upload_read";
+    public String board_read() {
+        return "board_read";
     }
 
     @PostMapping("/board/upload")
-    public String upload(@RequestParam("title") String title, @RequestParam("content") String content, Model model) throws IOException {
+    public String board_upload(@RequestParam("title") String title, @RequestParam("content") String content, Model model) throws IOException {
 
         model.addAttribute("message", "업로드 성공");
         model.addAttribute("title", title);
         model.addAttribute("content", content);
 
-        return "upload_list";
+        return "board_list";
     }
 
 }
