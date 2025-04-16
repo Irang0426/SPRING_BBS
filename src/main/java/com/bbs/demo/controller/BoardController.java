@@ -9,24 +9,24 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.io.IOException;
 
 @Controller
-public class UploadController {
+public class BoardController {
 
-    @GetMapping("/upload/register")
+    @GetMapping("/board/register")
     public String upload_register() {
         return "upload_register";
     }
 
-    @GetMapping("/upload/list")
+    @GetMapping("/board/list")
     public String upload_list() {
         return "upload_list";
     }
 
-    @GetMapping("/upload/read")
+    @GetMapping("/board/read")
     public String upload_read() {
         return "upload_read";
     }
 
-    @PostMapping("/upload")
+    @PostMapping("/board/upload")
     public String upload(@RequestParam("title") String title, @RequestParam("content") String content, Model model) throws IOException {
 
         model.addAttribute("message", "업로드 성공");
