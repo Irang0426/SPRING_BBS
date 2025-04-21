@@ -2,7 +2,7 @@ package com.bbs.demo.domain;
 
 import java.time.LocalDateTime;
 
-public class User {
+public class Users {
 	private int id;
 	private String nickName;
 	private String email;

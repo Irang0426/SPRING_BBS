@@ -1,10 +1,13 @@
 package com.bbs.demo.domain;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class File {
 	private int id;
 	private int noteId;
-	private File file;
-	
+	private String fileName;
+	private byte[] file;
+
 	public int getId() {
 		return id;
 	}
@@ -17,10 +20,16 @@ public class File {
 	public void setNoteId(int noteId) {
 		this.noteId = noteId;
 	}
-	public File getFile() {
+	public String getFileName() {
+		return fileName;
+	}
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+	public byte[] getFile() {
 		return file;
 	}
-	public void setFile(File file) {
+	public void setFile(byte[] file) {
 		this.file = file;
 	}
 }
