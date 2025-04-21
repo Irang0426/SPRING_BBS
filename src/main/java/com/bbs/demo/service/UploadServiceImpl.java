@@ -1,0 +1,4 @@
+package com.bbs.demo.service;
+
+public class UploadServiceImpl implements UploadService{
+}
