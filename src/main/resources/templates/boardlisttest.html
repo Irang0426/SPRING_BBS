@@ -37,13 +37,13 @@
 	</table>
 	<table>
 		<tr>
-			<td th:each="num : ${#numbers.sequence(pageInfo.page - 5, pageInfo.page + 4)}">
+			<td>
 				<a th:href="@{/pagingtest/page?boardPos=1&pagePos={num}(num=${num})}" th:text="${num}"></a>
 			</td>
 			<td th:each="num : ${#numbers.sequence(pageInfo.page - 5, pageInfo.page + 4)}">
 				<a th:href="@{/pagingtest/page?boardPos=1&pagePos={num}(num=${num})}" th:text="${num}"></a>
 			</td>
-			<td th:each="num : ${#numbers.sequence(pageInfo.page - 5, pageInfo.page + 4)}">
+			<td>
 				<a th:href="@{/pagingtest/page?boardPos=1&pagePos={num}(num=${num})}" th:text="${num}"></a>
 			</td>
 		</tr>
