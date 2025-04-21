@@ -10,5 +10,5 @@ import com.bbs.demo.domain.Page;
 @Mapper
 public interface PageMapper {
 	List<Notes> findInPage(Page pageDate);
-	int pageCount(Page pageData);
+	int pageCount();
 }

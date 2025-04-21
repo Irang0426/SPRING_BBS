@@ -27,9 +27,12 @@ public class PageController {
 		Page page = new Page();
 		page.setBoardPos(boardPos);
 		page.setPage(pagePos);
+		page.setPageLen(pagemapper.pageCount());
 		
 		List<Notes> pageList = pagemapper.findInPage(page);
 		model.addAttribute("boardList", pageList);
-		return "board_list";
+		model.addAttribute("pageInfo", page);
+		
+		return "boardlisttest";
 	}
 }
