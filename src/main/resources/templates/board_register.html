@@ -8,6 +8,7 @@
     <nav>
         <a href="/">홈</a> 
         <a href="/board/list">게시판</a> |
+        <a href="/upload/list">파일 업로드</a> |
         <a href="/login">로그인</a> |
         <a href="/register">회원가입</a> |
         <a href="/admin/users">관리자</a>
@@ -15,8 +16,7 @@
     <hr>
     
     <h2>새 게시글 등록</h2>
-    <form action="board_list.html" method="post" enctype="multipart/form-data">
-        <input type='file'><br>
+    <form action="board_list.html" method="post">
         <input type='text' placeholder='제목'><br>
         <textarea placeholder='내용'></textarea><br>
         <input type='text' placeholder='작성자'><br>

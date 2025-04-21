@@ -8,6 +8,7 @@
     <nav>
         <a href="@{/}">홈</a> 
         <a href="@{/board/list}">게시판</a> |
+        <a href="@{/upload/list}">파일 업로드</a> |
         <a href="@{/login}">로그인</a> |
         <a href="@{/register}">회원가입</a> |
         <a href="@{/admin/users}">관리자</a>
@@ -18,12 +19,6 @@
     <table border="1">
         <tr><th>댓글번호</th><th>내용</th><th>작성자</th><th>삭제</th></tr>
         <tr><td>1</td><td>좋은 게시글 감사합니다.</td><td>user1</td><td><button>삭제</button></td></tr>
-        <tr th:each="item: ${comments}">
-        	<td th:text="${item.id}"></td>
-        	<td th:text="${item.content}"></td>
-        	<td th:text="${item.writer}"></td>
-        	<td><button>삭제</button></td>
-        </tr>
     </table>
     
 </body>
