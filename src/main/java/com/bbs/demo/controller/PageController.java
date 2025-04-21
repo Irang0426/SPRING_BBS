@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.bbs.demo.domain.Note;
+import com.bbs.demo.domain.Notes;
 import com.bbs.demo.domain.Page;
 import com.bbs.demo.mapper.PageMapper;
 
@@ -28,7 +28,7 @@ public class PageController {
 		page.setBoardPos(boardPos);
 		page.setPage(pagePos);
 		
-		List<Note> pageList = pagemapper.findInPage(page);
+		List<Notes> pageList = pagemapper.findInPage(page);
 		model.addAttribute("boardList", pageList);
 		return "board_list";
 	}

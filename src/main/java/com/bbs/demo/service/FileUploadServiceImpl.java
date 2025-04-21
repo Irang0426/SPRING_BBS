@@ -1,6 +1,6 @@
 package com.bbs.demo.service;
 
-import com.bbs.demo.domain.File;
+import com.bbs.demo.domain.Files;
 import com.bbs.demo.mapper.FileUploadMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class FileUploadServiceImpl implements FileUploadService {
         for (MultipartFile multipartFile : files) {
             if (multipartFile.isEmpty()) continue;
 
-            File file = new File();
+            Files file = new Files();
             file.setNoteId(noteId);
             file.setFileName(multipartFile.getOriginalFilename());
             file.setFile(multipartFile.getBytes());

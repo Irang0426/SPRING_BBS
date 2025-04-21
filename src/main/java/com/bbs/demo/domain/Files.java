@@ -1,8 +1,6 @@
 package com.bbs.demo.domain;
 
-import org.springframework.web.multipart.MultipartFile;
-
-public class File {
+public class Files {
 	private int id;
 	private int noteId;
 	private String fileName;

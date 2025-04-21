@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.bbs.demo.domain.Note;
+import com.bbs.demo.domain.Notes;
 import com.bbs.demo.mapper.BoardMapper;
 import com.bbs.demo.mapper.NoteMapper;
 
@@ -35,9 +35,9 @@ public class BoardlistTestController {
 	
 	@PostMapping("/notelisttest")
 	@ResponseBody
-	public List<Note> noteListByBoardId(@RequestParam(name = "boardId") String id ,Model model) {
+	public List<Notes> noteListByBoardId(@RequestParam(name = "boardId") String id , Model model) {
 		System.out.println("GET FETCH!");
-		List<Note> notelist = notemapper.findByBoardId(Integer.parseInt(id));
+		List<Notes> notelist = notemapper.findByBoardId(Integer.parseInt(id));
 		return notelist;
 	}
 	

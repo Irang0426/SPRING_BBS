@@ -5,7 +5,7 @@
 
 <mapper namespace="com.bbs.demo.mapper.NoteMapper">
 
-  <select id="findByBoardId" parameterType="int" resultType="com.bbs.demo.domain.Note">
+  <select id="findByBoardId" parameterType="int" resultType="com.bbs.demo.domain.Notes">
     SELECT * FROM note where board_id = #{id};
   </select>
 

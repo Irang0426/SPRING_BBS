@@ -2,7 +2,7 @@ package com.bbs.demo.domain;
 
 import java.time.LocalDateTime;
 
-public class Note {
+public class Notes {
 	private Integer id;
 	private String title;
 	private String content;

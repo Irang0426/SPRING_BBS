@@ -4,8 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.bbs.demo.mapper.FileUploadMapper">
-    <insert id="insertFile" parameterType="File">
-        INSERT INTO file (note_id, file_name, file)
-        VALUES (#{noteId}, #{fileName}, #{file})
+    <insert id="insertFile" parameterType="Files">
+        INSERT INTO files (note_id, file_name, files)
+        VALUES (#{noteId}, #{fileName}, #{files})
     </insert>
 </mapper>

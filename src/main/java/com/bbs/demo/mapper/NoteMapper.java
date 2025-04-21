@@ -4,11 +4,11 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.bbs.demo.domain.Note;
+import com.bbs.demo.domain.Notes;
 
 @Mapper
 public interface NoteMapper {
-	List<Note> findAllNote();
-	List<Note> findByBoardId(int id);
-	Note findByNoteId(int id);
+	List<Notes> findAllNote();
+	List<Notes> findByBoardId(int id);
+	Notes findByNoteId(int id);
 }

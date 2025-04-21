@@ -3,7 +3,7 @@ package com.bbs.demo.domain;
 import java.awt.Image;
 import java.time.LocalDateTime;
 
-public class Comment {
+public class Comments {
 	private int id;
 	private String content;
 	private LocalDateTime createDate;

@@ -5,7 +5,7 @@
 
 <mapper namespace="com.bbs.demo.mapper.BoardMapper">
 
-  <select id="findAllBoard" resultType="com.bbs.demo.domain.Board">
+  <select id="findAllBoard" resultType="com.bbs.demo.domain.Boards">
     SELECT * FROM board;
   </select>
 

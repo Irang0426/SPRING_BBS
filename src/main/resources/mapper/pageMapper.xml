@@ -5,7 +5,7 @@
 
 <mapper namespace="com.bbs.demo.mapper.PageMapper">
 
-  <select id="findInPage" parameterType="com.bbs.demo.domain.Page" resultType="com.bbs.demo.domain.Note">
+  <select id="findInPage" parameterType="com.bbs.demo.domain.Page" resultType="com.bbs.demo.domain.Notes">
     SELECT * FROM note
     	WHERE board_id = #{boardPos}
     	LIMIT #{offset}, #{pageSize};

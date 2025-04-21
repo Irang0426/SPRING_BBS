@@ -2,7 +2,7 @@ package com.bbs.demo.domain;
 
 import java.time.LocalDateTime;
 
-public class Board {
+public class Boards {
 	private Integer id;
 	private String name;
 	private LocalDateTime create_date;
