@@ -19,11 +19,11 @@ public class FileUploadController {
 
     @PostMapping
     public ResponseEntity<?> uploadFile(
-            @RequestParam("file") MultipartFile[] files,
-            @RequestParam("noteId") int noteId
+            @RequestParam("files") MultipartFile[] files,
+            @RequestParam("note_id") int note_id
     ) {
         try {
-            fileUploadService.storeFiles(files, noteId);
+            fileUploadService.storeFiles(files, note_id);
             return ResponseEntity.ok("파일 업로드 성공");
         } catch (Exception e) {
             e.printStackTrace();

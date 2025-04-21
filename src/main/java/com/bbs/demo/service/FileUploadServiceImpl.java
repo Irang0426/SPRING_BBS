@@ -15,14 +15,17 @@ public class FileUploadServiceImpl implements FileUploadService {
     private FileUploadMapper fileMapper;
 
     @Override
-    public void storeFiles(MultipartFile[] files, int noteId) throws IOException {
+    public void storeFiles(MultipartFile[] files, int note_id) throws IOException {
         for (MultipartFile multipartFile : files) {
             if (multipartFile.isEmpty()) continue;
 
             Files file = new Files();
-            file.setNoteId(noteId);
+            file.setNote_id(note_id);
             file.setFileName(multipartFile.getOriginalFilename());
-            file.setFile(multipartFile.getBytes());
+            file.setFiles(multipartFile.getBytes());
+
+            // 디버깅을 위한 로그 추가
+            System.out.println("업로드 파일: " + multipartFile.getOriginalFilename() + ", 크기: " + multipartFile.getSize());
 
             fileMapper.insertFile(file);
         }

@@ -1,3 +1,4 @@
+/*
 package com.bbs.demo.controller;
 
 import org.springframework.stereotype.Controller;
@@ -35,4 +36,4 @@ public class LoginController{
 		
 		return "redirect:/sample/list";
 	}
-}
+}*/

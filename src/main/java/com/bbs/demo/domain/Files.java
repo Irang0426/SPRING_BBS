@@ -2,9 +2,9 @@ package com.bbs.demo.domain;
 
 public class Files {
 	private int id;
-	private int noteId;
+	private int note_id;
 	private String fileName;
-	private byte[] file;
+	private byte[] files;
 
 	public int getId() {
 		return id;
@@ -12,11 +12,11 @@ public class Files {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getNoteId() {
-		return noteId;
+	public int getNote_id() {
+		return note_id;
 	}
-	public void setNoteId(int noteId) {
-		this.noteId = noteId;
+	public void setNote_id(int note_id) {
+		this.note_id = note_id;
 	}
 	public String getFileName() {
 		return fileName;
@@ -24,10 +24,10 @@ public class Files {
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
-	public byte[] getFile() {
-		return file;
+	public byte[] getFiles() {
+		return files;
 	}
-	public void setFile(byte[] file) {
-		this.file = file;
+	public void setFiles(byte[] files) {
+		this.files = files;
 	}
 }

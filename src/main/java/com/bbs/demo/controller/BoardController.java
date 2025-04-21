@@ -13,22 +13,22 @@ import java.io.IOException;
 @RequestMapping("/board")
 public class BoardController {
 
-    @GetMapping("/board/register")
+    @GetMapping("/register")
     public String board_register() {
         return "board_register";
     }
 
-    @GetMapping("/board/list")
+    @GetMapping("/list")
     public String board_list() {
         return "board_list";
     }
 
-    @GetMapping("/board/read")
+    @GetMapping("/read")
     public String board_read() {
         return "board_read";
     }
 
-    @PostMapping("/board/upload")
+    @PostMapping("/upload")
     public String board_upload(@RequestParam("title") String title, @RequestParam("content") String content, Model model) throws IOException {
 
         model.addAttribute("message", "업로드 성공");
