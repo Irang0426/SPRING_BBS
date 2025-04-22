@@ -16,7 +16,8 @@
     <hr>
     
     <h2>게시글 관리</h2>
-    <select id="pageLimitSelect" onchange="updateLimitSize(this.value)">
+    <select id="pageLimitSelect" onchange="updateLimitSize(this.value)" >
+      <option value="none">=== 정렬 개수 선택 ===</option>
 	  <option value="10">10</option>
 	  <option value="20">20</option>
 	  <option value="50">50</option>
@@ -42,17 +43,38 @@ let sortName = ["id", "name", "create_date", "last_modified_date"];
 
 let page = 0;
 let limit = 10;
-let sort = "id";
+let sort = sortName[0];
 let order = sortDirections[0];
 
+function pageAjax() {
+	fetch(`/admin/boards/partial?sortby=${sort}&orderby=${order}&page=${page}&limit=${limit}`)
+	  .then(res => res.text())
+	  .then(html => {
+	    document.querySelector("tbody").innerHTML = html;
+	  });
+}
+
 function updateLimitSize(newSize) {
-	limit = parseInt(newSize); // 전역 변수나 상태값으로 관리
-	console.log(limit);
-	const params = new URLSearchParams(window.location.search);
+	limit = parseInt(newSize);
 	
-	params.set('limit', limit);
+	pageAjax();
+}
+
+function updatePageSort(col) {
+	if (sortDirections[col] === "desc") {
+		sortDirections[col] = "asc";
+	} else {
+		for (let i=0; i < sortDirections.length; i++) {
+			sortDirections[col] = "asc";
+		}
+		sortDirections[col] = "desc";
+	}
 	
-	window.location.href = `/admin/boards?${params.toString()}`
+	page = 0;
+	sort = sortName[col];
+	order = sortDirections[col];
+	
+	pageAjax();
 }
 
 </script>
