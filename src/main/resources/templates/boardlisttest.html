@@ -14,7 +14,72 @@
         <a href="@{/admin/users}">관리자</a>
         <a th:href="@{/listtest/boardlisttest}">리스트</a>
     </nav>
+    <hr>
+    
+    <h2>게시글 목록</h2>
+    <a href="board_register.html">[글 작성]</a>
 
+<!-- 	<select id="boardList" name="boardList" th:onchange="changeList()">
+		<option th:each="board : ${boardList}"
+				th:id="${board.id}"
+				th:value="${board.id}"
+				th:text="${board.name}"
+				></option>
+	</select> -->
+	
+ 	<table id="boardlist">
+		<tr th:each="item : ${boardList}">
+			<td th:text="${item.id}"></td>
+			<td th:text="${item.title}"></td>
+			<td th:text="${item.content}"></td>
+			<td th:text="${#temporals.format(item.create_date, 'yyyy-MM-dd')}"></td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td>
+				<a th:href="@{/pagingtest/page?boardPos=1&pagePos={num}(num=${num})}" th:text="${num}"></a>
+			</td>
+			<td th:each="num : ${#numbers.sequence(pageInfo.page - 5, pageInfo.page + 4)}">
+				<a th:href="@{/pagingtest/page?boardPos=1&pagePos={num}(num=${num})}" th:text="${num}"></a>
+			</td>
+			<td>
+				<a th:href="@{/pagingtest/page?boardPos=1&pagePos={num}(num=${num})}" th:text="${num}"></a>
+			</td>
+		</tr>
+	</table>
+        
+    <script type="text/javascript">
+    	const changeList = () => {
+    		let value =  document.getElementById("boardList").value;
+    		let source = document.getElementById("boardList");
+    		console.log("value : ", value);
+    		
+    		const formData = new URLSearchParams();
+    		formData.append("boardId", value);
+    		
+    		fetch(
+    			"/listtest/notelisttest",
+    			{
+    				method: "POST",
+	   				headers: {
+	   					'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+	   				},
+    				body: formData,
+   				}
+   			)
+    		.then((response) => {
+    			console.log("res: ", response);
+    			if (response.ok) {
+    				return response.json()
+    			}
+    		})
+    		.then((data) => {
+    			console.log("data: ", data);
+    		})
+    	} 
+    	
+    </script>
     
 </body>
 </html>
