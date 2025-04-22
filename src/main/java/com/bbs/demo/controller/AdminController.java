@@ -1,5 +1,7 @@
 package com.bbs.demo.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,14 +20,27 @@ public class AdminController {
 	AdminMapper adminM;
 	
 	@GetMapping("/boards")
-	public String boards(@RequestParam(name="sortby", defaultValue="id")String sortby,
-			@RequestParam(name="page", defaultValue="0") int page,
-			@RequestParam(name="limit", defaultValue="20") int limit,
-			@RequestParam(name="orderby", defaultValue="asc") String orderby,
-			Model model) {
-		Admin pagecon = new Admin().setOrderby(orderby).setPage(page).setLimit(limit).setSortby(sortby);
+	public String board(@RequestParam Map<String, String> params, Model model) {
+	    Admin pagecon = new Admin()
+	        .setOrderby(params.getOrDefault("orderby", "asc"))
+	        .setSortby(params.getOrDefault("sortby", "id"))
+	        .setPage(Integer.parseInt(params.getOrDefault("page", "0")))
+	        .setLimit(Integer.parseInt(params.getOrDefault("limit", "20")));
+	    
 		model.addAttribute("boards", adminM.findAllBoardByPage(pagecon));
 		return "admin_boards";
+	}
+	
+	@GetMapping("/boards/partial")
+	public String boardTablePartial(@RequestParam Map<String, String> params, Model model) {
+	    Admin pagecon = new Admin()
+	        .setOrderby(params.getOrDefault("orderby", "asc"))
+	        .setSortby(params.getOrDefault("sortby", "id"))
+	        .setPage(Integer.parseInt(params.getOrDefault("page", "0")))
+	        .setLimit(Integer.parseInt(params.getOrDefault("limit", "20")));
+
+	    model.addAttribute("boards", adminM.findAllBoardByPage(pagecon));
+	    return "adminboardTable :: tableBodyFragment";
 	}
 	
 	@GetMapping("/notes")
