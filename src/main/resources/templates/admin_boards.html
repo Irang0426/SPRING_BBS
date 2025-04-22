@@ -6,20 +6,55 @@
 </head>
 <body>
     <nav>
-        <a href="@{/}">홈</a> 
-        <a href="@{/board/list}">게시판</a> |
-        <a href="@{/upload/list}">파일 업로드</a> |
-        <a href="@{/login}">로그인</a> |
-        <a href="@{/register}">회원가입</a> |
-        <a href="@{/admin/users}">관리자</a>
+        <a href="/">홈</a> 
+        <a href="/board/list">게시판</a> |
+        <a href="/upload/list">파일 업로드</a> |
+        <a href="/login">로그인</a> |
+        <a href="/register">회원가입</a> |
+        <a href="/admin/users">관리자</a>
     </nav>
     <hr>
     
     <h2>게시글 관리</h2>
+    <select id="pageLimitSelect" onchange="updateLimitSize(this.value)">
+	  <option value="10">10</option>
+	  <option value="20">20</option>
+	  <option value="50">50</option>
+	  <option value="100">100</option>
+	</select>
     <table border="1">
-        <tr><th>번호</th><th>제목</th><th>작성자</th><th>삭제</th></tr>
-        <tr><td>1</td><td>게시판 만들기</td><td>admin</td><th><button>삭제</button></th></tr>
+        <thead><th onclick="updatePageSort(0)">게시판 번호</th><th onclick="updatePageSort(1)">게시판 이름</th>
+        	<th onclick="updatePageSort(2)">개설일</th><th onclick="updatePageSort(3)">수정일</th>
+        	<th>삭제</th></thead>
+        <tbody>
+	        <tr th:each="item: ${boards}">
+	        	<td th:text="${item.id}"></td>
+	        	<td th:text="${item.name}"></td>
+	        	<td th:text="${item.create_date}"></td>
+	        	<td th:text="${item.last_modified_date}"></td>
+	        	<td><button>삭제</button></td>
+	        </tr>
+        </tbody>
     </table>
-    
+<script>
+let sortDirections = ["asc", "asc", "asc", "asc"];
+let sortName = ["id", "name", "create_date", "last_modified_date"];
+
+let page = 0;
+let limit = 10;
+let sort = "id";
+let order = sortDirections[0];
+
+function updateLimitSize(newSize) {
+	limit = parseInt(newSize); // 전역 변수나 상태값으로 관리
+	console.log(limit);
+	const params = new URLSearchParams(window.location.search);
+	
+	params.set('limit', limit);
+	
+	window.location.href = `/admin/boards?${params.toString()}`
+}
+
+</script>
 </body>
 </html>
