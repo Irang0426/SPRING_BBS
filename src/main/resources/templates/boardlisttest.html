@@ -12,7 +12,7 @@
         <a href="@{/login}">로그인</a> |
         <a href="@{/register}">회원가입</a> |
         <a href="@{/admin/users}">관리자</a>
-        <a th:href="@{/listtest/boardlisttest}">리스트</a>
+        <a th:href="@{/pagingtest/page?boardPos=1&pagePos=1}">리스트</a>
     </nav>
     <hr>
     
@@ -35,16 +35,17 @@
 			<td th:text="${#temporals.format(item.create_date, 'yyyy-MM-dd')}"></td>
 		</tr>
 	</table>
-	<table>
+	<table th:with="back=${pageInfo.page - 5 >= 1 ? pageInfo.page - 5 : 1},
+					front=${pageInfo.page + 5 <= pageInfo.pageLen ? pageInfo.page + 5 : pageInfo.pageLen}">
 		<tr>
 			<td>
-				<a th:href="@{/pagingtest/page?boardPos=1&pagePos={num}(num=${num})}" th:text="${num}"></a>
+				<a th:href="@{/pagingtest/page?boardPos=1&pagePos={backTo}(backTo=${back - 1 >= 1 ? back - 1 : 1})}">&lt;&lt;</a>
 			</td>
-			<td th:each="num : ${#numbers.sequence(pageInfo.page - 5, pageInfo.page + 4)}">
+			<td th:each="num : ${#numbers.sequence(back, front)}">
 				<a th:href="@{/pagingtest/page?boardPos=1&pagePos={num}(num=${num})}" th:text="${num}"></a>
 			</td>
 			<td>
-				<a th:href="@{/pagingtest/page?boardPos=1&pagePos={num}(num=${num})}" th:text="${num}"></a>
+				<a th:href="@{/pagingtest/page?boardPos=1&pagePos={frontTO}(frontTO=${front + 1 <= pageInfo.pageLen ? front + 1 : pageInfo.pageLen})}">&gt;&gt;</a>
 			</td>
 		</tr>
 	</table>
