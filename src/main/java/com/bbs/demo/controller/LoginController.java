@@ -38,6 +38,7 @@ public class LoginController{
 			return "login";
 		}
 		session.setAttribute("loginMember", member);
+		System.out.print("!!!!!!!! 로그인 성공했습니다!!!!!!!!!!");
 		
 		return "redirect:/sample/list";
 	}
