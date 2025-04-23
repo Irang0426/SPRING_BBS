@@ -48,7 +48,7 @@ public class NoteController {
     public String register(NoteDTO noteDTO, RedirectAttributes rttr) {
         noteService.register(noteDTO);
         rttr.addFlashAttribute("message", "게시글 등록 성공!");
-        return "redirect:/note/list";
+        return "redirect:/note/read?id=";
     }
 
     /**
