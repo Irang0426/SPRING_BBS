@@ -1,3 +1,6 @@
+<!-- null 값 정렬하려 할 때 오류나는 것
+삭제 동작하게 구현
+페이징 구현 -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -23,6 +26,18 @@ const TableManager = {
 		    this.state.order = "asc";
 		    this.state.url = url;
 		  },
+
+		  set(url, sortNameArray) {
+		    this.state.sortName = sortNameArray;
+		    this.state.sortDirections = new Array(sortNameArray.length).fill("asc");
+		    this.state.page = 0;
+		    this.state.limit = 20;
+		    this.state.order = "asc";
+		    this.state.sort = sortNameArray[0];
+		    this.state.url = url;
+		    
+		    this.pageAjax();
+		  },
 		  
 		  updateLimitSize(newsize) {
 			this.state.limit = newsize
@@ -47,7 +62,7 @@ const TableManager = {
 		  },
 
 		  pageAjax() {
-		    const { sort, order, page, limit } = this.state;
+		    const { sort, order, page, limit, url } = this.state;
 		    
 			if (this.state.partial) {
 		    	fetch(`/admin/${url}/partial?sortby=${sort}&orderby=${order}&page=${page}&limit=${limit}`)
@@ -64,7 +79,6 @@ const TableManager = {
 			        this.state.partial = false;
 			      });
 			}
-			return false;
 		  }
 };
 TableManager.init("users",["id", "nickname", "email", "reg_date", "last_access_date", "user_grade"]);
@@ -81,10 +95,10 @@ TableManager.init("users",["id", "nickname", "email", "reg_date", "last_access_d
     </nav>
     <hr>
     <nav>
-		<a href="#" onclick="TableManager.init('users', ['id', 'nickname', 'email', 'reg_date', 'last_access_date', 'user_grade'])">회원</a> |
-		<a href="#" onclick="TableManager.init('boards', ['id', 'name', 'create_date', 'last_modified_date'])">게시판</a> |
-		<a href="#" onclick="TableManager.init('notes', ['id', 'title', 'content', 'create_date', 'last_modified_date', 'board_id', 'writer_id', 'file_id'])">게시글</a> |
-		<a href="#" onclick="TableManager.init('comments', ['id', 'content', 'create_date', 'last_modified_date', 'comment_id', 'note_id', 'comment_author_id'])">댓글</a>
+		<a href="#" onclick="TableManager.set('users', ['id', 'nickname', 'email', 'reg_date', 'last_access_date', 'user_grade'])">회원</a> |
+		<a href="#" onclick="TableManager.set('boards', ['id', 'name', 'create_date', 'last_modified_date'])">게시판</a> |
+		<a href="#" onclick="TableManager.set('notes', ['id', 'title', 'content', 'create_date', 'last_modified_date', 'board_id', 'writer_id', 'file_id'])">게시글</a> |
+		<a href="#" onclick="TableManager.set('comments', ['id', 'content', 'create_date', 'last_modified_date', 'comment_id', 'note_id', 'comment_author_id'])">댓글</a>
     </nav>
     
     <h2>회원 목록</h2>

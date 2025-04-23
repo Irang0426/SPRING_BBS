@@ -50,7 +50,7 @@ public class AdminController {
 
 	@GetMapping("/users/partial")
 	public String userTablePartial(@RequestParam Map<String, String> params, Model model) {
-		model.addAttribute("boards", adminS.getUsers(params));
+		model.addAttribute("users", adminS.getUsers(params));
 		return "admin_tables :: usertbody";
 	}
 	
@@ -62,13 +62,13 @@ public class AdminController {
 	
 	@GetMapping("/notes/partial")
 	public String noteTablePartial(@RequestParam Map<String, String> params, Model model) {
-		model.addAttribute("boards", adminS.getNotes(params));
+		model.addAttribute("notes", adminS.getNotes(params));
 		return "admin_tables :: notetbody";
 	}
 	
 	@GetMapping("/comments/partial")
 	public String commentTablePartial(@RequestParam Map<String, String> params, Model model) {
-		model.addAttribute("boards", adminS.getComments(params));
+		model.addAttribute("comments", adminS.getComments(params));
 		return "admin_tables :: commenttbody";
 	}
 	
