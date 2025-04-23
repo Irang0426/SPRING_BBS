@@ -1,12 +1,17 @@
 package com.bbs.demo.mapper;
 
 import com.bbs.demo.domain.NoteDTO;
+import com.bbs.demo.domain.Notes;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
 @Mapper
 public interface NoteMapper {
+	List<Notes> findAllNote();
+	List<Notes> findByBoardId(int id);
+	Notes findByNoteId(int id);
 
     // 전체 게시글 목록 조회
     List<NoteDTO> getList();

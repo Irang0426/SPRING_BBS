@@ -1,10 +1,11 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>회원 관리</title>
 </head>
-<body>
+<body th:onload="changeList()">
+	<input id="nowpage" value=1 hidden="hidden">
     <nav>
         <a href="@{/}">홈</a> 
         <a href="@{/board/list}">게시판</a> |
@@ -19,53 +20,42 @@
     <h2>게시글 목록</h2>
     <a href="board_register.html">[글 작성]</a>
 
-<!-- 	<select id="boardList" name="boardList" th:onchange="changeList()">
+ 	<select id="boardList" name="boardList" th:onchange="changeList()">
 		<option th:each="board : ${boardList}"
 				th:id="${board.id}"
 				th:value="${board.id}"
 				th:text="${board.name}"
 				></option>
-	</select> -->
-	
- 	<table id="boardlist">
-		<tr th:each="item : ${boardList}">
-			<td th:text="${item.id}"></td>
-			<td th:text="${item.title}"></td>
-			<td th:text="${item.content}"></td>
-			<td th:text="${#temporals.format(item.create_date, 'yyyy-MM-dd')}"></td>
-		</tr>
+	</select>
+   	<table id="notelist" border=1 width="100%">
+
 	</table>
-	<table th:with="back=${pageInfo.page - 5 >= 1 ? pageInfo.page - 5 : 1},
-					front=${pageInfo.page + 5 <= pageInfo.pageLen ? pageInfo.page + 5 : pageInfo.pageLen}">
-		<tr>
-			<td>
-				<a th:href="@{/pagingtest/page?boardPos=1&pagePos={backTo}(backTo=${back - 1 >= 1 ? back - 1 : 1})}">&lt;&lt;</a>
-			</td>
-			<td th:each="num : ${#numbers.sequence(back, front)}">
-				<a th:href="@{/pagingtest/page?boardPos=1&pagePos={num}(num=${num})}" th:text="${num}"></a>
-			</td>
-			<td>
-				<a th:href="@{/pagingtest/page?boardPos=1&pagePos={frontTO}(frontTO=${front + 1 <= pageInfo.pageLen ? front + 1 : pageInfo.pageLen})}">&gt;&gt;</a>
-			</td>
+
+	<table border=1 width="50%">
+		<tr id="paging">
 		</tr>
 	</table>
         
     <script type="text/javascript">
     	const changeList = () => {
+    		let page = document.getElementById("nowpage");
+    		
     		let value =  document.getElementById("boardList").value;
     		let source = document.getElementById("boardList");
+    		let notetable = document.getElementById("notelist");
+    		
+    		notetable.innerHTML = "<td>작성된 글이 없습니다.</td>";
+    		
     		console.log("value : ", value);
     		
     		const formData = new URLSearchParams();
-    		formData.append("boardId", value);
+    		formData.append("boardPos", value);
+    		formData.append("pagePos", page.value);
     		
     		fetch(
-    			"/listtest/notelisttest",
+    			"/pagingtest/page",
     			{
     				method: "POST",
-	   				headers: {
-	   					'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
-	   				},
     				body: formData,
    				}
    			)
@@ -77,10 +67,347 @@
     		})
     		.then((data) => {
     			console.log("data: ", data);
+    			const items = data.noteList;
+    			const pageInfo = data.pageInfo;
+    			page.value = pageInfo.page;
+    			
+         		let pagingtr =  document.getElementById("paging");
+    			if(items.length == 0) {
+    				notetable.innerHTML = "<td>작성된 글이 없습니다.</td>";
+					pagingtr.innerHTML = "";    				
+    				return;
+    			}
+    			notetable.innerHTML = "";
+    			for (i in items) {
+    				console.log("item: ", items[i]);
+	    			const noteList = document.createElement("tr");
+	    			noteList.innerHTML = `
+	    				<td>${items[i].id}</td>
+	    				<td>${items[i].title}</td>
+	    				<td>${items[i].content}</td>
+	    				<td>${items[i].create_date}</td>
+	    								`;
+    				notetable.appendChild(noteList);
+    			}
+    			
+         		let back = pageInfo.page - 5 >= 1 ? pageInfo.page - 5 : 1;
+         		let front = pageInfo.page + 5 <= pageInfo.pageLen ? pageInfo.page + 5 : pageInfo.pageLen
+         				
+    			let backTo = back - 1 >= 1 ? back - 1 : 1;
+         		let frontTo = front + 1 <= pageInfo.pageLen ? front + 1 : pageInfo.pageLen;
+         		
+         		
+        		pagingtr.innerHTML = 
+        			"<td>" +
+    					"<a onclick=" + `changePage(${backTo})` + ">&lt;&lt;</a>" +
+    				"</td>" +
+    				paging(back, front) + 
+    				"<td>" +
+						"<a onclick=" + `changePage(${frontTo})` + ">&gt;&gt;</a>" +
+					"</td>";
     		})
-    	} 
+    	}
+    	
+    	const changePage = (movingPage) => {
+    		let page = document.getElementById("nowpage");
+    		page.value = movingPage;
+    		
+    		changeList();
+    	}
+    	
+    	const paging = (back, front) => {
+    		let page = "";
+    		
+    		for(let i = back; i <= front; i++) {
+    			page += "<td>" + "<a onclick=" + `changePage(${i})` + ">" + `${i}` + "</a></td>" 
+    		}
+			
+    		return page;
+    	}
     	
     </script>
     
+</body>
+</html>
+ -->
+ 
+ 
+ <!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원 관리</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        
+        nav {
+            margin-bottom: 20px;
+        }
+        
+        nav a {
+            text-decoration: none;
+            margin-right: 10px;
+            color: #495057;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        nav a:hover {
+            color: #0d6efd;
+        }
+        
+        h2 {
+            color: #212529;
+            margin-bottom: 20px;
+        }
+        
+        .write-btn {
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+        
+        #boardList {
+            margin-bottom: 20px;
+            width: 200px;
+        }
+        
+        #notelist {
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        #notelist tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        #notelist tr:hover {
+            background-color: #e9ecef;
+        }
+        
+        #paging {
+            text-align: center;
+        }
+        
+        #paging td {
+            padding: 0;
+        }
+        
+        #paging a {
+            display: block;
+            padding: 10px 15px;
+            color: #495057;
+            text-decoration: none;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        
+        #paging a:hover {
+            background-color: #e9ecef;
+            color: #0d6efd;
+        }
+        
+        #paging .nowPage {
+            background-color: #e9ecef;
+            color: #0d6efd;
+        }
+        
+        .table-responsive {
+            overflow-x: auto;
+        }
+        
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .page-nav-table {
+            border-collapse: separate;
+            border-spacing: 5px;
+        }
+    </style>
+</head>
+<body th:onload="changeList()">
+    <input id="nowpage" value=1 hidden="hidden">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light rounded mb-4">
+            <div class="container-fluid">
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="@{/}">홈</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@{/board/list}">게시판</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@{/upload/list}">파일 업로드</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@{/login}">로그인</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@{/register}">회원가입</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@{/admin/users}">관리자</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/pagingtest/page?boardPos=1&pagePos=1}">리스트</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h2 class="mb-0 fs-4">게시글 목록</h2>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <a href="board_register.html" class="btn btn-primary write-btn">[글 작성]</a>
+                    </div>
+                    <div class="col-md-6">
+                        <select id="boardList" name="boardList" th:onchange="changeList()" class="form-select">
+                            <option th:each="board : ${boardList}"
+                                    th:id="${board.id}"
+                                    th:value="${board.id}"
+                                    th:text="${board.name}"></option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table id="notelist" class="table table-bordered table-hover">
+                    </table>
+                </div>
+                
+                <div class="pagination-container">
+                    <table class="page-nav-table">
+                        <tr id="paging">
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript">
+        const changeList = () => {
+            let page = document.getElementById("nowpage");
+            
+            let value =  document.getElementById("boardList").value;
+            let source = document.getElementById("boardList");
+            let notetable = document.getElementById("notelist");
+            
+            notetable.innerHTML = "<tr><td colspan='4' class='text-center py-3'>작성된 글이 없습니다.</td></tr>";
+            
+            console.log("value : ", value);
+            
+            const formData = new URLSearchParams();
+            formData.append("boardPos", value);
+            formData.append("pagePos", page.value);
+            
+            fetch(
+                "/pagingtest/page",
+                {
+                    method: "POST",
+                    body: formData,
+                }
+            )
+            .then((response) => {
+                console.log("res: ", response);
+                if (response.ok) {
+                    return response.json()
+                }
+            })
+            .then((data) => {
+                console.log("data: ", data);
+                const items = data.noteList;
+                const pageInfo = data.pageInfo;
+                page.value = pageInfo.page;
+                
+                let pagingtr =  document.getElementById("paging");
+                if(items.length == 0) {
+                    notetable.innerHTML = "<tr><td colspan='4' class='text-center py-3'>작성된 글이 없습니다.</td></tr>";
+                    pagingtr.innerHTML = "";                  
+                    return;
+                }
+                
+                notetable.innerHTML = `
+                    <thead class="table-dark">
+                        <tr>
+                            <th>번호</th>
+                            <th>제목</th>
+                            <th>내용</th>
+                            <th>작성일</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                `;
+                
+                const tbody = notetable.querySelector('tbody');
+                
+                for (i in items) {
+                    console.log("item: ", items[i]);
+                    const noteList = document.createElement("tr");
+                    noteList.innerHTML = `
+                        <td>${items[i].id}</td>
+                        <td>${items[i].title}</td>
+                        <td>${items[i].content}</td>
+                        <td>${items[i].create_date}</td>
+                    `;
+                    tbody.appendChild(noteList);
+                }
+                
+                let back = pageInfo.page - 5 >= 1 ? pageInfo.page - 5 : 1;
+                let front = pageInfo.page + 5 <= pageInfo.pageLen ? pageInfo.page + 5 : pageInfo.pageLen
+                        
+                let backTo = back - 1 >= 1 ? back - 1 : 1;
+                let frontTo = front + 1 <= pageInfo.pageLen ? front + 1 : pageInfo.pageLen;
+                
+                
+                pagingtr.innerHTML = 
+                    "<td class='page-nav'>" +
+                        "<a onclick=" + `changePage(${backTo})` + " class='page-link'>&lt;&lt;</a>" +
+                    "</td>" +
+                    paging(back, front) + 
+                    "<td class='page-nav'>" +
+                        "<a onclick=" + `changePage(${frontTo})` + " class='page-link'>&gt;&gt;</a>" +
+                    "</td>";
+            })
+        }
+        
+        const changePage = (movingPage) => {
+            let page = document.getElementById("nowpage");
+            page.value = movingPage;
+            
+            changeList();
+        }
+        
+        const paging = (back, front) => {
+            let page = "";
+            
+            for(let i = back; i <= front; i++) {
+            	if(i == document.getElementById("nowpage").value) {
+            		page += "<td class='page-nav nowPage'>" + "<a onclick=" + `changePage(${i})` + " class='page-link'>" + `${i}` + "</a></td>";
+            		continue;
+            	}
+                page += "<td class='page-nav'>" + "<a onclick=" + `changePage(${i})` + " class='page-link'>" + `${i}` + "</a></td>";
+            }
+            
+            return page;
+        }
+    </script>
 </body>
 </html>
