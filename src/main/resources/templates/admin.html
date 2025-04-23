@@ -67,7 +67,7 @@ const TableManager = {
 			return false;
 		  }
 };
-TableManager.init(["id", "nickname", "email", "reg_date", "last_access_date", "user_grade"]);
+TableManager.init("users",["id", "nickname", "email", "reg_date", "last_access_date", "user_grade"]);
 </script>
 </head>
 <body>
@@ -81,10 +81,10 @@ TableManager.init(["id", "nickname", "email", "reg_date", "last_access_date", "u
     </nav>
     <hr>
     <nav>
-		<a href="/admin/users" onclick="TableManager.init('users', ['id', 'nickname', 'email', 'reg_date', 'last_access_date', 'user_grade'])">회원</a> |
-		<a href="/admin/boards" onclick="TableManager.init('boards', ['id', 'name', 'create_date', 'last_modified_date'])">게시판</a> |
-		<a href="/admin/notes" onclick="TableManager.init('notes', ['id', 'title', 'content', 'create_date', 'last_modified_date', 'board_id', 'writer_id', 'file_id'])">게시글</a> |
-		<a href="/admin/comments" onclick="TableManager.init('comments', ['id', 'content', 'create_date', 'last_modified_date', 'comment_id', 'note_id', 'comment_author_id'])">댓글</a>
+		<a href="#" onclick="TableManager.init('users', ['id', 'nickname', 'email', 'reg_date', 'last_access_date', 'user_grade'])">회원</a> |
+		<a href="#" onclick="TableManager.init('boards', ['id', 'name', 'create_date', 'last_modified_date'])">게시판</a> |
+		<a href="#" onclick="TableManager.init('notes', ['id', 'title', 'content', 'create_date', 'last_modified_date', 'board_id', 'writer_id', 'file_id'])">게시글</a> |
+		<a href="#" onclick="TableManager.init('comments', ['id', 'content', 'create_date', 'last_modified_date', 'comment_id', 'note_id', 'comment_author_id'])">댓글</a>
     </nav>
     
     <h2>회원 목록</h2>
