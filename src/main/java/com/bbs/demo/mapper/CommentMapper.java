@@ -10,7 +10,7 @@ import com.bbs.demo.domain.CommentResponse;
 @Mapper
 public interface CommentMapper {
 	void insert(CommentRequest params);
-	CommentResponse findById(int id);
+	CommentResponse findCommentById(int id);
 	void update(CommentRequest params);
 	void delete(int id);
 	List<CommentResponse> findAllComment(int noteId);
