@@ -37,6 +37,10 @@ public class CommentService {
 		return id;
 	}
 	
+	public CommentResponse findCommentById(final int id) {
+        return commentMapper.findById(id);
+    }
+	
 	public List<CommentResponse> findAllComment(final int noteId) {
         return commentMapper.findAllComment(noteId);
     }
