@@ -31,7 +31,7 @@ public class LoginController{
 						HttpSession session,
 						Model model) {
 		
-		Users member = loginMemberMapper.findloginid(loginid);
+		Users member = loginMemberMapper.findbyEmail(loginid);
 		
 		if(member == null || !member.getPassword().equals(password)) {
 			model.addAttribute("error", "아이디 또는 비밀번호를 잘못 입력하였습니다!");

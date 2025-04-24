@@ -48,6 +48,8 @@ public class RegisterController {
         newUser.setUserGrade(1);
 
         loginMemberMapper.insert(newUser);
+        
+        System.out.println("회원가입성공");
         return "redirect:/login";
     }
 }

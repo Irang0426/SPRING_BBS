@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bbs.demo.mapper.LoginMemberMapper">
+
+    <!-- 이메일로 사용자 조회 -->
+    <select id="findByEmail" parameterType="String" resultType="com.bbs.demo.domain.Users">
+        SELECT * FROM users WHERE email = #{email}
+    </select>
+
+    <!-- 회원 정보 저장 -->
+    <insert id="insert" parameterType="com.bbs.demo.domain.Users">
+        INSERT INTO users (nick_name, email, password, reg_date, last_access_date, user_grade)
+        VALUES (#{nickName}, #{email}, #{password}, #{regDate}, #{lastAccessDate}, #{userGrade})
+    </insert>
+
+</mapper>
