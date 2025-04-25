@@ -6,9 +6,13 @@
 <mapper namespace="com.bbs.demo.mapper.PageMapper">
 
   <select id="findInPage" parameterType="com.bbs.demo.domain.Page" resultType="com.bbs.demo.domain.Notes">
-    SELECT * FROM note
+    SELECT * FROM notes
     	WHERE board_id = #{boardPos}
     	LIMIT #{offset}, #{pageSize};
+  </select>
+  
+  <select id="pageCount" resultType="Integer">
+	SELECT count(*) FROM notes;
   </select>
 
 </mapper>

@@ -5,8 +5,34 @@
 
 <mapper namespace="com.bbs.demo.mapper.NoteMapper">
 
-  <select id="findByBoardId" parameterType="int" resultType="com.bbs.demo.domain.Notes">
-    SELECT * FROM note where board_id = #{id};
-  </select>
+    <!-- 전체 게시글 목록 조회 -->
+    <select id="getList" resultType="com.bbs.demo.domain.NoteDTO">
+        SELECT * FROM notes ORDER BY id DESC
+    </select>
+
+    <!-- 게시글 상세 조회 -->
+    <select id="get" resultType="com.bbs.demo.domain.NoteDTO" parameterType="int">
+        SELECT * FROM notes WHERE id = #{id}
+    </select>
+
+    <!-- 게시글 등록 -->
+    <insert id="insert" parameterType="com.bbs.demo.domain.NoteDTO">
+        INSERT INTO notes (title, content, create_date, last_modified_date, board_id, user_id)
+        VALUES (#{title}, #{content}, NOW(), NOW(), #{boardId}, #{userId})
+    </insert>
+
+    <!-- 게시글 수정 -->
+    <update id="update" parameterType="com.bbs.demo.domain.NoteDTO">
+        UPDATE notes
+        SET title = #{title},
+            content = #{content},
+            last_modified_date = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 게시글 삭제 -->
+    <delete id="delete" parameterType="int">
+        DELETE FROM notes WHERE id = #{id}
+    </delete>
 
 </mapper>

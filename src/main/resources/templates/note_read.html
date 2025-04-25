@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html lang="ko">
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://unpkg.com/dayjs@1.11.9/dayjs.min.js"></script>
 <head>
     <meta charset="UTF-8">
     <title>게시글 상세</title>
@@ -9,7 +7,7 @@
 <body>
     <nav>
         <a href="/">홈</a> 
-        <a href="/board/list">게시판</a> |
+        <a href="/note/list">게시판</a> |
         <a href="/upload/list">파일 업로드</a> |
         <a href="/login">로그인</a> |
         <a href="/register">회원가입</a> |
@@ -18,10 +16,13 @@
     <hr>
     
     <h2>게시글 상세 보기</h2>
-    <p><strong>제목:</strong> Spring Boot 게시판 만들기</p>
-    <p><strong>작성자:</strong> admin</p>
-    <p><strong>내용:</strong> 이 게시판은 Spring Boot와 Thymeleaf로 구현되었습니다.</p>
-    <a href="board_modify.html">[수정]</a> | <a href="board_list.html">[목록]</a>
+    <p><strong>제목:</strong> <span th:text="${note.title}">제목</span></p>
+    <p><strong>작성자 ID:</strong> <span th:text="${note.userId}">admin</span></p>
+    <p><strong>작성일:</strong> <span th:text="${#temporals.format(note.createDate, 'yyyy-MM-dd HH:mm')}">날짜</span></p>
+    <p><strong>내용:</strong> <span th:text="${note.content}">내용</span></p>
+
+    <a th:href="@{|/note/modify?id=${note.id}|}">[수정]</a> |
+    <a href="/note/list">[목록]</a>
     <br><br><br><br><br><br>
     
     <!--/* 댓글 작성 */-->
@@ -71,7 +72,7 @@ function insertComment() {
     }
     
     const params = {
-       noteId : noteId,
+    	noteId : noteId,
         content : content.value,
         writer : commentAuthorId
     }
@@ -85,9 +86,9 @@ function insertComment() {
         async : false,
         success : function (response) {
             console.log('저장 성공: ', response);
-            // 저장 성공 시 페이지 새로고침
+         	// 저장 성공 시 페이지 새로고침
             window.location.reload();
-            findAllComment();
+         	findAllComment();
         },
         error : function (request, status, error) {
             console.log('저장 실패: ', error)
@@ -96,53 +97,53 @@ function insertComment() {
     
     // 댓글 리스트 조회
     function findAllComment() {
-       
-       const noteId = [[ ${comments?.noteId} ]];
-       
-       $.ajax({
-          url : `/posts/${noteId}/comments`,
-          type : 'get',
-          dataType : 'json',
-          async : false,
-          success : function (response) {
+    	
+    	const noteId = [[ ${comments?.noteId} ]];
+    	
+    	$.ajax({
+    		url : `/posts/${noteId}/comments`,
+    		type : 'get',
+    		dataType : 'json',
+    		async : false,
+    		success : function (response) {
                 // 조회된 데이터가 없는 경우
                 if(!response.length){
-                   document.querySelector('.cm_list').innerHTML = '<div class="cm_none"><p>등록된 댓글이 없습니다.</p></div>';
-                   return false;
+            	    document.querySelector('.cm_list').innerHTML = '<div class="cm_none"><p>등록된 댓글이 없습니다.</p></div>';
+            	    return false;
                 }
                
                 let commentHtml = '';
-            
+				
                 // 댓글 HTML 추가
                 response.forEach(row => {
                     commentHtml += `
-                       <div>
-                           <span class="writer_img"><img src="/images/default_profile.png" width="30" height="30" alt="기본 프로필 이미지"/></span>
-                           <p class="writer">
-                               <em>${comments?.commentAuthorId}</em>
-                               <span class="date">${dayjs(comments.createDate).format('YYYY-MM-DD HH:mm')}</span>
-                           </p>
-                           <div class="cont"><div class="txt_con">${comments.content}</div></div>
-                           <p class="func_btns">
-                               <button type="button" class="btns"><span class="icons icon_modify">수정</span></button>
-                               <button type="button" class="btns"><span class="icons icon_del">삭제</span></button>
-                           </p>
-                       </div>
-                  `;
+                	    <div>
+	                        <span class="writer_img"><img src="/images/default_profile.png" width="30" height="30" alt="기본 프로필 이미지"/></span>
+	                        <p class="writer">
+	                            <em>${comments?.commentAuthorId}</em>
+	                            <span class="date">${dayjs(comments.createDate).format('YYYY-MM-DD HH:mm')}</span>
+	                        </p>
+	                        <div class="cont"><div class="txt_con">${comments.content}</div></div>
+	                        <p class="func_btns">
+	                            <button type="button" class="btns"><span class="icons icon_modify">수정</span></button>
+	                            <button type="button" class="btns"><span class="icons icon_del">삭제</span></button>
+	                        </p>
+	                    </div>
+	               `;
                })
                
                // HTML 렌더링
                document.querySelector('.cm_list').innerHTML = commentHtml;
            },
            error : function (request, status, error) {
-              console.log(error)
+        	   console.log(error)
            }
            
-       })
+    	})
     }
 }
 window.onload = () => {
-   findAllComment();
+	findAllComment();
 }
 </script>
 </html>

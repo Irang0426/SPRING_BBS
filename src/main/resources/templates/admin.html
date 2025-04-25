@@ -1,0 +1,130 @@
+<!-- null 값 정렬하려 할 때 오류나는 것
+삭제 동작하게 구현
+페이징 구현 -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 관리</title>
+<script>
+const TableManager = {
+		  state: {
+		    sortDirections: [], // 각 컬럼의 정렬 방향 ('asc' or 'desc')
+		    sortName: [],       // 컬럼 이름 배열 (서버에 넘길 정렬 기준 이름들)
+		    page: 0,            // 현재 페이지 번호
+		    limit: 20,          // 한 페이지에 몇 개를 보여줄지
+		    order: "asc",       // 현재 정렬 방향
+		    sort: "id",         // 현재 정렬 기준 컬럼
+		    partial: false,
+		    url: "users"
+		  },
+
+		  init(url, sortNameArray) {
+		    this.state.sortName = sortNameArray;
+		    this.state.sortDirections = new Array(sortNameArray.length).fill("asc");
+		    this.state.sort = sortNameArray[0];
+		    this.state.order = "asc";
+		    this.state.url = url;
+		  },
+
+		  set(url, sortNameArray) {
+		    this.state.sortName = sortNameArray;
+		    this.state.sortDirections = new Array(sortNameArray.length).fill("asc");
+		    this.state.page = 0;
+		    this.state.limit = 20;
+		    this.state.order = "asc";
+		    this.state.sort = sortNameArray[0];
+		    this.state.url = url;
+		    
+		    this.pageAjax();
+		  },
+		  
+		  updateLimitSize(newsize) {
+			this.state.limit = newsize
+			this.state.partial = true;
+			
+			this.pageAjax();
+		  },
+
+		  updateSort(col) {
+			if (this.state.sortDirections[col] === "desc") {
+				this.state.sortDirections[col] = "asc";
+			} else {
+				this.state.sortDirections = new Array(this.state.sortName.length).fill("asc");
+				this.state.sortDirections[col] = "desc";
+			}
+			
+			this.state.partial = true;
+		    this.state.sort = this.state.sortName[col];
+		    this.state.order = this.state.sortDirections[col];
+
+		    this.pageAjax();
+		  },
+
+		  pageAjax() {
+		    const { sort, order, page, limit, url } = this.state;
+		    
+			if (this.state.partial) {
+		    	fetch(`/admin/${url}/partial?sortby=${sort}&orderby=${order}&page=${page}&limit=${limit}`)
+			      .then(res => res.text())
+			      .then(html => {
+			        document.querySelector("tbody").innerHTML = html;
+			        this.state.partial = false;
+			      });
+			} else {
+			    fetch(`/admin/${url}`)
+			      .then(res => res.text())
+			      .then(html => {
+			        document.querySelector("table").innerHTML = html;
+			        this.state.partial = false;
+			      });
+			}
+		  }
+};
+TableManager.init("users",["id", "nickname", "email", "reg_date", "last_access_date", "user_grade"]);
+</script>
+</head>
+<body>
+    <nav>
+        <a href="/">홈</a> 
+        <a href="/board/list">게시판</a> |
+        <a href="/upload/list">파일 업로드</a> |
+        <a href="/login">로그인</a> |
+        <a href="/register">회원가입</a> |
+        <a href="/admin">관리자</a>
+    </nav>
+    <hr>
+    <nav>
+		<a href="#" onclick="TableManager.set('users', ['id', 'nickname', 'email', 'reg_date', 'last_access_date', 'user_grade'])">회원</a> |
+		<a href="#" onclick="TableManager.set('boards', ['id', 'name', 'create_date', 'last_modified_date'])">게시판</a> |
+		<a href="#" onclick="TableManager.set('notes', ['id', 'title', 'content', 'create_date', 'last_modified_date', 'board_id', 'writer_id', 'file_id'])">게시글</a> |
+		<a href="#" onclick="TableManager.set('comments', ['id', 'content', 'create_date', 'last_modified_date', 'comment_id', 'note_id', 'comment_author_id'])">댓글</a>
+    </nav>
+    
+    <h2>회원 목록</h2>
+    <select id="pageLimitSelect" onchange="TableManager.updateLimitSize(this.value)" >
+      <option value="none">=== 정렬 개수 선택 ===</option>
+	  <option value="10">10</option>
+	  <option value="20">20</option>
+	  <option value="50">50</option>
+	  <option value="100">100</option>
+	</select>
+    <table border="1">
+        <thead><th onclick="TableManager.updateSort(0)">회원 번호</th><th onclick="TableManager.updateSort(1)">이름</th>
+        	<th onclick="TableManager.updateSort(2)">이메일</th><th onclick="TableManager.updateSort(3)">가입일</th>
+        	<th onclick="TableManager.updateSort(4)">마지막 접속일</th><th onclick="TableManager.updateSort(5)">등급</th>
+        	<th>삭제</th></thead>
+        <tbody>
+	        <tr th:each="item: ${users}">
+	        	<td th:text="${item.id}"></td>
+	        	<td th:text="${item.nickName}"></td>
+	        	<td th:text="${item.email}"></td>
+	        	<td th:text="${item.regDate}"></td>
+	        	<td th:text="${item.lastAccessDate}"></td>
+	        	<td th:text="${item.userGrade}"></td>
+	        	<td><button>삭제</button></td>
+	        </tr>
+        </tbody>
+    </table>
+</body>
+</html>

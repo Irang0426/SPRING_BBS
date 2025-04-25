@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bbs.demo.domain.Notes;
+import com.bbs.demo.domain.Page;
 import com.bbs.demo.mapper.BoardMapper;
 import com.bbs.demo.mapper.NoteMapper;
 
@@ -29,8 +30,12 @@ public class BoardlistTestController {
 	
 	@GetMapping("/boardlisttest")
 	public String boardList(Model model) {
+		Page page = new Page();
+
 		model.addAttribute("boardList", boardmapper.findAllBoard());
-		return "board_list";
+		model.addAttribute("pageInfo", page);
+		
+		return "boardlisttest";
 	}
 	
 	@PostMapping("/notelisttest")

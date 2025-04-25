@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bbs.demo.mapper.CommnetMapper">
+
+  <select id="findAllComment" parameterType="int" resultType="com.bbs.demo.domain.CommentResponse">
+    SELECT * FROM comment WHERE id = #{id};
+  </select>
+  
+  <insert id="insert" parameterType="com.bbs.demo.domain.CommentRequest" useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO comments(content, create_date, last_modified_date, images, comment_id, note_id, comment_author_id)
+	VALUES (#{content}, NOW(), NOW(), #{images}, #{comment_id}, #{note_id}, #{comment_author_id})
+  </insert>
+  
+  <update id="update" parameterType="com.bbs.demo.domain.CommentRequest">
+    UPDATE comments
+    SET content = #{content}, last_modified_date = NOW(), images = #{images}, comment_author_id = #{comment_author_id}
+    WHERE id = #{id}
+  </update>
+  
+  <delete id="delete" parameterType="int">
+    DELETE FROM comments WHERE id = #{id}
+  </delete>
+
+</mapper>

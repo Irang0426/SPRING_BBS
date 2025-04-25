@@ -16,10 +16,10 @@
     <hr>
     
     <h2>회원가입</h2>
-    <form>
-        <input type='text' placeholder='아이디'><br>
-        <input type='password' placeholder='비밀번호'><br>
-        <input type='email' placeholder='이메일'><br>
+    <form action="/register" method="post">
+        <input type='text' name='nickName' placeholder= '닉네임' required><br>
+        <input type='password' password='password' placeholder='비밀번호' required><br>
+        <input type='email' name='email' placeholder='이메일' required><br>
         <button type='submit'>가입하기</button>
     </form>
     

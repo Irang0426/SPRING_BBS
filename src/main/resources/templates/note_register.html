@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 등록</title>
+</head>
+<body>
+    <nav>
+        <a href="/">홈</a> 
+        <a href="/note/list">게시판</a> |
+        <a href="/upload/list">파일 업로드</a> |
+        <a href="/login">로그인</a> |
+        <a href="/register">회원가입</a> |
+        <a href="/admin/users">관리자</a>
+    </nav>
+    <hr>
+    
+    <h2>새 게시글 등록</h2>
+    
+    <!-- 🔥 게시글 등록 폼 시작 -->
+    <form action="/note/register" method="post">
+        <!-- ✅ 제목 입력 -->
+        <input type="text" name="title" placeholder="제목"><br>
+        
+        <!-- ✅ 내용 입력 -->
+        <textarea name="content" placeholder="내용"></textarea><br>
+        
+        <!-- ✅ [추가] 임시 작성자 ID (user_id = 1) -->
+        <input type="hidden" name="userId" value="1"> <!-- 임시 사용자 ID -->
+
+        <!-- ✅ [추가] 임시 게시판 ID (board_id = 1) -->
+        <input type="hidden" name="boardId" value="1"> <!-- 임시 게시판 ID -->
+        
+        <!-- ✅ 등록 버튼 -->
+        <button type="submit">등록</button>
+    </form>
+    <!-- 🔥 게시글 등록 폼 끝 -->
+</body>
+</html>

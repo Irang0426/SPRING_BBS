@@ -3,7 +3,7 @@ package com.bbs.demo.domain;
 public class Page {
 	private int page;		// 현재 page 위치
 	private int pageSize;	// 한 page 내용의 개수
-	private int pageLen; 	// page 바로가기 개수
+	private int pageLen; 	// 전체 page 바로가기 개수
 	private int boardPos;	// 현재 게시판 위치
 	
 	
