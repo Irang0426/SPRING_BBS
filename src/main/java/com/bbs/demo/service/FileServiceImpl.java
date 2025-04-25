@@ -1,7 +1,7 @@
 package com.bbs.demo.service;
 
 import com.bbs.demo.domain.Files;
-import com.bbs.demo.mapper.FileUploadMapper;
+import com.bbs.demo.mapper.FileMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -9,10 +9,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @Service
-public class FileUploadServiceImpl implements FileUploadService {
+public class FileServiceImpl implements FileService {
 
     @Autowired
-    private FileUploadMapper fileMapper;
+    private FileMapper fileMapper;
 
     @Override
     public void storeFiles(MultipartFile[] files, int note_id) throws IOException {
