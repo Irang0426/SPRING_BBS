@@ -33,7 +33,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public List<Files> getFilesByNoteId(int note_id) {
-        return fileMapper.selectFilesByNoteId(note_id);
+    public List<Files> getAllFilesByNoteId(int note_id) {
+        return fileMapper.findAllFilesByNoteId(note_id);
     }
 }

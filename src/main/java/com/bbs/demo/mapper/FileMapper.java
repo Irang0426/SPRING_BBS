@@ -8,5 +8,5 @@ import java.util.List;
 @Mapper
 public interface FileMapper {
     void insertFile(Files files);
-    List<Files> selectFilesByNoteId(int note_id);
+    List<Files> findAllFilesByNoteId(int note_id);
 }

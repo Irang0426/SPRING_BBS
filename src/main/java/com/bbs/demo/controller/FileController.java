@@ -34,7 +34,7 @@ public class FileController {
 
     @GetMapping
     public ResponseEntity<List<Files>> getFiles(@RequestParam("note_id") int note_id) {
-        List<Files> files = fileService.getFilesByNoteId(note_id);
+        List<Files> files = fileService.getAllFilesByNoteId(note_id);
         if (files.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
