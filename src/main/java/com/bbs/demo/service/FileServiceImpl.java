@@ -36,4 +36,9 @@ public class FileServiceImpl implements FileService {
     public List<Files> getAllFilesByNoteId(int note_id) {
         return fileMapper.findAllFilesByNoteId(note_id);
     }
+
+    @Override
+    public Files getFileById(int id) {
+        return fileMapper.findFileById(id);
+    }
 }

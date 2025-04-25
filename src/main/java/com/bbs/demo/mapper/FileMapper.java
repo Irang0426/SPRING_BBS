@@ -9,4 +9,5 @@ import java.util.List;
 public interface FileMapper {
     void insertFile(Files files);
     List<Files> findAllFilesByNoteId(int note_id);
+    Files findFileById(int id);
 }

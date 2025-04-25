@@ -3,7 +3,9 @@ package com.bbs.demo.controller;
 import com.bbs.demo.domain.Files;
 import com.bbs.demo.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -32,12 +34,25 @@ public class FileController {
         }
     }
 
-    @GetMapping
+    @GetMapping("/read")
     public ResponseEntity<List<Files>> getFiles(@RequestParam("note_id") int note_id) {
         List<Files> files = fileService.getAllFilesByNoteId(note_id);
         if (files.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(files);
+    }
+
+    @GetMapping("/download")
+    public ResponseEntity<byte[]> downloadFile(@RequestParam("id") int id) {
+        Files file = fileService.getFileById(id);
+        if (file == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFileName() + "\"")
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(file.getFiles());
     }
 }

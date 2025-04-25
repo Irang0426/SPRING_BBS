@@ -9,4 +9,5 @@ import java.util.List;
 public interface FileService {
     void storeFiles(MultipartFile[] multipartFile, int note_id) throws IOException;
     List<Files> getAllFilesByNoteId(int note_id);
+    Files getFileById(int id);
 }

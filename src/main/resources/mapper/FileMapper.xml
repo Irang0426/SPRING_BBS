@@ -14,4 +14,10 @@
         FROM files
         WHERE note_id = #{note_id}
     </select>
+
+    <select id="findFileById" resultType="com.bbs.demo.domain.Files" parameterType="int">
+        SELECT id, note_id, fileName, files
+        FROM files
+        WHERE id = #{id}
+    </select>
 </mapper>
