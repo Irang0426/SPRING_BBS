@@ -3,22 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <title>게시글 등록</title>
+    <style type="text/css">
+            #loadingModal {
+		    position: fixed;
+		    top: 0;
+		    left: 0;
+		    width: 100%;
+		    height: 100%;
+		    background-color: rgba(0,0,0,0.5); /* 어두운 반투명 */
+		    display: flex;
+		    align-items: center;
+		    justify-content: center;
+		    z-index: 9999;
+		}
+		
+		.spinner {
+		    width: 50px;
+		    height: 50px;
+		    border: 6px solid #ccc;
+		    border-top-color: #333;
+		    border-radius: 50%;
+		    animation: spin 0.8s linear infinite;
+		}
+		
+		@keyframes spin {
+		    to { transform: rotate(360deg); }
+		}
+    </style>
 </head>
 <body>
+    <div id="loadingModal" style="display: none;">
+	    <div class="spinner"></div>
+	</div>
     <nav>
-        <a href="/">홈</a> 
-        <a href="/note/list">게시판</a> |
-        <a href="/upload/list">파일 업로드</a> |
+        <a href="/">홈</a> |
+        <a href="/board/list">게시판</a> |
+        <a href="/file/read?note_id=1">파일 업로드</a> |
         <a href="/login">로그인</a> |
         <a href="/register">회원가입</a> |
-        <a href="/admin/users">관리자</a>
+        <a href="/admin">관리자</a>
     </nav>
     <hr>
     
     <h2>새 게시글 등록</h2>
     
     <!-- 🔥 게시글 등록 폼 시작 -->
-    <form action="/note/register" method="post">
+    <form action="/note/register" method="post" id="register">
         <!-- ✅ 제목 입력 -->
         <input type="text" name="title" placeholder="제목"><br>
         
@@ -32,8 +62,23 @@
         <input type="hidden" name="boardId" value="1"> <!-- 임시 게시판 ID -->
         
         <!-- ✅ 등록 버튼 -->
-        <button type="submit">등록</button>
+        <button type="button" onclick="regist()">등록</button>
     </form>
     <!-- 🔥 게시글 등록 폼 끝 -->
+    <script type="text/javascript">
+    	function regist() {
+    		showLoading();
+    		let form = document.getElementById('register');
+    		form.submit();
+    	}
+    
+	    function showLoading() {
+	        document.getElementById('loadingModal').style.display = 'flex';
+	    }
+	
+	    function hideLoading() {
+	        document.getElementById('loadingModal').style.display = 'none';
+	    }
+    </script>
 </body>
 </html>

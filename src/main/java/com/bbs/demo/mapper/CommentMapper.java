@@ -1,20 +1,24 @@
 package com.bbs.demo.mapper;
 
-import java.util.List;
-
+import com.bbs.demo.domain.Comments;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
-import com.bbs.demo.domain.CommentRequest;
-import com.bbs.demo.domain.CommentResponse;
+import java.util.List;
 
 @Mapper
 public interface CommentMapper {
-	void insert(CommentRequest params);
-	CommentResponse findCommentById(int id);
-	void update(CommentRequest params);
-	void delete(int id);
-	List<CommentResponse> findAllComment(int noteId);
-	
-	// 댓글 수 카운팅
-	int count(int noteId);
+    // 댓글 작성
+    void insertComment(Comments comment);
+
+    // 게시글에 달린 댓글 조회 (대댓글도 포함)
+    List<Comments> getCommentsByNoteId(@Param("noteId") int noteId);
+
+    // 특정 댓글 조회 (대댓글 관계 확인을 위해)
+    Comments getCommentById(@Param("id") int id);
+
+    // 댓글 삭제
+    void deleteComment(@Param("id") int id);
+    
+    void updateComment(Comments comment);
 }
