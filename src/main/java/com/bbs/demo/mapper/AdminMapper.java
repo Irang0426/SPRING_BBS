@@ -16,4 +16,29 @@ public interface AdminMapper {
 	List<Boards> findAllBoardByPage(Admin admin);
 	List<Notes> findAllNoteByPage(Admin admin);
 	List<CommentResponse> findAllCommentByPage(Admin admin);
+
+	void deleteUsers(int id);
+	void deleteBoards(int id);
+	void deleteNotes(int id);
+	void deleteComments(int id);
+	
+	void deleteFilesbyUserId(int userId);
+	void deleteViewCountbyUserId(int userId);
+	void deleteNoteTokenbyUserId(int userId);
+	void deleteNoteCommentsbyUserId(int userId);
+	void deleteNotesbyUserId(int userId);
+	void deleteCommentsbyUserId(int userId);
+	
+	void deleteFilesbyBoardId(int boardId);
+	void deleteViewCountbyBoardId(int boardId);
+	void deleteNoteTokenbyBoardId(int boardId);
+	void deleteCommentsbyBoardId(int boardId);
+	void deleteNotesbyBoardId(int boardId);
+	
+	void deleteFiles(int noteId);
+	void deleteViewCount(int noteId);
+	void deleteNoteToken(int noteId);
+	void deleteCommentsbyNoteId(int noteId);
+	
+	void deleteCommentsbyParentId(int commentId);
 }
