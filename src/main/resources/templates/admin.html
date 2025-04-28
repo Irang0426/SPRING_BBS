@@ -26,6 +26,10 @@ const TableManager = {
     this.state.sort = sortNameArray[0];
     this.state.order = "asc";
     this.state.url = url;
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        this.bindDeleteButtons();
+    });
   },
 
   set(url, sortNameArray) {
@@ -75,6 +79,7 @@ const TableManager = {
 	      .then(html => {
 	        document.querySelector("tbody").innerHTML = html;
 	        this.state.partial = false;
+	        this.bindDeleteButtons();
 	      });
 	} else {
 	    fetch(`/admin/${url}`)
@@ -82,9 +87,37 @@ const TableManager = {
 	      .then(html => {
 	        document.querySelector("table").innerHTML = html;
 	        this.state.partial = false;
+	        this.bindDeleteButtons();
 	      });
 	}
-  }
+  },
+  
+  bindDeleteButtons() {
+	  console.log('이벤트 추가 시작');
+	    document.querySelectorAll('.delete-button').forEach(button => {
+	        button.addEventListener('click', function () {
+	            const form = button.closest('form'); 
+	            const id = form.querySelector('input[name="id"]').value;
+	        
+	            if (!confirm(`id가 ${id}인 항목을 삭제하시겠습니까?`)) {
+	                return; 
+	            }
+
+	            const params = {
+	                sort: TableManager.state.sort,
+	                order: TableManager.state.order,
+	                page: TableManager.state.page,
+	                limit: TableManager.state.limit,
+	                url: TableManager.state.url,
+	            };
+
+	            const paramsInput = form.querySelector('input[name="params"]');
+	            paramsInput.value = new URLSearchParams(params).toString();
+
+	            form.submit();
+	        });
+	    });
+	}
 };
 TableManager.init("users",["id", "nickname", "email", "reg_date", "last_access_date", "user_grade"]);
 </script>
@@ -131,26 +164,12 @@ TableManager.init("users",["id", "nickname", "email", "reg_date", "last_access_d
 			        	<td>
 			        		<form class="delete-form" action="/admin/users/delete" method="post">
 			        			<input type="hidden" name="id" th:value="${item.id}" />
-			        			<input type="hidden" name="params" id="params" />
-					        	<input type="submit" value="삭제" />
+			        			<input type="hidden" name="params"/>
+					        	<button type="button" class="delete-button">삭제</button>
 			        		</form>
 			        	</td>
 			        </tr>
 	        </tbody>
 	    </table>
-<script type="text/javascript">
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.delete-form').forEach(form => {
-        form.addEventListener('submit', function (e) {
-            e.preventDefault(); // 기본 제출 막기
-            const id = form.querySelector('input[name="id"]').value; // hidden input에서 id 읽기
-            const { sort, order, page, limit, url } = this.state;
-            if (confirm(`id가 ${id}인 항목을 삭제하시겠습니까?`)) {
-                form.submit(); // 사용자가 확인 누르면 폼 제출
-            }
-        });
-    });
-});
-</script>
 </body>
 </html>
