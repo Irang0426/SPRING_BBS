@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://unpkg.com/dayjs@1.11.9/dayjs.min.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 상세</title>
+</head>
+<body>
+    <nav>
+        <a href="/">홈</a> 
+        <a href="/board/list">게시판</a> |
+        <a href="/upload/list">파일 업로드</a> |
+        <a href="/login">로그인</a> |
+        <a href="/register">회원가입</a> |
+        <a href="/admin/users">관리자</a>
+    </nav>
+    <hr>
+    
+    <h2>게시글 상세 보기</h2>
+    <p><strong>제목:</strong> Spring Boot 게시판 만들기</p>
+    <p><strong>작성자:</strong> admin</p>
+    <p><strong>내용:</strong> 이 게시판은 Spring Boot와 Thymeleaf로 구현되었습니다.</p>
+    <a href="board_modify.html">[수정]</a> | <a href="board_list.html">[목록]</a>
+    <br><br><br><br><br><br>
+    
+<div class="note-detail">
+    <h2>게시글 제목</h2>
+    <p>게시글 내용</p>
+
+    <!-- 댓글 입력 폼 -->
+    <h3>댓글 작성</h3>
+    <form action="/comments/add" method="post">
+        <input type="hidden" name="noteId" th:value="1"/> <!-- 게시글 ID -->
+        <input type="hidden" name="commentAuthorId" th:value="1"/>
+        <textarea name="content" placeholder="댓글을 작성하세요"></textarea><br>
+        <button type="submit">댓글 작성</button>
+    </form>
+
+    <!-- 댓글 목록 -->
+    <h3>댓글 목록</h3>
+    <ul>
+        <th:block th:each="comment : ${comments}">
+            <li>
+		        <div>
+		            <span th:text="${comment.commentAuthorId}">작성자</span>
+		            <span th:text="${comment.createDate}">작성일</span>
+		            <p th:text="${comment.content}">댓글 내용</p>
+		        </div>        
+                
+				<!-- 댓글 수정 폼 (초기에는 숨김) -->
+	            <form class="edit-comment-form" action="/comments/update" method="post" style="display:none;">
+	                <input type="hidden" name="id" th:value="${comment.id}">
+	                <input type="hidden" name="noteId" th:value="1">
+	                <input type="hidden" name="commentAuthorId" th:value="1"/>
+	                <textarea name="content" th:text="${comment.content}"></textarea><br>
+	                <button type="submit">수정 완료</button>
+	                <button type="button" class="cancel-edit">취소</button>
+	            </form>
+                <button class="edit-comment-btn">수정</button>
+                
+                <!-- 댓글 삭제 버튼 -->
+                <form action="/comments/delete" method="post">
+				    <input type="hidden" name="id" th:value="${comment.id}">
+				    <input type="hidden" name="noteId" th:value="1">
+				    <button type="submit">삭제</button>
+				</form>
+                
+                <!-- 대댓글 입력 폼 -->
+                <form action="/comments/add" method="post">
+                    <input type="hidden" name="noteId" th:value="1"/>
+                    <input type="hidden" name="commentAuthorId" th:value="1"/>
+                    <input type="hidden" name="commentId" th:value="${comment.id}"/> <!-- 부모 댓글 ID -->
+                    <textarea name="content" placeholder="대댓글을 작성하세요"></textarea><br>
+                    <button type="submit">대댓글 작성</button>
+                </form>
+                <!-- 대댓글 목록 (children이 있으면 재귀적으로 출력) -->
+		        <ul th:if="${comment.children != null and #lists.size(comment.children) > 0}">
+		            <li th:each="child : ${comment.children}">
+		                <div th:replace="~{this :: commentBlock(${child})}"></div>
+		            </li>
+		        </ul>
+            </li>
+        </th:block>
+    </ul>
+</div>
+</body>
+</html>
+<script type="text/javascript">
+$(function() {
+    // '수정' 버튼 클릭 시 폼 보여주기
+    $('.edit-comment-btn').on('click', function() {
+        var $li = $(this).closest('li');
+        $li.find('.comment-content').hide();
+        $li.find('.edit-comment-form').show();
+        $(this).hide(); // 수정 버튼 감추기
+    });
+
+    // '취소' 버튼 클릭 시 원래대로
+    $('.cancel-edit').on('click', function() {
+        var $li = $(this).closest('li');
+        $li.find('.edit-comment-form').hide();
+        $li.find('.comment-content').show();
+        $li.find('.edit-comment-btn').show();
+    });
+});
+</script>

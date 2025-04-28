@@ -3,25 +3,47 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.bbs.demo.mapper.CommnetMapper">
+<mapper namespace="com.bbs.demo.mapper.CommentMapper">
 
-  <select id="findAllComment" parameterType="int" resultType="com.bbs.demo.domain.CommentResponse">
-    SELECT * FROM comment WHERE id = #{id};
-  </select>
-  
-  <insert id="insert" parameterType="com.bbs.demo.domain.CommentRequest" useGeneratedKeys="true" keyProperty="id">
-    INSERT INTO comments(content, create_date, last_modified_date, images, comment_id, note_id, comment_author_id)
-	VALUES (#{content}, NOW(), NOW(), #{images}, #{comment_id}, #{note_id}, #{comment_author_id})
-  </insert>
-  
-  <update id="update" parameterType="com.bbs.demo.domain.CommentRequest">
-    UPDATE comments
-    SET content = #{content}, last_modified_date = NOW(), images = #{images}, comment_author_id = #{comment_author_id}
-    WHERE id = #{id}
-  </update>
-  
-  <delete id="delete" parameterType="int">
-    DELETE FROM comments WHERE id = #{id}
-  </delete>
+    <!-- 댓글 작성 -->
+    <insert id="insertComment" parameterType="com.bbs.demo.domain.Comments">
+        INSERT INTO comments (content, create_date, last_modified_date, images, comment_id, note_id, comment_author_id)
+        VALUES (#{content}, NOW(), NOW(), #{images}, #{commentId}, #{noteId}, #{commentAuthorId})
+    </insert>
+
+    <!-- 게시글에 달린 댓글 조회 -->
+	<select id="getCommentsByNoteId" resultType="com.bbs.demo.domain.Comments">
+	    SELECT 
+	        id, content, create_date, 
+	        comment_id, note_id, comment_author_id
+	    FROM comments
+	    WHERE note_id = #{noteId}
+	    ORDER BY create_date ASC <!-- 부모가 먼저 조회되도록 정렬 -->
+	</select>
+
+    <!-- 특정 댓글 조회 (대댓글 관계 확인을 위해) -->
+    <select id="getCommentById" resultType="com.bbs.demo.domain.Comments">
+        SELECT c.id, c.content, c.create_date, c.last_modified_date, c.images, c.comment_id, c.note_id, c.comment_author_id
+        FROM comments c
+        WHERE c.id = #{id}
+    </select>
+
+    <!-- 댓글 삭제 -->
+    <delete id="deleteComment" parameterType="int">
+        DELETE FROM comments WHERE id = #{id}
+    </delete>
+    <!-- 댓글 수정 -->
+    <update id="updateComment" parameterType="com.bbs.demo.domain.Comments">
+        UPDATE comments
+        SET
+            content = #{content},
+            images = #{images},
+	        comment_id = #{commentId},
+            last_modified_date = NOW(),
+            note_id = #{noteId},
+            comment_author_id = #{commentAuthorId}
+        WHERE
+            id = #{id}
+    </update>
 
 </mapper>

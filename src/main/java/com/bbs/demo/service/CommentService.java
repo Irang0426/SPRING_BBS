@@ -1,47 +1,58 @@
 package com.bbs.demo.service;
 
-import java.util.List;
-
+import com.bbs.demo.domain.Comments;
+import com.bbs.demo.mapper.CommentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.bbs.demo.domain.CommentRequest;
-import com.bbs.demo.domain.CommentResponse;
-import com.bbs.demo.mapper.CommentMapper;
-
-import lombok.RequiredArgsConstructor;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
-@RequiredArgsConstructor
 public class CommentService {
-	
-	@Autowired
-	private CommentMapper commentMapper;
-	
-	@Transactional
-	public int insertComment(final CommentRequest params) {
-		commentMapper.insert(params);
-		return params.getId();
-	}
-	
-	@Transactional
-	public int updateComment(final CommentRequest params) {
-		commentMapper.update(params);
-		return params.getId();
-	}
-	
-	@Transactional
-	public int deleteComment(final int id) {
-		commentMapper.delete(id);
-		return id;
-	}
-	
-	public CommentResponse findCommentById(final int id) {
-        return commentMapper.findCommentById(id);
+
+    @Autowired
+    private CommentMapper commentMapper;
+
+    // 댓글 작성
+    public void addComment(Comments comment) {
+        commentMapper.insertComment(comment);
     }
-	
-	public List<CommentResponse> findAllComment(final int noteId) {
-        return commentMapper.findAllComment(noteId);
+    
+    public Comments getCommentById(int id) {
+        return commentMapper.getCommentById(id);
     }
+
+    // 게시글에 달린 모든 댓글 조회
+    public List<Comments> getCommentsByNoteId(int noteId) {
+        List<Comments> all = commentMapper.getCommentsByNoteId(noteId);
+        Map<Integer, Comments> map = new HashMap<>();
+        List<Comments> roots = new ArrayList<>();
+
+        for (Comments c : all) {
+            map.put(c.getId(), c);
+            if (c.getCommentId() == null) { // 최상위 댓글
+                roots.add(c);
+            } else {
+                Comments parent = map.get(c.getCommentId());
+                if (parent != null) {
+                    parent.getChildren().add(c);
+                }
+            }
+        }
+        return roots;
+    }
+
+    // 댓글 삭제
+    public void deleteComment(int id) {
+        commentMapper.deleteComment(id);
+    }
+    
+    public void updateComment(Comments comment) {
+        commentMapper.updateComment(comment);
+    }
+    
+    
 }
