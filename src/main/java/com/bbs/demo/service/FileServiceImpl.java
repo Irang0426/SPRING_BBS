@@ -25,9 +25,6 @@ public class FileServiceImpl implements FileService {
             file.setFilename(multipartFile.getOriginalFilename());
             file.setFiles(multipartFile.getBytes());
 
-            // 디버깅을 위한 로그 추가
-            System.out.println("업로드 파일: " + multipartFile.getOriginalFilename() + ", 크기: " + multipartFile.getSize());
-
             fileMapper.insertFile(file);
         }
     }

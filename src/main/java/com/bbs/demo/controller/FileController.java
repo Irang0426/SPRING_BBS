@@ -39,11 +39,6 @@ public class FileController {
     public String getFiles(@RequestParam("note_id") int note_Id, Model model) {
         List<Files> files = fileService.getAllFilesByNoteId(note_Id);
 
-        System.out.println("불러온 파일 갯수: " + files.size());
-        for (Files file : files) {
-            System.out.println("파일 이름: " + file.getFilename());
-        }
-
         model.addAttribute("files", files);
         return "file_test";
     }
