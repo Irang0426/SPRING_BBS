@@ -25,7 +25,8 @@
     <p><strong>내용:</strong> <span th:text="${note.content}">내용</span></p>
 
     <a th:href="@{|/note/modify?id=${note.id}|}">[수정]</a> |
-    <a href="/board/list">[목록]</a>
+    <a href="#" onclick="deleteNote();">[삭제]</a> |
+    <a href="/note/list">[목록]</a>
 
     <input type="hidden" id="noteId" th:value="${note.id}">
     <input type="hidden" id="commentAuthorId" th:value="${note.userId}">
@@ -40,8 +41,7 @@
                 <p>
                     <textarea id="content" name="content" 
                         onkeyup="countingLength(this);" cols="90" rows="4" 
-                        placeholder="댓글을 입력해 주세요.">
-                    </textarea>
+                        placeholder="댓글을 입력해 주세요."></textarea>
                 </p>
                 <span>
                     <button type="button" class="btns" onclick="insertComment();">등 록</button> 
@@ -56,6 +56,8 @@
     </div>
 
 </body>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery 추가 -->
 
 <script>
 // 댓글 길이 카운팅
@@ -145,6 +147,28 @@ function findAllComment() {
         },
         error: function (request, status, error) {
             console.log(error);
+        }
+    });
+}
+
+// 게시글 삭제
+function deleteNote() {
+    const noteId = document.getElementById('noteId').value;
+
+    if (!confirm('정말 삭제하시겠습니까?')) {
+        return;
+    }
+
+    $.ajax({
+        url: `/note/remove?id=${noteId}`,
+        type: 'post',
+        success: function () {
+            alert('삭제되었습니다.');
+            window.location.href = '/board/list';
+        },
+        error: function (request, status, error) {
+            console.log('삭제 실패: ', error);
+            alert('삭제에 실패했습니다.');
         }
     });
 }
