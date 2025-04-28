@@ -6,23 +6,28 @@
 <mapper namespace="com.bbs.demo.mapper.NoteMapper">
 
     <!-- 전체 게시글 목록 조회 -->
-    <select id="getList" resultType="com.bbs.demo.domain.NoteDTO">
+    <select id="getList" resultType="com.bbs.demo.domain.Notes">
         SELECT * FROM notes ORDER BY id DESC
     </select>
 
-    <!-- 게시글 상세 조회 -->
-    <select id="get" resultType="com.bbs.demo.domain.NoteDTO" parameterType="int">
+    <!-- 게시글 상세 조회 (NoteServiceImpl 전용) -->
+    <select id="select" resultType="com.bbs.demo.domain.Notes" parameterType="int">
+        SELECT * FROM notes WHERE id = #{id}
+    </select>
+
+    <!-- 게시글 상세 조회 (다른 곳에서 쓸 수도 있는 get) -->
+    <select id="get" resultType="com.bbs.demo.domain.Notes" parameterType="int">
         SELECT * FROM notes WHERE id = #{id}
     </select>
 
     <!-- 게시글 등록 -->
-    <insert id="insert" parameterType="com.bbs.demo.domain.NoteDTO" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="com.bbs.demo.domain.Notes" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO notes (title, content, create_date, last_modified_date, board_id, user_id)
         VALUES (#{title}, #{content}, NOW(), NOW(), #{boardId}, #{userId})
     </insert>
 
     <!-- 게시글 수정 -->
-    <update id="update" parameterType="com.bbs.demo.domain.NoteDTO">
+    <update id="update" parameterType="com.bbs.demo.domain.Notes">
         UPDATE notes
         SET title = #{title},
             content = #{content},
@@ -34,11 +39,16 @@
     <delete id="delete" parameterType="int">
         DELETE FROM notes WHERE id = #{id}
     </delete>
-    
+
     <!-- ///////////////////////////////////////////// 임의 수정 ////////////////////////////////////////////////////////// -->
-	<insert id="tokenList" parameterType="com.bbs.demo.domain.Token">
+    <insert id="tokenList" parameterType="com.bbs.demo.domain.Token">
         INSERT INTO note_token (note_id, token)
         VALUES (#{note_id}, #{content})
     </insert>
-	<!-- ///////////////////////////////////////////// 임의 수정 ////////////////////////////////////////////////////////// -->
+    
+    <delete id="deleteTokens" parameterType="int">
+        DELETE FROM note_token WHERE note_id = #{noteId}
+    </delete>
+    <!-- ///////////////////////////////////////////// 임의 수정 ////////////////////////////////////////////////////////// -->
+
 </mapper>

@@ -1,9 +1,0 @@
-<tbody th:fragment="tableBodyFragment (boards)">
-  <tr th:each="item : ${boards}">
-    <td th:text="${item.id}"></td>
-    <td th:text="${item.name}"></td>
-    <td th:text="${item.create_date}"></td>
-    <td th:text="${item.last_modified_date}"></td>
-    <td><button>삭제</button></td>
-  </tr>
-</tbody>

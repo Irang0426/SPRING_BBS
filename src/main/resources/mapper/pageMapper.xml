@@ -17,7 +17,7 @@
 		WHERE board_id = #{boardPos};
   </select>
   
-  <select id="noteList" parameterType="map" resultType="com.bbs.demo.domain.Note">
+  <select id="noteList" parameterType="map" resultType="com.bbs.demo.domain.Notes">
   	SELECT n.*
 		FROM notes n
 			INNER JOIN (

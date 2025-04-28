@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.bbs.demo.domain.Note;
 import com.bbs.demo.domain.Notes;
 import com.bbs.demo.domain.Page;
 
@@ -13,5 +12,5 @@ import com.bbs.demo.domain.Page;
 public interface PageMapper {
 	List<Notes> findInPage(Page pageDate);
 	int pageCount(int boardPos);
-	List<Note> noteList(Map<String, Object> params);
+	List<Notes> noteList(Map<String, Object> params);
 }

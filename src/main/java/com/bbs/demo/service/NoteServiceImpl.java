@@ -1,6 +1,6 @@
 package com.bbs.demo.service;
 
-import com.bbs.demo.domain.NoteDTO;
+import com.bbs.demo.domain.Notes; // ✅ NoteDTO → Notes
 import com.bbs.demo.domain.Token;
 import com.bbs.demo.mapper.NoteMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,23 +15,23 @@ public class NoteServiceImpl implements NoteService {  // ⭐ 인터페이스 �
     private NoteMapper noteMapper;
 
     @Override
-    public List<NoteDTO> getList() {
+    public List<Notes> getList() { // ✅ NoteDTO → Notes
         return noteMapper.getList();
     }
 
     @Override
-    public void register(NoteDTO noteDTO) {
-        noteMapper.insert(noteDTO);
+    public void register(Notes notes) { // ✅ NoteDTO → Notes
+        noteMapper.insert(notes);
     }
 
     @Override
-    public NoteDTO get(int id) {
+    public Notes get(int id) { // ✅ NoteDTO → Notes
         return noteMapper.select(id);
     }
 
     @Override
-    public void modify(NoteDTO noteDTO) {
-        noteMapper.update(noteDTO);
+    public void modify(Notes notes) { // ✅ NoteDTO → Notes
+        noteMapper.update(notes);
     }
 
     @Override
@@ -42,7 +42,12 @@ public class NoteServiceImpl implements NoteService {  // ⭐ 인터페이스 �
     ///////////////////////////////////////////// 임의 수정 //////////////////////////////////////////////////////////
     @Override
     public void tokenList(Token token) {
-    	noteMapper.tokenList(token);
+        noteMapper.tokenList(token);
+    }
+    
+    @Override
+    public void deleteTokens(int noteId) {
+    	noteMapper.deleteTokens(noteId);
     }
     ///////////////////////////////////////////// 임의 수정 //////////////////////////////////////////////////////////
 }

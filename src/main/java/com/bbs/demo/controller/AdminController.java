@@ -86,26 +86,27 @@ public class AdminController {
 	
 	//삭제 후 돌아오는 요청
 	@PostMapping("/users/delete")
-	public String deleteUsers(@RequestParam Map<String, String> params, @RequestParam("id") int id) {
+	public String deleteUsers(@RequestParam("params") String rawParams, @RequestParam("id") int id) {
 		adminS.deleteUsers(id);
-		return adminS.setRedirectUrl(params);
+		return "redirect:/admin?"+ rawParams;
 	}
 
 	@PostMapping("/boards/delete")
-	public String deleteBoards(@RequestParam Map<String, String> params, @RequestParam("id") int id) {
+	public String deleteBoards(@RequestParam("params") String rawParams, @RequestParam("id") int id) {
 		adminS.deleteBoards(id);
-		return adminS.setRedirectUrl(params);
+		return "redirect:/admin?"+ rawParams;
 	}
 
 	@PostMapping("/notes/delete")
-	public String deleteNotes(@RequestParam Map<String, String> params, @RequestParam("id") int id) {
+	public String deleteNotes(@RequestParam("params") String rawParams, @RequestParam("id") int id) {
 		adminS.deleteNotes(id);
-		return adminS.setRedirectUrl(params);
+		return "redirect:/admin?"+ rawParams;
 	}
 
 	@PostMapping("/comments/delete")
-	public String deleteComments(@RequestParam Map<String, String> params, @RequestParam("id") int id) {
+	public String deleteComments(@RequestParam("params") String rawParams, @RequestParam("id") int id) {
 		adminS.deleteComments(id);
-		return adminS.setRedirectUrl(params);
+		System.out.println("redirect:/admin?"+ rawParams);
+		return "redirect:/admin?"+ rawParams;
 	}
 }
