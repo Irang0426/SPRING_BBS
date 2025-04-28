@@ -23,19 +23,6 @@ public class AdminService {
             .setPage(Integer.parseInt(params.getOrDefault("page", "0")))
             .setLimit(Integer.parseInt(params.getOrDefault("limit", "20")));
     }
-    
-    public String setRedirectUrl(Map<String, String> params) {
-        StringBuilder redirectUrl = new StringBuilder("redirect:/admin");
-
-        if (!params.isEmpty()) {
-            redirectUrl.append("?");
-            params.forEach((key, value) -> redirectUrl.append(key).append("=").append(value).append("&"));
-            // 마지막 '&' 삭제
-            redirectUrl.deleteCharAt(redirectUrl.length() - 1);
-        }
-
-        return redirectUrl.toString();
-    }
 
     public Object getUsers(Map<String, String> params) {
         return adminMapper.findAllUserByPage(createPageCondition(params));

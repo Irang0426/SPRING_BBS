@@ -6,7 +6,7 @@
 <mapper namespace="com.bbs.demo.mapper.AdminMapper">
 	<select id="findAllUserByPage" parameterType="com.bbs.demo.domain.Admin" resultType="com.bbs.demo.domain.Users">
 		SELECT id, nickname, email, password,
-		reg_date as regDate, last_access_date as lastAccessDate, user_grade as userGrade
+			reg_date as regDate, last_access_date as lastAccessDate, user_grade as userGrade
 		FROM users
 		ORDER BY ${sortby} ${orderby}
 		LIMIT #{offset}, #{limit}
@@ -17,14 +17,16 @@
 		LIMIT #{offset}, #{limit}
 	</select>
 	<select id="findAllNoteByPage" parameterType="com.bbs.demo.domain.Admin" resultType="com.bbs.demo.domain.Notes">
-		SELECT * FROM notes
+		SELECT id, title, content, create_date as createDate, 
+			last_modified_date as lastModifiedDate, board_id as boardId, user_id as userId
+		FROM notes
 		ORDER BY ${sortby} ${orderby}
 		LIMIT #{offset}, #{limit}
 	</select>
 	<select id="findAllCommentByPage" parameterType="com.bbs.demo.domain.Admin" resultType="com.bbs.demo.domain.CommentResponse">
-		SELECT id, content, images, create_date as createDate,
-		last_modified_date as lastModifiedDate,
-		comment_id as parentCommentId, note_id as noteId, comment_author_id as commentAuthorId
+		SELECT id, content, images, create_date AS createDate,
+			last_modified_date as lastModifiedDate,
+			comment_id as parentCommentId, note_id as noteId, comment_author_id as commentAuthorId
 		FROM comments
 		ORDER BY ${sortby} ${orderby}
 		LIMIT #{offset}, #{limit}
