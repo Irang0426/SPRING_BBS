@@ -34,7 +34,7 @@
     <tbody>
     <tr th:each="file : ${files}">
       <td th:text="${file.id}">파일 번호</td>
-      <td th:text="${file.filename}">파일 이름</td>
+      <td><a th:href="@{/file/download(id=${file.id})}" th:text="${file.filename}">파일 이름</a></td>
       <td th:text="${#arrays.length(file.files)}">파일 크기</td>
       <td th:text="${file.note_id}">노트 번호</td>
     </tr>
