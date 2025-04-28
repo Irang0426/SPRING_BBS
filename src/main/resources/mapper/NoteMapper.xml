@@ -45,6 +45,10 @@
         INSERT INTO note_token (note_id, token)
         VALUES (#{note_id}, #{content})
     </insert>
+    
+    <delete id="deleteTokens" parameterType="int">
+        DELETE FROM note_token WHERE note_id = #{noteId}
+    </delete>
     <!-- ///////////////////////////////////////////// 임의 수정 ////////////////////////////////////////////////////////// -->
 
 </mapper>

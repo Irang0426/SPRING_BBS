@@ -44,5 +44,10 @@ public class NoteServiceImpl implements NoteService {  // ⭐ 인터페이스 �
     public void tokenList(Token token) {
         noteMapper.tokenList(token);
     }
+    
+    @Override
+    public void deleteTokens(int noteId) {
+    	noteMapper.deleteTokens(noteId);
+    }
     ///////////////////////////////////////////// 임의 수정 //////////////////////////////////////////////////////////
 }

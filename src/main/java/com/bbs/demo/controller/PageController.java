@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.bbs.demo.domain.Note;
 import com.bbs.demo.domain.Notes;
 import com.bbs.demo.domain.Page;
 import com.bbs.demo.domain.Token;
@@ -82,7 +81,7 @@ public class PageController {
 		params.put("tokens", uniqueTokens);
 		params.put("count", tokens.size());
 		
-		List<Note> searchResult = pagemapper.noteList(params);
+		List<Notes> searchResult = pagemapper.noteList(params);
 
 		// 페이징 처리후 출력
 		

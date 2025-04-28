@@ -11,8 +11,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Controller
@@ -97,13 +99,29 @@ public class NoteController {
     /**
      * 게시글 수정 처리
      * URL: /note/modify (POST)
-     * 처리 후 /note/list로 리다이렉트
+     * 처리 후 /board/list로 리다이렉트
      */
     @PostMapping("/modify")
     public String modify(Notes notes, RedirectAttributes rttr) { // ✅ 변경: NoteDTO → Notes
+    	Tokenizer tokenizer = new Tokenizer();
+        Token token = new Token();
+        
         noteService.modify(notes); // ✅ 변경: noteDTO → notes
+        noteService.deleteTokens(notes.getId());
+        
+        List<String> tokens = tokenizer.tokenizer(notes.getContent()); // ✅ 변경: noteDTO → notes
+        Set<String> uniqueTokens = new HashSet<>(tokens);
+
+        System.out.println("new Note Id : " + notes.getId()); // ✅ 변경: noteDTO → notes
+        token.setNote_id(notes.getId());
+
+        for (String content : uniqueTokens) {
+            token.setContent(content);
+            noteService.tokenList(token);
+        }
         rttr.addFlashAttribute("message", "수정 완료!");
-        return "redirect:/note/list";
+        
+        return "redirect:/board/list";
     }
 
     /**
@@ -114,6 +132,7 @@ public class NoteController {
     @PostMapping("/remove")
     public String remove(@RequestParam("id") int id, RedirectAttributes rttr) {
         noteService.remove(id);
+        noteService.deleteTokens(id);
         rttr.addFlashAttribute("message", "삭제 완료!");
         return "redirect:/note/list";
     }

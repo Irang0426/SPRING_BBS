@@ -1,41 +1,46 @@
 package com.bbs.demo.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.IOException;
+import com.bbs.demo.domain.Notes;
+import com.bbs.demo.domain.Page;
+import com.bbs.demo.mapper.BoardMapper;
+import com.bbs.demo.mapper.NoteMapper;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/board")
 public class BoardController {
 
-    @GetMapping("/register")
-    public String board_register() {
-        return "board_register";
-    }
+	@Autowired
+	private BoardMapper boardmapper;
+	
+	@Autowired
+	private NoteMapper notemapper;
+	
+	@GetMapping("/list")
+	public String boardList(Model model) {
+		Page page = new Page();
 
-    @GetMapping("/list")
-    public String board_list() {
-        return "board_list";
-    }
-
-    @GetMapping("/read")
-    public String board_read() {
-        return "board_read";
-    }
-
-    @PostMapping("/upload")
-    public String board_upload(@RequestParam("title") String title, @RequestParam("content") String content, Model model) throws IOException {
-
-        model.addAttribute("message", "업로드 성공");
-        model.addAttribute("title", title);
-        model.addAttribute("content", content);
-
-        return "board_list";
-    }
-
+		model.addAttribute("boardList", boardmapper.findAllBoard());
+		model.addAttribute("pageInfo", page);
+		
+		return "board_list";
+	}
+	
+	@PostMapping("/notelist")
+	@ResponseBody
+	public List<Notes> noteListByBoardId(@RequestParam(name = "boardId") String id , Model model) {
+		System.out.println("GET FETCH!");
+		List<Notes> notelist = notemapper.findByBoardId(Integer.parseInt(id));
+		return notelist;
+	}
 }
