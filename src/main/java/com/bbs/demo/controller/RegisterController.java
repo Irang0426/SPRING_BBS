@@ -26,9 +26,9 @@ public class RegisterController {
     }
 
     @PostMapping
-    public String processRegister(@RequestParam String nickName,
-                                  @RequestParam String email,
-                                  @RequestParam String password,
+    public String processRegister(@RequestParam(name="nickName") String nickName,
+                                  @RequestParam(name="email") String email,
+                                  @RequestParam(name="password") String password,
                                   Model model) {
     	
 		/*

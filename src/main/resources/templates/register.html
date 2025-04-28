@@ -3,6 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <title>회원가입</title>
+    <style>
+        body {
+            font-family: 'Apple SD Gothic Neo', sans-serif;
+            background-color: #e0f2f1; 
+            color: #444;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav {
+            background-color: #ffffff; 
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 1px solid #b2dfdb;
+        }
+
+        nav a {
+            color: #80deea; 
+            text-decoration: none;
+            margin: 0 12px;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: #4fc3f7; 
+        }
+
+        h2 {
+            text-align: center;
+            color: #4fc3f7; 
+            margin-top: 50px;
+        }
+
+        form {
+            background: #ffffff;
+            max-width: 360px;
+            margin: 30px auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        input[type='text'],
+        input[type='password'],
+        input[type='email'] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #81d4fa; 
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #4fc3f7; 
+        }
+    </style>
 </head>
 <body>
     <nav>
@@ -17,10 +87,10 @@
     
     <h2>회원가입</h2>
     <form action="/register" method="post">
-        <input type='text' name='nickName' placeholder= '닉네임' required><br>
-        <input type='password' password='password' placeholder='비밀번호' required><br>
-        <input type='email' name='email' placeholder='이메일' required><br>
-        <button type='submit'>가입하기</button>
+        <input type="text" name="nickName" placeholder="닉네임" required><br>
+        <input type="password" name="password" placeholder="비밀번호" required><br>
+        <input type="email" name="email" placeholder="이메일" required><br>
+        <button type="submit">가입하기</button>
     </form>
     
 </body>
