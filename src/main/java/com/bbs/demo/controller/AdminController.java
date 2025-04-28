@@ -6,10 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.bbs.demo.service.AdminService;
+
+import jakarta.transaction.Transactional;
 
 @Controller
 @RequestMapping("/admin")
@@ -20,7 +23,16 @@ public class AdminController {
 	
 	@GetMapping("")
 	public String adminMain(@RequestParam Map<String, String> params, Model model) {
-		model.addAttribute("users", adminS.getUsers(params));
+		String url = params.getOrDefault("url", "users");
+		if(url.equals("users")) {
+			model.addAttribute("users", adminS.getUsers(params));
+		} else if (url.equals("boards")) {
+			model.addAttribute("boards", adminS.getBoards(params));
+		} else if (url.equals("notes")) {
+			model.addAttribute("notes", adminS.getNotes(params));
+		} else if (url.equals("comments")) {
+			model.addAttribute("comments", adminS.getComments(params));
+		}
 		return "admin";
 	}
 	
@@ -49,28 +61,51 @@ public class AdminController {
 	}
 
 	@GetMapping("/users/partial")
-	public String userTablePartial(@RequestParam Map<String, String> params, Model model) {
+	public String usersTablePartial(@RequestParam Map<String, String> params, Model model) {
 		model.addAttribute("users", adminS.getUsers(params));
 		return "admin_tables :: usertbody";
 	}
 	
 	@GetMapping("/boards/partial")
-	public String boardTablePartial(@RequestParam Map<String, String> params, Model model) {
+	public String boardsTablePartial(@RequestParam Map<String, String> params, Model model) {
 		model.addAttribute("boards", adminS.getBoards(params));
 		return "admin_tables :: boardtbody";
 	}
 	
 	@GetMapping("/notes/partial")
-	public String noteTablePartial(@RequestParam Map<String, String> params, Model model) {
+	public String notesTablePartial(@RequestParam Map<String, String> params, Model model) {
 		model.addAttribute("notes", adminS.getNotes(params));
 		return "admin_tables :: notetbody";
 	}
 	
 	@GetMapping("/comments/partial")
-	public String commentTablePartial(@RequestParam Map<String, String> params, Model model) {
+	public String commentsTablePartial(@RequestParam Map<String, String> params, Model model) {
 		model.addAttribute("comments", adminS.getComments(params));
 		return "admin_tables :: commenttbody";
 	}
 	
 	//삭제 후 돌아오는 요청
+	@PostMapping("/users/delete")
+	public String deleteUsers(@RequestParam Map<String, String> params, @RequestParam("id") int id) {
+		adminS.deleteUsers(id);
+		return adminS.setRedirectUrl(params);
+	}
+
+	@PostMapping("/boards/delete")
+	public String deleteBoards(@RequestParam Map<String, String> params, @RequestParam("id") int id) {
+		adminS.deleteBoards(id);
+		return adminS.setRedirectUrl(params);
+	}
+
+	@PostMapping("/notes/delete")
+	public String deleteNotes(@RequestParam Map<String, String> params, @RequestParam("id") int id) {
+		adminS.deleteNotes(id);
+		return adminS.setRedirectUrl(params);
+	}
+
+	@PostMapping("/comments/delete")
+	public String deleteComments(@RequestParam Map<String, String> params, @RequestParam("id") int id) {
+		adminS.deleteComments(id);
+		return adminS.setRedirectUrl(params);
+	}
 }

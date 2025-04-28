@@ -11,7 +11,12 @@
      	<td th:text="${item.regDate}"></td>
      	<td th:text="${item.lastAccessDate}"></td>
      	<td th:text="${item.userGrade}"></td>
-     	<td><button>삭제</button></td>
+       	<td>
+       		<form class="delete-form" action="/admin/users/delete" method="post">
+       			<input type="hidden" name="id" th:value="${item.id}" />
+	        	<input type="submit" value="삭제" />
+       		</form>
+       	</td>
      </tr>
     </tbody>
 </table>
@@ -26,7 +31,12 @@
 	    	<td th:text="${item.name}"></td>
 	    	<td th:text="${item.create_date}"></td>
 	    	<td th:text="${item.last_modified_date}"></td>
-	    	<td><button>삭제</button></td>
+	       	<td>
+	       		<form class="delete-form" action="/admin/boards/delete" method="post">
+	       			<input type="hidden" name="id" th:value="${item.id}" />
+		        	<input type="submit" value="삭제" />
+	       		</form>
+	       	</td>
 	    </tr>
     </tbody>
 </table>
@@ -49,7 +59,12 @@
 	    	<td th:text="${item.board_id}"></td>
 	    	<td th:text="${item.writer_id}"></td>
 	    	<td th:text="${item.file_id}"></td>
-	    	<td><button>삭제</button></td>
+	       	<td>
+	       		<form class="delete-form" action="/admin/notes/delete" method="post">
+	       			<input type="hidden" name="id" th:value="${item.id}" />
+		        	<input type="submit" value="삭제" />
+	       		</form>
+	       	</td>
 	    </tr>
     </tbody>
 </table>
@@ -71,7 +86,12 @@
 	    	<td th:text="${item.parentCommentId}"></td>
 	    	<td th:text="${item.noteId}"></td>
 	    	<td th:text="${item.commentAuthorId}"></td>
-	    	<td><button>삭제</button></td>
+	       	<td>
+	       		<form class="delete-form" action="/admin/comments/delete" method="post">
+	       			<input type="hidden" name="id" th:value="${item.id}" />
+		        	<input type="submit" value="삭제" />
+	       		</form>
+	       	</td>
 	    </tr>
     </tbody>
 </table>

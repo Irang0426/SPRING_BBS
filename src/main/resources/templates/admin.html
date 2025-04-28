@@ -8,78 +8,83 @@
     <title>회원 관리</title>
 <script>
 const TableManager = {
-		  state: {
-		    sortDirections: [], // 각 컬럼의 정렬 방향 ('asc' or 'desc')
-		    sortName: [],       // 컬럼 이름 배열 (서버에 넘길 정렬 기준 이름들)
-		    page: 0,            // 현재 페이지 번호
-		    limit: 20,          // 한 페이지에 몇 개를 보여줄지
-		    order: "asc",       // 현재 정렬 방향
-		    sort: "id",         // 현재 정렬 기준 컬럼
-		    partial: false,
-		    url: "users"
-		  },
+  state: {
+    sortDirections: [], // 각 컬럼의 정렬 방향 ('asc' or 'desc')
+    sortName: [],       // 컬럼 이름 배열 (서버에 넘길 정렬 기준 이름들)
+    lastSorted: 0,		// 마지막으로 클릭된 컬럼
+    page: 0,            // 현재 페이지 번호
+    limit: 20,          // 한 페이지에 몇 개를 보여줄지
+    order: "asc",       // 현재 정렬 방향
+    sort: "id",         // 현재 정렬 기준 컬럼
+    partial: false,
+    url: "users"
+  },
 
-		  init(url, sortNameArray) {
-		    this.state.sortName = sortNameArray;
-		    this.state.sortDirections = new Array(sortNameArray.length).fill("asc");
-		    this.state.sort = sortNameArray[0];
-		    this.state.order = "asc";
-		    this.state.url = url;
-		  },
+  init(url, sortNameArray) {
+    this.state.sortName = sortNameArray;
+    this.state.sortDirections = new Array(sortNameArray.length).fill("asc");
+    this.state.sort = sortNameArray[0];
+    this.state.order = "asc";
+    this.state.url = url;
+  },
 
-		  set(url, sortNameArray) {
-		    this.state.sortName = sortNameArray;
-		    this.state.sortDirections = new Array(sortNameArray.length).fill("asc");
-		    this.state.page = 0;
-		    this.state.limit = 20;
-		    this.state.order = "asc";
-		    this.state.sort = sortNameArray[0];
-		    this.state.url = url;
-		    
-		    this.pageAjax();
-		  },
-		  
-		  updateLimitSize(newsize) {
-			this.state.limit = newsize
-			this.state.partial = true;
-			
-			this.pageAjax();
-		  },
+  set(url, sortNameArray) {
+    this.state.sortName = sortNameArray;
+    this.state.sortDirections = new Array(sortNameArray.length).fill("asc");
+    this.state.lastSorted = 0;
+    this.state.page = 0;
+    this.state.limit = 20;
+    this.state.order = "asc";
+    this.state.sort = sortNameArray[0];
+    this.state.url = url;
+    
+    this.pageAjax();
+  },
+  
+  updateLimitSize(newsize) {
+	this.state.limit = newsize
+	this.state.partial = true;
+	
+	this.pageAjax();
+  },
 
-		  updateSort(col) {
-			if (this.state.sortDirections[col] === "desc") {
-				this.state.sortDirections[col] = "asc";
-			} else {
-				this.state.sortDirections = new Array(this.state.sortName.length).fill("asc");
-				this.state.sortDirections[col] = "desc";
-			}
-			
-			this.state.partial = true;
-		    this.state.sort = this.state.sortName[col];
-		    this.state.order = this.state.sortDirections[col];
+  updateSort(col) {
+	this.state.lastSorted = col;
+	if (this.state.sortDirections[col] === "desc") {
+		this.state.sortDirections[col] = "asc";
+	} else if (this.state.sortDirections.includes("desc")) {
+		this.state.sortDirections = new Array(this.state.sortName.length).fill("asc");
+	} else {
+		this.state.sortDirections = new Array(this.state.sortName.length).fill("asc");
+		this.state.sortDirections[col] = "desc";
+	}
+	
+	this.state.partial = true;
+    this.state.sort = this.state.sortName[col];
+    this.state.order = this.state.sortDirections[col];
 
-		    this.pageAjax();
-		  },
+    this.pageAjax();
+  },
 
-		  pageAjax() {
-		    const { sort, order, page, limit, url } = this.state;
-		    
-			if (this.state.partial) {
-		    	fetch(`/admin/${url}/partial?sortby=${sort}&orderby=${order}&page=${page}&limit=${limit}`)
-			      .then(res => res.text())
-			      .then(html => {
-			        document.querySelector("tbody").innerHTML = html;
-			        this.state.partial = false;
-			      });
-			} else {
-			    fetch(`/admin/${url}`)
-			      .then(res => res.text())
-			      .then(html => {
-			        document.querySelector("table").innerHTML = html;
-			        this.state.partial = false;
-			      });
-			}
-		  }
+  pageAjax() {
+    const { sort, order, page, limit, url } = this.state;
+    
+	if (this.state.partial) {
+    	fetch(`/admin/${url}/partial?sortby=${sort}&orderby=${order}&page=${page}&limit=${limit}`)
+	      .then(res => res.text())
+	      .then(html => {
+	        document.querySelector("tbody").innerHTML = html;
+	        this.state.partial = false;
+	      });
+	} else {
+	    fetch(`/admin/${url}`)
+	      .then(res => res.text())
+	      .then(html => {
+	        document.querySelector("table").innerHTML = html;
+	        this.state.partial = false;
+	      });
+	}
+  }
 };
 TableManager.init("users",["id", "nickname", "email", "reg_date", "last_access_date", "user_grade"]);
 </script>
@@ -109,22 +114,43 @@ TableManager.init("users",["id", "nickname", "email", "reg_date", "last_access_d
 	  <option value="50">50</option>
 	  <option value="100">100</option>
 	</select>
-    <table border="1">
-        <thead><th onclick="TableManager.updateSort(0)">회원 번호</th><th onclick="TableManager.updateSort(1)">이름</th>
-        	<th onclick="TableManager.updateSort(2)">이메일</th><th onclick="TableManager.updateSort(3)">가입일</th>
-        	<th onclick="TableManager.updateSort(4)">마지막 접속일</th><th onclick="TableManager.updateSort(5)">등급</th>
-        	<th>삭제</th></thead>
-        <tbody>
-	        <tr th:each="item: ${users}">
-	        	<td th:text="${item.id}"></td>
-	        	<td th:text="${item.nickName}"></td>
-	        	<td th:text="${item.email}"></td>
-	        	<td th:text="${item.regDate}"></td>
-	        	<td th:text="${item.lastAccessDate}"></td>
-	        	<td th:text="${item.userGrade}"></td>
-	        	<td><button>삭제</button></td>
-	        </tr>
-        </tbody>
-    </table>
+	
+	    <table border="1">
+	        <thead><th onclick="TableManager.updateSort(0)">회원 번호</th><th onclick="TableManager.updateSort(1)">이름</th>
+	        	<th onclick="TableManager.updateSort(2)">이메일</th><th onclick="TableManager.updateSort(3)">가입일</th>
+	        	<th onclick="TableManager.updateSort(4)">마지막 접속일</th><th onclick="TableManager.updateSort(5)">등급</th>
+	        	<th>삭제</th></thead>
+	        <tbody>
+			        <tr th:each="item: ${users}">
+			        	<td th:text="${item.id}"></td>
+			        	<td th:text="${item.nickName}"></td>
+			        	<td th:text="${item.email}"></td>
+			        	<td th:text="${item.regDate}"></td>
+			        	<td th:text="${item.lastAccessDate}"></td>
+			        	<td th:text="${item.userGrade}"></td>
+			        	<td>
+			        		<form class="delete-form" action="/admin/users/delete" method="post">
+			        			<input type="hidden" name="id" th:value="${item.id}" />
+			        			<input type="hidden" name="params" id="params" />
+					        	<input type="submit" value="삭제" />
+			        		</form>
+			        	</td>
+			        </tr>
+	        </tbody>
+	    </table>
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.delete-form').forEach(form => {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault(); // 기본 제출 막기
+            const id = form.querySelector('input[name="id"]').value; // hidden input에서 id 읽기
+            const { sort, order, page, limit, url } = this.state;
+            if (confirm(`id가 ${id}인 항목을 삭제하시겠습니까?`)) {
+                form.submit(); // 사용자가 확인 누르면 폼 제출
+            }
+        });
+    });
+});
+</script>
 </body>
 </html>
