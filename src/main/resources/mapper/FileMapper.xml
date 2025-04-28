@@ -5,18 +5,18 @@
 
 <mapper namespace="com.bbs.demo.mapper.FileMapper">
     <insert id="insertFile" parameterType="com.bbs.demo.domain.Files">
-        INSERT INTO files (note_id, fileName, files)
-        VALUES (#{note_id}, #{fileName}, #{files})
+        INSERT INTO files (note_id, filename, files)
+        VALUES (#{note_id}, #{filename}, #{files})
     </insert>
 
     <select id="findAllFilesByNoteId" resultType="com.bbs.demo.domain.Files" parameterType="int">
-        SELECT id, note_id, fileName, files
+        SELECT id, note_id, filename, files
         FROM files
         WHERE note_id = #{note_id}
     </select>
 
     <select id="findFileById" resultType="com.bbs.demo.domain.Files" parameterType="int">
-        SELECT id, note_id, fileName, files
+        SELECT id, note_id, filename, files
         FROM files
         WHERE id = #{id}
     </select>

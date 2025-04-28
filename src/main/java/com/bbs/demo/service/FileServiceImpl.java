@@ -22,7 +22,7 @@ public class FileServiceImpl implements FileService {
 
             Files file = new Files();
             file.setNote_id(note_id);
-            file.setFileName(multipartFile.getOriginalFilename());
+            file.setFilename(multipartFile.getOriginalFilename());
             file.setFiles(multipartFile.getBytes());
 
             // 디버깅을 위한 로그 추가

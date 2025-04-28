@@ -3,7 +3,7 @@ package com.bbs.demo.domain;
 public class Files {
 	private int id;
 	private int note_id;
-	private String fileName;
+	private String filename;
 	private byte[] files;
 
 	public int getId() {
@@ -18,11 +18,11 @@ public class Files {
 	public void setNote_id(int note_id) {
 		this.note_id = note_id;
 	}
-	public String getFileName() {
-		return fileName;
+	public String getFilename() {
+		return filename;
 	}
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
+	public void setFilename(String filename) {
+		this.filename = filename;
 	}
 	public byte[] getFiles() {
 		return files;

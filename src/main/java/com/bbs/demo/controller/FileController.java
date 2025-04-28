@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,12 +36,16 @@ public class FileController {
     }
 
     @GetMapping("/read")
-    public ResponseEntity<List<Files>> getFiles(@RequestParam("note_id") int note_id) {
-        List<Files> files = fileService.getAllFilesByNoteId(note_id);
-        if (files.isEmpty()) {
-            return ResponseEntity.noContent().build();
+    public String getFiles(@RequestParam("note_id") int note_Id, Model model) {
+        List<Files> files = fileService.getAllFilesByNoteId(note_Id);
+
+        System.out.println("불러온 파일 갯수: " + files.size());
+        for (Files file : files) {
+            System.out.println("파일 이름: " + file.getFilename());
         }
-        return ResponseEntity.ok(files);
+
+        model.addAttribute("files", files);
+        return "file_test";
     }
 
     @GetMapping("/download")
@@ -51,7 +56,7 @@ public class FileController {
         }
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFileName() + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(file.getFiles());
     }
