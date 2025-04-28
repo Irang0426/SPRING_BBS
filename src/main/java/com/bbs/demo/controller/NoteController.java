@@ -70,7 +70,7 @@ public class NoteController {
             noteService.tokenList(token);
         }
 
-        return "redirect:/listtest/boardlisttest";
+        return "redirect:/board/list";
     }
     ///////////////////////////////////////////// 임의 수정 //////////////////////////////////////////////////////////
 
