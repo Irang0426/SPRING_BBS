@@ -43,5 +43,3 @@ public class LoginController{
 		return "redirect:/sample/list";
 	}
 }
-
-
