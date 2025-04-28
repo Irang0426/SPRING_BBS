@@ -15,7 +15,7 @@
        		<form class="delete-form" action="/admin/users/delete" method="post">
        			<input type="hidden" name="id" th:value="${item.id}" />
 			    <input type="hidden" name="params"/>
-	        	<input type="submit" value="삭제" />
+	        	<button type="button" class="delete-button">삭제</button>
        		</form>
        	</td>
      </tr>
@@ -36,7 +36,7 @@
 	       		<form class="delete-form" action="/admin/boards/delete" method="post">
 	       			<input type="hidden" name="id" th:value="${item.id}" />
 			        <input type="hidden" name="params"/>
-		        	<input type="submit" value="삭제" />
+		        	<button type="button" class="delete-button">삭제</button>
 	       		</form>
 	       	</td>
 	    </tr>
@@ -65,7 +65,7 @@
 	       		<form class="delete-form" action="/admin/notes/delete" method="post">
 	       			<input type="hidden" name="id" th:value="${item.id}" />
 			        <input type="hidden" name="params"/>
-		        	<input type="submit" value="삭제" />
+		        	<button type="button" class="delete-button">삭제</button>
 	       		</form>
 	       	</td>
 	    </tr>
@@ -93,7 +93,7 @@
 	       		<form class="delete-form" action="/admin/comments/delete" method="post">
 	       			<input type="hidden" name="id" th:value="${item.id}" />
 			        <input type="hidden" name="params"/>
-		        	<input type="submit" value="삭제" />
+		        	<button type="button" class="delete-button">삭제</button>
 	       		</form>
 	       	</td>
 	    </tr>

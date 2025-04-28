@@ -24,6 +24,7 @@ public class AdminController {
 	@GetMapping("")
 	public String adminMain(@RequestParam Map<String, String> params, Model model) {
 		String url = params.getOrDefault("url", "users");
+		System.out.println(url);
 		if(url.equals("users")) {
 			model.addAttribute("users", adminS.getUsers(params));
 		} else if (url.equals("boards")) {
@@ -88,18 +89,21 @@ public class AdminController {
 	@PostMapping("/users/delete")
 	public String deleteUsers(@RequestParam("params") String rawParams, @RequestParam("id") int id) {
 		adminS.deleteUsers(id);
+		System.out.println("redirect:/admin?"+ rawParams);
 		return "redirect:/admin?"+ rawParams;
 	}
 
 	@PostMapping("/boards/delete")
 	public String deleteBoards(@RequestParam("params") String rawParams, @RequestParam("id") int id) {
 		adminS.deleteBoards(id);
+		System.out.println("redirect:/admin?"+ rawParams);
 		return "redirect:/admin?"+ rawParams;
 	}
 
 	@PostMapping("/notes/delete")
 	public String deleteNotes(@RequestParam("params") String rawParams, @RequestParam("id") int id) {
 		adminS.deleteNotes(id);
+		System.out.println("redirect:/admin?"+ rawParams);
 		return "redirect:/admin?"+ rawParams;
 	}
 

@@ -93,12 +93,11 @@ const TableManager = {
   },
   
   bindDeleteButtons() {
-	  console.log('이벤트 추가 시작');
 	    document.querySelectorAll('.delete-button').forEach(button => {
 	        button.addEventListener('click', function () {
 	            const form = button.closest('form'); 
 	            const id = form.querySelector('input[name="id"]').value;
-	        
+	        	
 	            if (!confirm(`id가 ${id}인 항목을 삭제하시겠습니까?`)) {
 	                return; 
 	            }
@@ -109,6 +108,7 @@ const TableManager = {
 	                page: TableManager.state.page,
 	                limit: TableManager.state.limit,
 	                url: TableManager.state.url,
+	                lastSorted: TableManager.state.lastSorted
 	            };
 
 	            const paramsInput = form.querySelector('input[name="params"]');
@@ -171,5 +171,49 @@ TableManager.init("users",["id", "nickname", "email", "reg_date", "last_access_d
 			        </tr>
 	        </tbody>
 	    </table>
+<script type="text/javascript">
+window.onload = function() {
+	const urlParams = new URLSearchParams(window.location.search);
+	
+	const defaultUrl = urlParams.get('url');
+	if (defaultUrl) {
+		if (defaultUrl === "users") {
+			TableManager.state.lastSorted = urlParams.get('lastSorted');
+			TableManager.state.page = urlParams.get('page');
+			TableManager.state.limit = urlParams.get('limit');
+			TableManager.state.order = urlParams.get('order');
+			TableManager.state.sort = urlParams.get('sort');
+		    TableManager.state.url = defaultUrl;
+			TableManager.set('users', ['id', 'nickname', 'email', 'reg_date', 'last_access_date', 'user_grade']);
+		} else if (defaultUrl === "boards") {
+			TableManager.state.lastSorted = urlParams.get('lastSorted');
+			TableManager.state.page = urlParams.get('page');
+			TableManager.state.limit = urlParams.get('limit');
+			TableManager.state.order = urlParams.get('order');
+			TableManager.state.sort = urlParams.get('sort');
+		    TableManager.state.url = defaultUrl;
+			TableManager.set('boards', ['id', 'name', 'create_date', 'last_modified_date']);
+		} else if (defaultUrl === "notes") {
+			TableManager.state.lastSorted = urlParams.get('lastSorted');
+			TableManager.state.page = urlParams.get('page');
+			TableManager.state.limit = urlParams.get('limit');
+			TableManager.state.order = urlParams.get('order');
+			TableManager.state.sort = urlParams.get('sort');
+		    TableManager.state.url = defaultUrl;
+			TableManager.set('notes', ['id', 'title', 'content', 'create_date', 'last_modified_date', 'board_id', 'writer_id', 'file_id'])
+		} else if (defaultUrl === "comments") {
+			TableManager.state.lastSorted = urlParams.get('lastSorted');
+			TableManager.state.page = urlParams.get('page');
+			TableManager.state.limit = urlParams.get('limit');
+			TableManager.state.order = urlParams.get('order');
+			TableManager.state.sort = urlParams.get('sort');
+		    TableManager.state.url = defaultUrl;
+			TableManager.set('comments', ['id', 'content', 'create_date', 'last_modified_date', 'comment_id', 'note_id', 'comment_author_id'])
+		} else {
+			confirm('url 확인 필요');
+		}
+	}
+}
+</script>
 </body>
 </html>
