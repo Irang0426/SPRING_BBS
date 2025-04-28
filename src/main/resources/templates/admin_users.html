@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 관리</title>
+</head>
+<body>
+    <nav>
+        <a href="@{/}">홈</a> 
+        <a href="@{/board/list}">게시판</a> |
+        <a href="@{/upload/list}">파일 업로드</a> |
+        <a href="@{/login}">로그인</a> |
+        <a href="@{/register}">회원가입</a> |
+        <a href="@{/admin/users}">관리자</a>
+    </nav>
+    <hr>
+    
+    <h2>회원 목록</h2>
+    <table border="1">
+        <tr><th>아이디</th><th>이메일</th><th>등급</th><th>삭제</th><th>수정</th></tr>
+        <tr><td>admin</td><td>admin@test.com</td><td>ROLE_ADMIN</td><td><button>삭제</button></td><td><button>수정</button></td></tr>
+        <tr><td>user1</td><td>user1@test.com</td><td>ROLE_USER</td><td><button>삭제</button></td><td><button>수정</button></td></tr>
+    </table>
+    
+</body>
+</html>

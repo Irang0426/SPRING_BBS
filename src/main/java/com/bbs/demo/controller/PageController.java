@@ -1,7 +1,10 @@
 package com.bbs.demo.controller;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,9 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.bbs.demo.domain.Note;
 import com.bbs.demo.domain.Notes;
 import com.bbs.demo.domain.Page;
+import com.bbs.demo.domain.Token;
 import com.bbs.demo.mapper.PageMapper;
+import com.bbs.demo.service.Tokenizer;
 
 @Controller
 @RequestMapping("/pagingtest")
@@ -29,7 +35,7 @@ public class PageController {
 							@RequestParam(name="pagePos") int pagePos,
 							Model model) {
 		Page page = new Page();
-		int pagecount = pagemapper.pageCount();
+		int pagecount = pagemapper.pageCount(boardPos);
 		if(pagecount % page.getPageSize() != 0) {
 			pagecount = (int)(pagecount / page.getPageSize()) + 1;
 		}
@@ -48,6 +54,46 @@ public class PageController {
 		return Map.of(
 					"noteList", pageList,
 					"pageInfo", page
+				);
+	}
+	
+	@ResponseBody
+	@PostMapping("/noteSearch")
+	public Map<String, Object> NoteSearch(@RequestParam(name="boardPos") int boardPos,
+										@RequestParam(name="content") String content,
+										Model model) {
+		
+		Page page = new Page();
+		int pagecount = pagemapper.pageCount(boardPos);
+		page.setPageLen(pagecount);
+
+		Tokenizer tokenizer = new Tokenizer();
+		
+		List<String> tokens = tokenizer.tokenizer(content);
+		// 토큰화된 검색어중 1번만 이용하여 note_token 검색 -> note_id 리스트 리턴
+//		select note_id from note_token
+//		where token = "여행"
+//	    group by note_id;
+		
+		Map<String, Object> params = new HashMap<>();
+		Set<String> uniqueTokens = new HashSet<>(tokens);
+		
+		params.put("board", boardPos);
+		params.put("tokens", uniqueTokens);
+		params.put("count", tokens.size());
+		
+		List<Note> searchResult = pagemapper.noteList(params);
+
+		// 페이징 처리후 출력
+		
+		
+//      Set<String> uniqueTokens = new HashSet<>(tokens);
+//		List<Notes> pageList = pagemapper.findInPage();
+        
+        
+		
+		return Map.of(
+					"noteList", searchResult
 				);
 	}
 }

@@ -16,7 +16,7 @@
     </select>
 
     <!-- 게시글 등록 -->
-    <insert id="insert" parameterType="com.bbs.demo.domain.NoteDTO">
+    <insert id="insert" parameterType="com.bbs.demo.domain.NoteDTO" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO notes (title, content, create_date, last_modified_date, board_id, user_id)
         VALUES (#{title}, #{content}, NOW(), NOW(), #{boardId}, #{userId})
     </insert>
@@ -34,5 +34,11 @@
     <delete id="delete" parameterType="int">
         DELETE FROM notes WHERE id = #{id}
     </delete>
-
+    
+    <!-- ///////////////////////////////////////////// 임의 수정 ////////////////////////////////////////////////////////// -->
+	<insert id="tokenList" parameterType="com.bbs.demo.domain.Token">
+        INSERT INTO note_token (note_id, token)
+        VALUES (#{note_id}, #{content})
+    </insert>
+	<!-- ///////////////////////////////////////////// 임의 수정 ////////////////////////////////////////////////////////// -->
 </mapper>

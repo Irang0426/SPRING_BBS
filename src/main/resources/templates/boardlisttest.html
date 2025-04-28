@@ -1,138 +1,4 @@
-<!-- <!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <title>회원 관리</title>
-</head>
-<body th:onload="changeList()">
-	<input id="nowpage" value=1 hidden="hidden">
-    <nav>
-        <a href="@{/}">홈</a> 
-        <a href="@{/board/list}">게시판</a> |
-        <a href="@{/upload/list}">파일 업로드</a> |
-        <a href="@{/login}">로그인</a> |
-        <a href="@{/register}">회원가입</a> |
-        <a href="@{/admin/users}">관리자</a>
-        <a th:href="@{/pagingtest/page?boardPos=1&pagePos=1}">리스트</a>
-    </nav>
-    <hr>
-    
-    <h2>게시글 목록</h2>
-    <a href="board_register.html">[글 작성]</a>
-
- 	<select id="boardList" name="boardList" th:onchange="changeList()">
-		<option th:each="board : ${boardList}"
-				th:id="${board.id}"
-				th:value="${board.id}"
-				th:text="${board.name}"
-				></option>
-	</select>
-   	<table id="notelist" border=1 width="100%">
-
-	</table>
-
-	<table border=1 width="50%">
-		<tr id="paging">
-		</tr>
-	</table>
-        
-    <script type="text/javascript">
-    	const changeList = () => {
-    		let page = document.getElementById("nowpage");
-    		
-    		let value =  document.getElementById("boardList").value;
-    		let source = document.getElementById("boardList");
-    		let notetable = document.getElementById("notelist");
-    		
-    		notetable.innerHTML = "<td>작성된 글이 없습니다.</td>";
-    		
-    		console.log("value : ", value);
-    		
-    		const formData = new URLSearchParams();
-    		formData.append("boardPos", value);
-    		formData.append("pagePos", page.value);
-    		
-    		fetch(
-    			"/pagingtest/page",
-    			{
-    				method: "POST",
-    				body: formData,
-   				}
-   			)
-    		.then((response) => {
-    			console.log("res: ", response);
-    			if (response.ok) {
-    				return response.json()
-    			}
-    		})
-    		.then((data) => {
-    			console.log("data: ", data);
-    			const items = data.noteList;
-    			const pageInfo = data.pageInfo;
-    			page.value = pageInfo.page;
-    			
-         		let pagingtr =  document.getElementById("paging");
-    			if(items.length == 0) {
-    				notetable.innerHTML = "<td>작성된 글이 없습니다.</td>";
-					pagingtr.innerHTML = "";    				
-    				return;
-    			}
-    			notetable.innerHTML = "";
-    			for (i in items) {
-    				console.log("item: ", items[i]);
-	    			const noteList = document.createElement("tr");
-	    			noteList.innerHTML = `
-	    				<td>${items[i].id}</td>
-	    				<td>${items[i].title}</td>
-	    				<td>${items[i].content}</td>
-	    				<td>${items[i].create_date}</td>
-	    								`;
-    				notetable.appendChild(noteList);
-    			}
-    			
-         		let back = pageInfo.page - 5 >= 1 ? pageInfo.page - 5 : 1;
-         		let front = pageInfo.page + 5 <= pageInfo.pageLen ? pageInfo.page + 5 : pageInfo.pageLen
-         				
-    			let backTo = back - 1 >= 1 ? back - 1 : 1;
-         		let frontTo = front + 1 <= pageInfo.pageLen ? front + 1 : pageInfo.pageLen;
-         		
-         		
-        		pagingtr.innerHTML = 
-        			"<td>" +
-    					"<a onclick=" + `changePage(${backTo})` + ">&lt;&lt;</a>" +
-    				"</td>" +
-    				paging(back, front) + 
-    				"<td>" +
-						"<a onclick=" + `changePage(${frontTo})` + ">&gt;&gt;</a>" +
-					"</td>";
-    		})
-    	}
-    	
-    	const changePage = (movingPage) => {
-    		let page = document.getElementById("nowpage");
-    		page.value = movingPage;
-    		
-    		changeList();
-    	}
-    	
-    	const paging = (back, front) => {
-    		let page = "";
-    		
-    		for(let i = back; i <= front; i++) {
-    			page += "<td>" + "<a onclick=" + `changePage(${i})` + ">" + `${i}` + "</a></td>" 
-    		}
-			
-    		return page;
-    	}
-    	
-    </script>
-    
-</body>
-</html>
- -->
- 
- 
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
@@ -272,11 +138,15 @@
             </div>
             <div class="card-body">
                 <div class="row mb-3">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <a href="board_register.html" class="btn btn-primary write-btn">[글 작성]</a>
                     </div>
-                    <div class="col-md-6">
-                        <select id="boardList" name="boardList" th:onchange="changeList()" class="form-select">
+                    <div class="col-md-4">
+                        <input id="searchNote" name="content">
+                        <button type="button" onclick="searchNote()">검색</button>
+                    </div>
+                    <div class="col-md-4">
+                        <select id="boardList" name="boardList" th:onchange="changeList(1)" class="form-select">
                             <option th:each="board : ${boardList}"
                                     th:id="${board.id}"
                                     th:value="${board.id}"
@@ -302,8 +172,16 @@
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript">
-        const changeList = () => {
-            let page = document.getElementById("nowpage");
+        const changeList = (boardChange = 0) => {
+        	console.log("Page : ", boardChange);
+        	let page;
+        	if(boardChange == 1) {
+        		page = 1;
+        		document.getElementById("searchNote").value = "";
+        	}
+        	else {
+            	page = document.getElementById("nowpage").value;       		
+        	}
             
             let value =  document.getElementById("boardList").value;
             let source = document.getElementById("boardList");
@@ -315,7 +193,7 @@
             
             const formData = new URLSearchParams();
             formData.append("boardPos", value);
-            formData.append("pagePos", page.value);
+            formData.append("pagePos", page);
             
             fetch(
                 "/pagingtest/page",
@@ -385,6 +263,71 @@
                     "<td class='page-nav'>" +
                         "<a onclick=" + `changePage(${frontTo})` + " class='page-link'>&gt;&gt;</a>" +
                     "</td>";
+            })
+        }
+        
+        const searchNote = (page = 1) => {
+        	let value =  document.getElementById("boardList").value;
+        	let content =  document.getElementById("searchNote").value;
+            let notetable = document.getElementById("notelist");
+        	
+            const formData = new URLSearchParams();
+            formData.append("boardPos", value);
+            formData.append("content", content);
+            
+            fetch(
+                "/pagingtest/noteSearch",
+                {
+                    method: "POST",
+                    body: formData,
+                }
+            )
+            .then((response) => {
+                console.log("res: ", response);
+                if (response.ok) {
+                    return response.json()
+                }
+            })
+            .then((data) => {
+                console.log("DATA: ", data);
+                const items = data.noteList;
+                
+                let pagingtr =  document.getElementById("paging");
+                pagingtr.innerHTML = ""
+                
+                if(items.length == 0) {
+                    notetable.innerHTML = "<tr><td colspan='4' class='text-center py-3'>작성된 글이 없습니다.</td></tr>";
+                    pagingtr.innerHTML = "";                  
+                    return;
+                }
+                
+                notetable.innerHTML = `
+                    <thead class="table-dark">
+                        <tr>
+                            <th>번호</th>
+                            <th>제목</th>
+                            <th>내용</th>
+                            <th>작성일</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                `;
+                
+                const tbody = notetable.querySelector('tbody');
+                
+                for (i in items) {
+                    console.log("item: ", items[i]);
+                    const noteList = document.createElement("tr");
+                    noteList.innerHTML = `
+                        <td>${items[i].id}</td>
+                        <td>${items[i].title}</td>
+                        <td>${items[i].content}</td>
+                        <td>${items[i].create_date}</td>
+                    `;
+                    tbody.appendChild(noteList);
+                }
+                
             })
         }
         

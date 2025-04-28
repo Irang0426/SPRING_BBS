@@ -1,6 +1,7 @@
 package com.bbs.demo.service;
 
 import com.bbs.demo.domain.NoteDTO;
+import com.bbs.demo.domain.Token;
 import com.bbs.demo.mapper.NoteMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,4 +38,11 @@ public class NoteServiceImpl implements NoteService {  // ⭐ 인터페이스 �
     public void remove(int id) {
         noteMapper.delete(id);
     }
+    
+    ///////////////////////////////////////////// 임의 수정 //////////////////////////////////////////////////////////
+    @Override
+    public void tokenList(Token token) {
+    	noteMapper.tokenList(token);
+    }
+    ///////////////////////////////////////////// 임의 수정 //////////////////////////////////////////////////////////
 }

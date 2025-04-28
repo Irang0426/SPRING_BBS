@@ -8,11 +8,29 @@
   <select id="findInPage" parameterType="com.bbs.demo.domain.Page" resultType="com.bbs.demo.domain.Notes">
     SELECT * FROM notes
     	WHERE board_id = #{boardPos}
+    	ORDER BY create_date DESC
     	LIMIT #{offset}, #{pageSize};
   </select>
   
-  <select id="pageCount" resultType="Integer">
-	SELECT count(*) FROM notes;
+  <select id="pageCount" parameterType="int" resultType="Integer">
+	SELECT count(*) FROM notes
+		WHERE board_id = #{boardPos};
+  </select>
+  
+  <select id="noteList" parameterType="map" resultType="com.bbs.demo.domain.Note">
+  	SELECT n.*
+		FROM notes n
+			INNER JOIN (
+				SELECT note_id
+				FROM note_token
+				WHERE token IN 
+			    <foreach collection="tokens" item="token" open="(" separator="," close=")">
+			        #{token}
+			    </foreach>
+			) nt ON n.id = nt.note_id
+			WHERE n.board_id = #{board}
+			GROUP BY n.id
+			HAVING count(n.id) >= #{count};
   </select>
 
 </mapper>

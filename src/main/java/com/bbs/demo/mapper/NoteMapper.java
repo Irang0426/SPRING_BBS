@@ -2,6 +2,7 @@ package com.bbs.demo.mapper;
 
 import com.bbs.demo.domain.NoteDTO;
 import com.bbs.demo.domain.Notes;
+import com.bbs.demo.domain.Token;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -27,4 +28,8 @@ public interface NoteMapper {
 
     // 게시글 삭제
     void delete(int id);
+    
+///////////////////////////////////////////// 임의 수정 //////////////////////////////////////////////////////////
+    void tokenList(Token token);
+///////////////////////////////////////////// 임의 수정 //////////////////////////////////////////////////////////
 }
