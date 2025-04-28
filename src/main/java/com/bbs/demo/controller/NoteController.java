@@ -70,7 +70,7 @@ public class NoteController {
             noteService.tokenList(token);
         }
 
-        return "redirect:/listtest/boardlisttest";
+        return "redirect:/board/list";
     }
     ///////////////////////////////////////////// 임의 수정 //////////////////////////////////////////////////////////
 
@@ -134,6 +134,15 @@ public class NoteController {
         noteService.remove(id);
         noteService.deleteTokens(id);
         rttr.addFlashAttribute("message", "삭제 완료!");
-        return "redirect:/note/list";
+        return "redirect:/board/list";
     }
+    
+    @PostMapping("/remove2")
+    @ResponseBody  // ⭐ [추가된 부분]
+    public String remove(@RequestParam("id") int id) {
+        noteService.remove(id);
+        noteService.deleteTokens(id);
+        return "OK";  // ⭐ [변경된 부분]
+    }
+
 }
