@@ -25,24 +25,26 @@ public class CommentService {
         return commentMapper.getCommentById(id);
     }
 
-    // 게시글에 달린 모든 댓글 조회
     public List<Comments> getCommentsByNoteId(int noteId) {
+        // 모든 댓글 조회 (대댓글 포함)
         List<Comments> all = commentMapper.getCommentsByNoteId(noteId);
-        Map<Integer, Comments> map = new HashMap<>();
-        List<Comments> roots = new ArrayList<>();
-
-        for (Comments c : all) {
-            map.put(c.getId(), c);
-            if (c.getCommentId() == null) { // 최상위 댓글
-                roots.add(c);
-            } else {
-                Comments parent = map.get(c.getCommentId());
+        
+        // 부모-자식 매핑
+        Map<Integer, Comments> commentMap = new HashMap<>();
+        List<Comments> result = new ArrayList<>();
+        
+        for (Comments comment : all) {
+            commentMap.put(comment.getId(), comment);
+            if (comment.getCommentId() == null) { // 최상위 댓글
+                result.add(comment);
+            } else { // 대댓글 (1단계만 허용)
+                Comments parent = commentMap.get(comment.getCommentId());
                 if (parent != null) {
-                    parent.getChildren().add(c);
+                    parent.getChildren().add(comment);
                 }
             }
         }
-        return roots;
+        return result;
     }
 
     // 댓글 삭제
