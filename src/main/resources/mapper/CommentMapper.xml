@@ -31,9 +31,16 @@
     </select>
 
     <!-- 댓글 삭제 -->
-    <delete id="deleteComment" parameterType="int">
-        DELETE FROM comments WHERE id = #{id}
-    </delete>
+	<delete id="deleteComment">
+	    DELETE FROM comments
+	    WHERE id = #{id}
+	</delete>
+	
+	<delete id="deleteParentsComment">
+	    DELETE FROM comments
+	    WHERE comment_id = #{id}<!-- 대댓글까지 모두 삭제 -->
+	</delete>
+	
     <!-- 댓글 수정 -->
     <update id="updateComment" parameterType="com.bbs.demo.domain.Comments">
         UPDATE comments

@@ -49,6 +49,7 @@ public class CommentService {
 
     // 댓글 삭제
     public void deleteComment(int id) {
+    	commentMapper.deleteParentsComment(id);
         commentMapper.deleteComment(id);
     }
     
