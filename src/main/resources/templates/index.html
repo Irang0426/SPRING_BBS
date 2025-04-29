@@ -1,45 +1,170 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>홈</title>
+  <meta charset="UTF-8">
+  <title>홈</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/yourkitid.js" crossorigin="anonymous"></script> <!-- FontAwesome 추가 -->
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: #FFFFB4;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav {
+      background-color: #E3C4FF;
+      padding: 15px 20px;
+      text-align: center;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #000000;
+      margin: 0 15px;
+      font-weight: 500;
+    }
+
+    nav a:hover {
+      color: #FFFF48;
+    }
+
+    h2 {
+      text-align: center;
+      margin-top: 30px;
+      color: #5F00FF;
+    }
+
+    .content {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px 10px;
+    }
+
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(2, auto);
+      gap: 20px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .stat-card {
+      background-color: #fff;
+      border: 2px solid #000;
+      border-radius: 10px;
+      width: 150px;
+      padding: 30px;
+      font-size: 15px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+      text-align: center;
+      transition: transform 0.2s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .stat-card strong {
+      display: block;
+      font-size: 1.5em;
+      color: #C18B00;
+      margin-top: 10px;
+    }
+
+    .info-box {
+      background-color: #D6C7FF;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+      margin: 15px auto;
+      padding: 20px 25px;
+      max-width: 600px;
+      border: 1px solid #ccc;
+      color: #333;
+    }
+
+    h3 a {
+      color: #FF5E00;
+      text-decoration: none;
+    }
+
+    h3 a:hover {
+      text-decoration: underline;
+    }
+
+    .stat-card-link {
+      text-decoration: none;
+      color: inherit;
+      display: inline-block;
+    }
+  </style>
 </head>
 <body>
-    <nav>
-        <a href="/">홈</a> |
-        <a href="/board/list">게시판</a> |
-        <a href="/file/read?note_id=1">파일 업로드</a> |
-        <a href="/login">로그인</a> |
-        <a href="/register">회원가입</a> |
-        <a href="/admin">관리자</a>
-    </nav>
-    <hr>
+  <nav>
+    <a href="/">홈</a>
+    <a href="/board/list">게시판</a>
+    <a href="/file/read?note_id=1">파일 업로드</a>
+    <a href="/login">로그인</a>
+    <a href="/register">회원가입</a>
+    <a href="/admin">관리자</a>
+  </nav>
 
-    <h2>사이트 통계</h2>
-    <ul>
-        <li>전체 회원 수: <strong>35명</strong></li>
-        <li>전체 게시글 수: <strong>87건</strong></li>
-        <li>파일 업로드 게시글 수: <strong>12건</strong></li>
-        <li>댓글 수: <strong>215건</strong></li>
-    </ul>
+  <hr>
 
-    <h2>📌 최근 가입한 회원</h2>
-    <div>
-        <p><strong>닉네임:</strong> springdev2025</p>
-        <p><strong>가입일:</strong> 2025-04-12</p>
-        <p><strong>이메일:</strong> springdev2025@test.com</p>
+  <div class="content">
+
+    <h2>📊 사이트 통계</h2>
+
+    <div class="stats-container">
+      <div class="stat-card">
+        전체 회원 수:
+        <strong>35명</strong>
+      </div>
+      
+      <a href="/board/list" class="stat-card-link">
+        <div class="stat-card">
+          전체 게시글 수:
+          <strong>87건</strong>
+        </div>
+      </a>
+
+      <a href="/file/read?note_id=1" class="stat-card-link">
+        <div class="stat-card">
+          파일 업로드 게시글:
+          <strong>12건</strong>
+        </div>
+      </a>
+
+      <div class="stat-card">
+        댓글 수:
+        <strong>215건</strong>
+      </div>
     </div>
 
-    <h2>📝 최근 작성된 게시글</h2>
-    <div>
-        <h3><a href="board_read.html">Thymeleaf 기본 문법 정리</a></h3>
-        <p><strong>작성자:</strong> user5 | <strong>작성일:</strong> 2025-04-11</p>
-        <p>Thymeleaf는 HTML 템플릿에서 변수를 출력하거나 조건문 등을 처리할 수 있도록 도와주는 템플릿 엔진입니다...</p>
+    <h2>🙇 최근 가입한 회원</h2>
+
+    <div class="info-box">
+      <p><strong>닉네임:</strong> springdev2025</p>
+      <p><strong>가입일:</strong> 2025-04-12</p>
+      <p><strong>이메일:</strong> springdev2025@test.com</p>
     </div>
-    <div>
-        <h3><a href="board_read.html">Spring Boot와 MyBatis 연동하기</a></h3>
-        <p><strong>작성자:</strong> admin | <strong>작성일:</strong> 2025-04-10</p>
-        <p>MyBatis는 SQL을 XML 또는 어노테이션으로 분리하여 사용할 수 있게 해주는 프레임워크입니다. 이번 게시글에서는...</p>
+
+    <h2>✒️ 최근 작성된 게시글</h2>
+
+    <div class="info-box">
+      <h3><a href="board_read.html">Thymeleaf 기본 문법 정리</a></h3>
+      <p><strong>작성자:</strong> user5 | <strong>작성일:</strong> 2025-04-11</p>
+      <p>Thymeleaf는 HTML 템플릿에서 변수를 출력하거나 조건문 등을 처리할 수 있도록 도와주는 템플릿 엔진입니다...</p>
     </div>
+    
+    <div class="info-box">
+      <h3><a href="board_read.html">Spring Boot와 MyBatis 연동하기</a></h3>
+      <p><strong>작성자:</strong> admin | <strong>작성일:</strong> 2025-04-10</p>
+      <p>MyBatis는 SQL을 XML 또는 어노테이션으로 분리하여 사용할 수 있게 해주는 프레임워크입니다...</p>
+    </div>
+
+  </div>
 </body>
 </html>
