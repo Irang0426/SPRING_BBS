@@ -1,6 +1,8 @@
 package com.bbs.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +29,8 @@ public class LoginController{
 	
 	@GetMapping("/login")
 	public String loginForm() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		System.out.println("User roles: " + auth.getAuthorities());
 		return "login";
 	}
 	
