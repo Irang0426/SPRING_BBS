@@ -89,6 +89,7 @@ public class NoteController {
     @GetMapping("/read")
     public String read(@RequestParam("id") int id, Model model) {
         model.addAttribute("note", noteService.get(id)); // 반환 타입도 Notes로 변경됨
+        model.addAttribute("files", fileService.getAllFilesByNoteId(id));
         return "note_read";
     }
 

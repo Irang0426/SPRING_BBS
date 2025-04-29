@@ -16,7 +16,26 @@
     <hr>
 
     <h2>게시글 상세 보기</h2>
-    
+
+    <table th:if="${files != null and !files.isEmpty()}">
+        <thead>
+        <tr>
+            <th>파일 번호</th>
+            <th>파일 이름</th>
+            <th>파일 크기</th>
+            <th>노트 번호</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr th:each="file : ${files}">
+                <td th:text="${file.id}">파일 번호</td>
+                <td><a th:href="@{/file/download(id=${file.id})}" th:text="${file.filename}">파일 이름</a></td>
+                <td th:text="${#arrays.length(file.files)}">파일 크기</td>
+                <td th:text="${file.note_id}">노트 번호</td>
+            </tr>
+        </tbody>
+    </table>
+
     <p><strong>제목:</strong> <span th:text="${note.title}">제목</span></p>
     <p><strong>작성자 ID:</strong> <span th:text="${note.userId}">작성자</span></p>
     <p><strong>작성일:</strong> 
