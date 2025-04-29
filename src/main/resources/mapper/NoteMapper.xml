@@ -12,12 +12,16 @@
 
     <!-- 게시글 상세 조회 (NoteServiceImpl 전용) -->
     <select id="select" resultType="com.bbs.demo.domain.Notes" parameterType="int">
-        SELECT * FROM notes WHERE id = #{id}
+        SELECT id, title, content, create_date as createDate,
+        	last_modified_date as lastModifiedDate, board_id as boardId,
+        	user_id as userId FROM notes WHERE id =  #{id}
     </select>
 
     <!-- 게시글 상세 조회 (다른 곳에서 쓸 수도 있는 get) -->
     <select id="get" resultType="com.bbs.demo.domain.Notes" parameterType="int">
-        SELECT * FROM notes WHERE id = #{id}
+        SELECT id, title, content, create_date as createDate,
+        	last_modified_date as lastModifiedDate, board_id as boardId,
+        	user_id as userId FROM notes WHERE id =  #{id}
     </select>
 
     <!-- 게시글 등록 -->

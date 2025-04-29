@@ -11,7 +11,6 @@ public class Notes {
     private LocalDateTime lastModifiedDate; // 마지막 수정일
     private Integer boardId;            // 소속 게시판 ID (foreign key)
     private Integer userId;             // 작성자 ID (foreign key)
-    private Integer fileId;             // 파일 ID (foreign key, nullable)
 
     // --- Getter & Setter ---
 
@@ -69,13 +68,5 @@ public class Notes {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
-    }
-
-    public Integer getFileId() {
-        return fileId;
-    }
-
-    public void setFileId(Integer fileId) {
-        this.fileId = fileId;
     }
 }

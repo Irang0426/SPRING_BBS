@@ -6,7 +6,10 @@
 <mapper namespace="com.bbs.demo.mapper.PageMapper">
 
   <select id="findInPage" parameterType="com.bbs.demo.domain.Page" resultType="com.bbs.demo.domain.Notes">
-    SELECT * FROM notes
+    SELECT id, title, content, create_date as createDate,
+        	last_modified_date as lastModifiedDate, board_id as boardId,
+        	user_id as userId
+        FROM notes
     	WHERE board_id = #{boardPos}
     	ORDER BY create_date DESC
     	LIMIT #{offset}, #{pageSize};
@@ -18,7 +21,9 @@
   </select>
   
   <select id="noteList" parameterType="map" resultType="com.bbs.demo.domain.Notes">
-  	SELECT n.*
+  	SELECT n.id, n.title, n.content, n.create_date as createDate,
+        	n.last_modified_date as lastModifiedDate, n.board_id as boardId,
+        	n.user_id as userId
 		FROM notes n
 			INNER JOIN (
 				SELECT note_id
