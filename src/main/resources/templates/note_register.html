@@ -1,88 +1,172 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>게시글 등록</title>
-    <style type="text/css">
-            #loadingModal {
-		    position: fixed;
-		    top: 0;
-		    left: 0;
-		    width: 100%;
-		    height: 100%;
-		    background-color: rgba(0,0,0,0.5); /* 어두운 반투명 */
-		    display: flex;
-		    align-items: center;
-		    justify-content: center;
-		    z-index: 9999;
-		}
-		
-		.spinner {
-		    width: 50px;
-		    height: 50px;
-		    border: 6px solid #ccc;
-		    border-top-color: #333;
-		    border-radius: 50%;
-		    animation: spin 0.8s linear infinite;
-		}
-		
-		@keyframes spin {
-		    to { transform: rotate(360deg); }
-		}
-    </style>
+  <meta charset="UTF-8">
+  <title>게시글 등록</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: #F1F9FF;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav {
+      background-color: #ADE8F4;
+      padding: 15px 20px;
+      text-align: center;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #003566;
+      margin: 0 15px;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      color: #0077B6;
+    }
+
+    h2 {
+      text-align: center;
+      margin-top: 40px;
+      color: #0077B6;
+    }
+
+    form {
+      max-width: 700px;
+      margin: 40px auto;
+      background-color: #CAF0F8;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    }
+
+    input[type="text"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 15px;
+      margin-top: 15px;
+      margin-bottom: 25px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      height: 150px;
+      resize: vertical;
+    }
+
+    input[type="file"] {
+      font-size: 15px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      background-color: #0077B6;
+      color: #FFFFFF;
+      border: none;
+      padding: 14px 0;
+      border-radius: 6px;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      background-color: #023E8A;
+    }
+
+    #loadingModal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 6px solid #ccc;
+      border-top-color: #333;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
 </head>
 <body>
-    <div id="loadingModal" style="display: none;">
-	    <div class="spinner"></div>
-	</div>
-    <nav>
-        <a href="/">홈</a> |
-        <a href="/board/list">게시판</a> |
-        <a href="/file/read?note_id=1">파일 업로드</a> |
-        <a href="/login">로그인</a> |
-        <a href="/register">회원가입</a> |
-        <a href="/admin">관리자</a>
-    </nav>
-    <hr>
-    
-    <h2>새 게시글 등록</h2>
-    
-    <!-- 🔥 게시글 등록 폼 시작 -->
-    <form action="/note/register" method="post" id="register" enctype="multipart/form-data">
+  <div id="loadingModal" style="display: none;">
+    <div class="spinner"></div>
+  </div>
 
-        <!-- 파일 업로드 -->
-        <input type="file" name="files" multiple /><br>
+  <nav>
+    <a href="/">홈</a> |
+    <a href="/board/list">게시판</a> |
+    <a href="/file/read?note_id=1">파일 업로드</a> |
+    <a href="/login">로그인</a> |
+    <a href="/register">회원가입</a> |
+    <a href="/admin">관리자</a>
+  </nav>
 
-        <!-- ✅ 제목 입력 -->
-        <input type="text" name="title" placeholder="제목"><br>
-        
-        <!-- ✅ 내용 입력 -->
-        <textarea name="content" placeholder="내용"></textarea><br>
-        
-        <!-- ✅ [추가] 임시 작성자 ID (user_id = 1) -->
-        <input type="hidden" name="userId" value="1"> <!-- 임시 사용자 ID -->
+  <h2>새 게시글 등록</h2>
 
-        <!-- ✅ [추가] 임시 게시판 ID (board_id = 1) -->
-        <input type="hidden" name="boardId" value="1"> <!-- 임시 게시판 ID -->
-        
-        <!-- ✅ 등록 버튼 -->
-        <button type="button" onclick="regist()">등록</button>
-    </form>
-    <!-- 🔥 게시글 등록 폼 끝 -->
-    <script type="text/javascript">
-    	function regist() {
-    		showLoading();
-    		let form = document.getElementById('register');
-    		form.submit();
-    	}
-    
-	    function showLoading() {
-	        document.getElementById('loadingModal').style.display = 'flex';
-	    }
-	
-	    function hideLoading() {
-	        document.getElementById('loadingModal').style.display = 'none';
-	    }
-    </script>
+  <!-- 🔥 게시글 등록 폼 시작 -->
+  <form action="/note/register" method="post" id="register" enctype="multipart/form-data">
+    <!-- 파일 업로드 -->
+    <input type="file" name="files" multiple />
+
+    <!-- 제목 -->
+    <input type="text" name="title" placeholder="제목" required />
+
+    <!-- 내용 -->
+    <textarea name="content" placeholder="내용" required></textarea>
+
+    <!-- 게시판 선택 드롭다운 -->
+    <select name="boardId" required>
+      <option value="">-- 게시판 선택 --</option>
+      <option th:each="board : ${boardList}"
+              th:value="${board.id}"
+              th:text="${board.name}"></option>
+    </select>
+
+    <!-- 임시 사용자 ID -->
+    <input type="hidden" name="userId" value="1" />
+
+    <!-- 등록 버튼 -->
+    <button type="button" onclick="regist()">등록</button>
+  </form>
+  <!-- 🔥 게시글 등록 폼 끝 -->
+
+  <script type="text/javascript">
+    function regist() {
+      showLoading();
+      document.getElementById('register').submit();
+    }
+
+    function showLoading() {
+      document.getElementById('loadingModal').style.display = 'flex';
+    }
+
+    function hideLoading() {
+      document.getElementById('loadingModal').style.display = 'none';
+    }
+  </script>
 </body>
 </html>
