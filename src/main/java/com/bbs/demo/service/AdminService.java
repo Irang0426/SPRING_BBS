@@ -1,6 +1,12 @@
 package com.bbs.demo.service;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,8 +23,6 @@ public class AdminService {
 
     @Autowired
     private AdminMapper adminMapper;
-    @Autowired
-    private PageMapper pageMapper;
 
     public Admin createPageCondition(Map<String, String> params) {
         Admin admin = new Admin()
@@ -26,8 +30,24 @@ public class AdminService {
             .setSortby(params.getOrDefault("sortby", "id"))
             .setPage(Integer.parseInt(params.getOrDefault("page", "0")))
             .setLimit(Integer.parseInt(params.getOrDefault("limit", "20")))
-            .setUrl(params.getOrDefault("url", "users"));
+            .setUrl(params.getOrDefault("url", "users"))
+            .setOffset();
         return admin.setTotalPageCount(adminMapper.pageCount(admin));
+    }
+    
+    public String createBoard(Map<String, String> params) {
+        Admin admin = new Admin()
+                .setOrderby(params.getOrDefault("orderby", "asc"))
+                .setSortby(params.getOrDefault("sortby", "id"))
+                .setPage(Integer.parseInt(params.getOrDefault("page", "0")))
+                .setLimit(Integer.parseInt(params.getOrDefault("limit", "20")))
+                .setUrl(params.getOrDefault("url", "users"))
+                .setOffset();
+	    String boardName = (String) params.get("boardName");
+	    
+	    adminMapper.createBoard(boardName);
+	    System.out.println("page="+admin.getPage()+"&limit="+admin.getLimit()+"&order="+admin.getOrderby()+"&sort="+admin.getSortby()+"&url="+admin.getUrl());
+	    return "page="+admin.getPage()+"&limit="+admin.getLimit()+"&order="+admin.getOrderby()+"&sort="+admin.getSortby()+"&url="+admin.getUrl();
     }
     
     public Object getUsers(Map<String, String> params) {
@@ -60,11 +80,17 @@ public class AdminService {
 	@Transactional
     public void deleteBoards(int id) {
 		adminMapper.deleteFilesbyBoardId(id);
+		System.out.println("Files 삭제 완료");
 		adminMapper.deleteViewCountbyBoardId(id);
+		System.out.println("ViewCount 삭제 완료");
 		adminMapper.deleteNoteTokenbyBoardId(id);
+		System.out.println("NoteToken 삭제 완료");
 		adminMapper.deleteCommentsbyBoardId(id);
+		System.out.println("Comments 삭제 완료");
 		adminMapper.deleteNotesbyBoardId(id);
+		System.out.println("Notes 삭제 완료");
     	adminMapper.deleteBoards(id);
+		System.out.println("Boards 삭제 완료");
     }
 
 	@Transactional

@@ -33,6 +33,11 @@
 	</select>
 	
 	
+	<insert id="createBoard" parameterType="String">
+		INSERT boards(name) values(#{name})
+	</insert>
+	
+	
 	<select id="pageCount" parameterType="com.bbs.demo.domain.Admin" resultType="int">
 		SELECT count(*) FROM ${url}
 	</select>
@@ -92,7 +97,7 @@
 	</delete>
 	<delete id="deleteNoteTokenbyBoardId" parameterType="int">
 		DELETE FROM note_token WHERE note_id IN (
-			SELETE id FROM notes WHERE board_id = #{boardId}
+			SELECT id FROM notes WHERE board_id = #{boardId}
 		)
 	</delete>
 	<delete id="deleteCommentsbyBoardId" parameterType="int">

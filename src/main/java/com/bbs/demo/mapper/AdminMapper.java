@@ -16,6 +16,8 @@ public interface AdminMapper {
 	List<Boards> findAllBoardByPage(Admin admin);
 	List<Notes> findAllNoteByPage(Admin admin);
 	List<Comments> findAllCommentByPage(Admin admin);
+	
+	void createBoard(String name);
 
 	int pageCount(Admin admin);
 	
