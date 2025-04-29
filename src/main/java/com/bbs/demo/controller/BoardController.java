@@ -34,9 +34,9 @@ public class BoardController {
 		Page page = new Page();
 		Users loginMember = (Users)session.getAttribute("loginMember");
 		
-		if(loginMember == null) {
-			return "/login";
-		}
+//		if(loginMember == null) {
+//			return "/login";
+//		}
 		
 		model.addAttribute("loginMember", loginMember);
 		model.addAttribute("boardList", boardmapper.findAllBoard());

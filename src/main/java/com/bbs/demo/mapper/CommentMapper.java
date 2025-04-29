@@ -20,5 +20,7 @@ public interface CommentMapper {
     // 댓글 삭제
     void deleteComment(@Param("id") int id);
     
+    void deleteParentsComment(@Param("id") int id);
+    
     void updateComment(Comments comment);
 }
