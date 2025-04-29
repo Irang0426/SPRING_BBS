@@ -12,14 +12,16 @@
     </insert>
 
     <!-- 게시글에 달린 댓글 조회 -->
-	<select id="getCommentsByNoteId" resultType="com.bbs.demo.domain.Comments">
-	    SELECT 
-	        id, content, create_date, 
-	        comment_id, note_id, comment_author_id
-	    FROM comments
-	    WHERE note_id = #{noteId}
-	    ORDER BY create_date ASC <!-- 부모가 먼저 조회되도록 정렬 -->
-	</select>
+    <select id="getCommentsByNoteId" resultType="com.bbs.demo.domain.Comments">
+        SELECT
+        id, content, create_date AS createDate,
+        comment_id AS commentId, note_id AS noteId, comment_author_id AS commentAuthorId
+        FROM comments
+        WHERE note_id = #{noteId}
+        ORDER BY
+        CASE WHEN comment_id IS NULL THEN id ELSE comment_id END ASC,
+        create_date ASC
+    </select>
 
     <!-- 특정 댓글 조회 (대댓글 관계 확인을 위해) -->
     <select id="getCommentById" resultType="com.bbs.demo.domain.Comments">

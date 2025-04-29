@@ -114,55 +114,57 @@
             </li>
         </ul>
     </div>
-<script type="text/javascript">
-	// 댓글 카운팅
-	const textareas = document.getElementsByClassName('comment_content');
-	const counters = document.getElementsByClassName('char-count');
-	const editButtons = document.querySelectorAll('.edit-btn');
-	
- 	for (let i = 0; i < textareas.length; i++) {
-	  textareas[i].addEventListener('input', function() {
-	    counters[i].textContent = textareas[i].value.length;
-	  });
-	}
-	
- 	$(function() {
-	    // 댓글/대댓글 수정 폼 토글
-	    $(document).on('click', '.edit-comment-btn', function() {
-	        var $content = $(this).closest('.comment-content');
-	        // 댓글 내용만 담긴 요소가 있을 때
-	        var commentText = $content.find('.comment_content').text().trim();
-	        // 만약 .comment-text가 없다면, 직접 텍스트 노드만 추출
-	        if (!commentText) {
-	            commentText = $content.contents().filter(function() {
-	                return this.nodeType === 3;
-	            }).text().trim();
-	        }
-	        var $form = $content.next('.edit-comment-form');
-	        var $textarea = $form.find('textarea');
-	        var $counter = $form.find('.char-count');
-	        $textarea.val(commentText);
-	        $counter.text(commentText.length);
-	        $content.hide();
-	        $form.show();
-	    });
-	    $(document).on('click', '.cancel-edit', function() {
-	        var $form = $(this).closest('.edit-comment-form');
-	        $form.hide();
-	        $form.prev('.comment-content').show();
-	    });
-	    // 대댓글 작성 폼 토글
-	    $(document).on('click', '.reply-toggle-btn', function() {
-	        var $li = $(this).closest('li');
-	        $li.find('.reply-form').show();
-	        $(this).hide();
-	    });
-	    $(document).on('click', '.reply-cancel-btn', function() {
-	        var $li = $(this).closest('li');
-	        $li.find('.reply-form').hide();
-	        $li.find('.reply-toggle-btn').show();
-	    });
-	});
-</script>
+    <script type="text/javascript">
+        // 댓글/대댓글/수정폼 글자수 카운팅
+        const textareas = document.querySelectorAll('.comment_content');
+
+        textareas.forEach(textarea => {
+          const counter = textarea.parentElement.querySelector('.char-count');
+          if (counter) {
+            textarea.addEventListener('input', function() {
+              counter.textContent = this.value.length;
+            });
+          }
+        });
+
+        $(function() {
+            // 댓글/대댓글 수정 폼 토글
+            $(document).on('click', '.edit-comment-btn', function() {
+                var $content = $(this).closest('.comment-content');
+                var commentText = $content.find('.comment_content').text().trim();
+                if (!commentText) {
+                    commentText = $content.contents().filter(function() {
+                        return this.nodeType === 3;
+                    }).text().trim();
+                }
+                var $form = $content.next('.edit-comment-form');
+                var $textarea = $form.find('textarea');
+                var $counter = $form.find('.char-count');
+                $textarea.val(commentText);
+                $counter.text(commentText.length);
+                $content.hide();
+                $form.show();
+            });
+
+            $(document).on('click', '.cancel-edit', function() {
+                var $form = $(this).closest('.edit-comment-form');
+                $form.hide();
+                $form.prev('.comment-content').show();
+            });
+
+            // 대댓글 작성 폼 토글
+            $(document).on('click', '.reply-toggle-btn', function() {
+                var $li = $(this).closest('li');
+                $li.find('.reply-form').show();
+                $(this).hide();
+            });
+
+            $(document).on('click', '.reply-cancel-btn', function() {
+                var $li = $(this).closest('li');
+                $li.find('.reply-form').hide();
+                $li.find('.reply-toggle-btn').show();
+            });
+        });
+    </script>
 </body>
 </html>
