@@ -36,16 +36,11 @@ public class AdminService {
     }
     
     public String createBoard(Map<String, String> params) {
-        Admin admin = new Admin()
-                .setOrderby(params.getOrDefault("orderby", "asc"))
-                .setSortby(params.getOrDefault("sortby", "id"))
-                .setPage(Integer.parseInt(params.getOrDefault("page", "0")))
-                .setLimit(Integer.parseInt(params.getOrDefault("limit", "20")))
-                .setUrl(params.getOrDefault("url", "users"))
-                .setOffset();
+        Admin admin = createPageCondition(params);
+        System.out.println("\t\t\t\tService params: "+params);
 	    String boardName = (String) params.get("boardName");
-	    
 	    adminMapper.createBoard(boardName);
+	    
 	    System.out.println("page="+admin.getPage()+"&limit="+admin.getLimit()+"&order="+admin.getOrderby()+"&sort="+admin.getSortby()+"&url="+admin.getUrl());
 	    return "page="+admin.getPage()+"&limit="+admin.getLimit()+"&order="+admin.getOrderby()+"&sort="+admin.getSortby()+"&url="+admin.getUrl();
     }

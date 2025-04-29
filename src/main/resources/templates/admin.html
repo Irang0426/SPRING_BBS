@@ -85,32 +85,6 @@ const TableManager = {
 	        this.changeList(this.state.totalPageCount < 0 ? [[${totalPageCount}]] : this.state.totalPageCount);
 	        this.createBoardButton();
 	      });
-	} else if(this.state.boardName){
-		console.log(`/admin/${url}/create`);
-	    fetch(`/admin/${url}/create`, {
-	    	  method: 'POST',
-	    	  headers: {
-	    	    'Content-Type': 'application/json'
-	    	  },
-	    	  body: JSON.stringify({
-	    		  sort: String(this.state.sort),
-	    		  order: String(this.state.order),
-	    		  page: String(this.state.page),
-	    		  limit: String(this.state.limit),
-	    		  url: String(this.state.url),
-	    		  boardName: String(this.state.boardName)
-	    		})
-	    	})
-	      .then(res => res.text())
-	      .then(html => {
-	        document.querySelector("table").innerHTML = html;
-	        this.state.totalPageCount = document.getElementById('totalPageCount').value;
-	        this.state.partial = false;
-	        this.state.boardName = null;
-	        this.bindDeleteButtons();
-	        this.changeList(this.state.totalPageCount);
-	        this.createBoardButton();
-	      });
 	} else {
 	    fetch(`/admin/${url}`)
 	      .then(res => res.text())
@@ -140,20 +114,36 @@ const TableManager = {
   showInput() {
 	const container = document.getElementById("insertBoard");
 	container.innerHTML = `
-	  <input type="text" id="boardNameInput" placeholder="게시판 이름 입력" />
-	  <button onclick="TableManager.createBoard()">생성 완료</button>
+	  <input type="text" id="boardName" placeholder="게시판 이름 입력" />
+	  <button type="button" onclick="TableManager.createBoard()">생성 완료</button>
 	`;
   },
   
-  // 게시판 생성
+  // 게시판 생성 버튼 구현
   createBoard() {
-	  const name = document.getElementById("boardNameInput").value;
+	  const container = document.getElementById("insertBoard")
+	  const name = document.getElementById("boardName").value;
 	    if (name.trim() === "") {
 	      alert("게시판 이름을 입력해주세요!");
 	      return;
 	    }
-	    this.state.boardName = name;
-	  this.pageAjax();
+	    const params = {
+	    	    sort: this.state.sort,
+	    	    order: this.state.order,
+	    	    page: this.state.page,
+	    	    limit: this.state.limit,
+	    	    url: this.state.url,
+	    	    boardName: name
+	    	  };
+
+	    	  for (const key in params) {
+	    	    const input = document.createElement('input');
+	    	    input.type = 'hidden';
+	    	    input.name = key;
+	    	    input.value = params[key];
+	    	    container.appendChild(input);
+	    	  }
+	    container.submit();
   },
   
   // 삭제 버튼 이벤트 ajax 되면 다시 넣어줘야
@@ -265,7 +255,7 @@ TableManager.init("users",["id", "nickname", "email", "reg_date", "last_access_d
 	  <option value="50">50</option>
 	  <option value="100">100</option>
 	</select>
-	<div id="insertBoard">	</div>
+	<form id="insertBoard" method="post" action="/admin/boards/create">	</form>
     <table border="1">
         <thead><th onclick="TableManager.updateSort(0)">회원 번호</th><th onclick="TableManager.updateSort(1)">이름</th>
         	<th onclick="TableManager.updateSort(2)">이메일</th><th onclick="TableManager.updateSort(3)">가입일</th>
