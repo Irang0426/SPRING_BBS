@@ -26,10 +26,6 @@ public class CustomUserDetailsService implements org.springframework.security.co
 		if(member == null) {
 			new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + username);
 		}
-		
-
-		System.out.println("\n\n\n\n\n\n" + member.getEmail());
-		System.out.println(member.getPassword() + "\n\n\n\n\n\n\n");
 
 		return org.springframework.security.core.userdetails.User.builder()
 				.username(member.getEmail())
