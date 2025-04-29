@@ -2,6 +2,7 @@ package com.bbs.demo.controller;
 
 import com.bbs.demo.domain.Notes; // ✅ 변경: NoteDTO → Notes
 import com.bbs.demo.domain.Token;
+import com.bbs.demo.service.FileService;
 import com.bbs.demo.service.NoteService;
 import com.bbs.demo.service.Tokenizer;
 
@@ -9,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -23,6 +26,9 @@ public class NoteController {
 
     @Autowired
     private NoteService noteService;
+
+    @Autowired
+    private FileService fileService;
 
     /**
      * 게시글 목록 조회
@@ -53,11 +59,12 @@ public class NoteController {
      */
     ///////////////////////////////////////////// 임의 수정 //////////////////////////////////////////////////////////
     @PostMapping("/register")
-    public String register(Notes notes, RedirectAttributes rttr) { // ✅ 변경: NoteDTO → Notes
+    public String register(@RequestParam("files") MultipartFile[] files, Notes notes, RedirectAttributes rttr) throws IOException { // ✅ 변경: NoteDTO → Notes
         Tokenizer tokenizer = new Tokenizer();
         Token token = new Token();
 
         noteService.register(notes); // ✅ 변경: noteDTO → notes
+        fileService.storeFiles(files, notes.getId());
         rttr.addFlashAttribute("message", "게시글 등록 성공!");
         List<String> tokens = tokenizer.tokenizer(notes.getContent()); // ✅ 변경: noteDTO → notes
         Set<String> uniqueTokens = new HashSet<>(tokens);

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>게시글 등록</title>
@@ -49,6 +49,10 @@
     
     <!-- 🔥 게시글 등록 폼 시작 -->
     <form action="/note/register" method="post" id="register">
+
+        <!-- 파일 업로드 -->
+        <input type="file" name="files" multiple />
+
         <!-- ✅ 제목 입력 -->
         <input type="text" name="title" placeholder="제목"><br>
         

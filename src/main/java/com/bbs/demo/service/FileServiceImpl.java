@@ -16,7 +16,7 @@ public class FileServiceImpl implements FileService {
     private FileMapper fileMapper;
 
     @Override
-    public void storeFiles(MultipartFile[] files, int note_id) throws IOException {
+    public void storeFiles(MultipartFile[] files, Integer note_id) throws IOException {
         for (MultipartFile multipartFile : files) {
             if (multipartFile.isEmpty()) continue;
 
@@ -30,12 +30,12 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public List<Files> getAllFilesByNoteId(int note_id) {
+    public List<Files> getAllFilesByNoteId(Integer note_id) {
         return fileMapper.findAllFilesByNoteId(note_id);
     }
 
     @Override
-    public Files getFileById(int id) {
+    public Files getFileById(Integer id) {
         return fileMapper.findFileById(id);
     }
 }

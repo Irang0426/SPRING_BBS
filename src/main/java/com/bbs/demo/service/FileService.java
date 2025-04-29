@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface FileService {
-    void storeFiles(MultipartFile[] multipartFile, int note_id) throws IOException;
-    List<Files> getAllFilesByNoteId(int note_id);
-    Files getFileById(int id);
+    void storeFiles(MultipartFile[] multipartFile, Integer note_id) throws IOException;
+    List<Files> getAllFilesByNoteId(Integer note_id);
+    Files getFileById(Integer id);
 }

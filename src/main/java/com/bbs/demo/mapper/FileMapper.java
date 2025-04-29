@@ -8,6 +8,6 @@ import java.util.List;
 @Mapper
 public interface FileMapper {
     void insertFile(Files files);
-    List<Files> findAllFilesByNoteId(int note_id);
-    Files findFileById(int id);
+    List<Files> findAllFilesByNoteId(Integer note_id);
+    Files findFileById(Integer id);
 }

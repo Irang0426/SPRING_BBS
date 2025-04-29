@@ -24,7 +24,7 @@ public class FileController {
     @PostMapping
     public ResponseEntity<?> uploadFile(
             @RequestParam("files") MultipartFile[] files,
-            @RequestParam("note_id") int note_id
+            @RequestParam("note_id") Integer note_id
     ) {
         try {
             fileService.storeFiles(files, note_id);
@@ -36,7 +36,7 @@ public class FileController {
     }
 
     @GetMapping("/read")
-    public String getFiles(@RequestParam("note_id") int note_Id, Model model) {
+    public String getFiles(@RequestParam("note_id") Integer note_Id, Model model) {
         List<Files> files = fileService.getAllFilesByNoteId(note_Id);
 
         model.addAttribute("files", files);
@@ -44,7 +44,7 @@ public class FileController {
     }
 
     @GetMapping("/download")
-    public ResponseEntity<byte[]> downloadFile(@RequestParam("id") int id) {
+    public ResponseEntity<byte[]> downloadFile(@RequestParam("id") Integer id) {
         Files file = fileService.getFileById(id);
         if (file == null) {
             return ResponseEntity.notFound().build();

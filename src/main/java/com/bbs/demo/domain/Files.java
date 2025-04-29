@@ -1,21 +1,21 @@
 package com.bbs.demo.domain;
 
 public class Files {
-	private int id;
-	private int note_id;
+	private Integer id;
+	private Integer note_id;
 	private String filename;
 	private byte[] files;
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
-	public int getNote_id() {
+	public Integer getNote_id() {
 		return note_id;
 	}
-	public void setNote_id(int note_id) {
+	public void setNote_id(Integer note_id) {
 		this.note_id = note_id;
 	}
 	public String getFilename() {
