@@ -10,7 +10,14 @@ public class Users {
 	private LocalDateTime regDate;
 	private LocalDateTime lastAccessDate;
 	private int userGrade;			// DB에 check 1 ~ 10으로 제한 걸려있음, 나중에 서비스에서 제한할 것
+	private String userGradeString;
 	
+	public String getUserGradeString() {
+		return userGradeString;
+	}
+	public void setUserGradeString(String userGradeString) {
+		this.userGradeString = userGradeString;
+	}
 	public int getId() {
 		return id;
 	}
