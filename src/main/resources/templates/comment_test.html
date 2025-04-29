@@ -34,12 +34,11 @@
         <!-- 댓글 입력 폼 -->
         <h3>댓글 작성</h3>
         <form action="/comments/add" method="post">
-            <input type="hidden" name="noteId" th:value="${noteId}"/>
-            <input type="hidden" name="commentAuthorId" th:value="${loginUserId}"/>
-            <textarea name="content" placeholder="댓글을 작성하세요"></textarea><br>
-            <textarea id="comment-content" rows="4" cols="50" maxlength="300" placeholder="댓글을 입력하세요"></textarea>
+            <input type="hidden" name="noteId" th:value="2"/>
+            <input type="hidden" name="commentAuthorId" th:value="36"/>
+            <textarea class="comment_content" name="content" rows="4" cols="50" maxlength="300" placeholder="댓글을 입력하세요"></textarea>
 			<br>
-			<span id="char-count">0</span>/300
+			<span class="char-count">0</span>/300
             <button type="submit">댓글 작성</button>
         </form>
 
@@ -51,7 +50,7 @@
                 <div class="comment-content">
                     <span th:text="${comment.commentAuthorId}">작성자</span>
                     <span th:text="${#temporals.format(comment.createDate, 'yyyy-MM-dd HH:mm')}">작성일</span>
-                    <p th:text="${comment.content}">댓글 내용</p>
+                    <p class="comment_content" th:text="${comment.content}">댓글 내용</p>
                     <button type="button" class="edit-comment-btn">수정</button>
                     <form action="/comments/delete" method="post" style="display:inline;">
                         <input type="hidden" name="id" th:value="${comment.id}">
@@ -63,11 +62,10 @@
                 <form class="edit-comment-form" action="/comments/update" method="post">
                     <input type="hidden" name="id" th:value="${comment.id}">
                     <input type="hidden" name="noteId" th:value="2">
-                    <input type="hidden" name="commentAuthorId" th:value="1"/>
-                    <textarea name="content" th:text="${comment.content}"></textarea><br>
-		            <textarea id="comment-content" rows="4" cols="50" maxlength="300" placeholder="댓글을 입력하세요"></textarea>
+                    <input type="hidden" name="commentAuthorId" th:value="36"/>
+		            <textarea class="comment_content" name="content" th:text="${comment.content}" rows="4" cols="50" maxlength="300" placeholder="댓글을 입력하세요"></textarea>
 					<br>
-					<span id="char-count">0</span>/300
+					<span class="char-count">0</span>/300
                     <button type="submit">수정 완료</button>
                     <button type="button" class="cancel-edit">취소</button>
                 </form>
@@ -76,12 +74,11 @@
                 <!-- 대댓글 입력 폼 -->
                 <form class="reply-form" action="/comments/add" method="post" style="margin-top:10px;">
                     <input type="hidden" name="noteId" th:value="2"/>
-                    <input type="hidden" name="commentAuthorId" th:value="1"/>
+                    <input type="hidden" name="commentAuthorId" th:value="36"/>
                     <input type="hidden" name="commentId" th:value="${comment.id}"/>
-                    <textarea name="content" placeholder="대댓글을 작성하세요"></textarea><br>
-		            <textarea id="comment-content" rows="4" cols="50" maxlength="300" placeholder="댓글을 입력하세요"></textarea>
+		            <textarea class="comment_content" name="content" rows="4" cols="50" maxlength="300" placeholder="댓글을 입력하세요"></textarea>
 					<br>
-					<span id="char-count">0</span>/300
+					<span class="char-count">0</span>/300
                     <button type="submit">등록</button>
                     <button type="button" class="reply-cancel-btn">취소</button>
                 </form>
@@ -91,7 +88,7 @@
                         <div class="comment-content">
                             <span th:text="${reply.commentAuthorId}">작성자</span>
                             <span th:text="${#temporals.format(reply.lastModifiedDate, 'yyyy-MM-dd HH:mm')}">작성일</span>
-                            <p th:text="${reply.content}">대댓글 내용</p>
+                            <p class="comment_content" th:text="${reply.content}">대댓글 내용</p>
                             <button type="button" class="edit-comment-btn">수정</button>
                             <form action="/comments/delete" method="post" style="display:inline;">
                                 <input type="hidden" name="id" th:value="${reply.id}">
@@ -103,9 +100,12 @@
                         <form class="edit-comment-form" action="/comments/update" method="post">
                             <input type="hidden" name="id" th:value="${reply.id}">
                             <input type="hidden" name="noteId" th:value="2">
-                            <input type="hidden" name="commentAuthorId" th:value="1"/>
+                            <input type="hidden" name="commentAuthorId" th:value="36"/>
                             <input type="hidden" name="commentId" th:value="${reply.commentId}"/>
-                            <textarea name="content" th:text="${reply.content}"></textarea><br>
+                            <textarea class="comment_content" name="content" th:text="${reply.content}" rows="4" cols="50" maxlength="300" placeholder="댓글을 입력하세요"></textarea>
+							<br>
+							<span class="char-count">0</span>/300
+		                    <button type="submit">등록</button>
                             <button type="submit">수정 완료</button>
                             <button type="button" class="cancel-edit">취소</button>
                         </form>
@@ -114,38 +114,55 @@
             </li>
         </ul>
     </div>
-    <script type="text/javascript">
-    const textarea = document.getElementById('comment-content');
-    const counter = document.getElementById('char-count');
-
-    textarea.addEventListener('input', function() {
-      counter.textContent = textarea.value.length;
-    });
-    
-    $(function() {
-        // 댓글/대댓글 수정 폼 토글
-        $(document).on('click', '.edit-comment-btn', function() {
-            var $content = $(this).closest('.comment-content');
-            $content.hide();
-            $content.next('.edit-comment-form').show();
-        });
-        $(document).on('click', '.cancel-edit', function() {
-            var $form = $(this).closest('.edit-comment-form');
-            $form.hide();
-            $form.prev('.comment-content').show();
-        });
-        // 대댓글 작성 폼 토글
-        $(document).on('click', '.reply-toggle-btn', function() {
-            var $li = $(this).closest('li');
-            $li.find('.reply-form').show();
-            $(this).hide();
-        });
-        $(document).on('click', '.reply-cancel-btn', function() {
-            var $li = $(this).closest('li');
-            $li.find('.reply-form').hide();
-            $li.find('.reply-toggle-btn').show();
-        });
-    });
-    </script>
+<script type="text/javascript">
+	// 댓글 카운팅
+	const textareas = document.getElementsByClassName('comment_content');
+	const counters = document.getElementsByClassName('char-count');
+	const editButtons = document.querySelectorAll('.edit-btn');
+	
+ 	for (let i = 0; i < textareas.length; i++) {
+	  textareas[i].addEventListener('input', function() {
+	    counters[i].textContent = textareas[i].value.length;
+	  });
+	}
+	
+ 	$(function() {
+	    // 댓글/대댓글 수정 폼 토글
+	    $(document).on('click', '.edit-comment-btn', function() {
+	        var $content = $(this).closest('.comment-content');
+	        // 댓글 내용만 담긴 요소가 있을 때
+	        var commentText = $content.find('.comment_content').text().trim();
+	        // 만약 .comment-text가 없다면, 직접 텍스트 노드만 추출
+	        if (!commentText) {
+	            commentText = $content.contents().filter(function() {
+	                return this.nodeType === 3;
+	            }).text().trim();
+	        }
+	        var $form = $content.next('.edit-comment-form');
+	        var $textarea = $form.find('textarea');
+	        var $counter = $form.find('.char-count');
+	        $textarea.val(commentText);
+	        $counter.text(commentText.length);
+	        $content.hide();
+	        $form.show();
+	    });
+	    $(document).on('click', '.cancel-edit', function() {
+	        var $form = $(this).closest('.edit-comment-form');
+	        $form.hide();
+	        $form.prev('.comment-content').show();
+	    });
+	    // 대댓글 작성 폼 토글
+	    $(document).on('click', '.reply-toggle-btn', function() {
+	        var $li = $(this).closest('li');
+	        $li.find('.reply-form').show();
+	        $(this).hide();
+	    });
+	    $(document).on('click', '.reply-cancel-btn', function() {
+	        var $li = $(this).closest('li');
+	        $li.find('.reply-form').hide();
+	        $li.find('.reply-toggle-btn').show();
+	    });
+	});
+</script>
 </body>
 </html>
