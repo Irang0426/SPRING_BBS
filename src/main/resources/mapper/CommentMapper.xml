@@ -14,7 +14,7 @@
     <!-- 게시글에 달린 댓글 조회 -->
     <select id="getCommentsByNoteId" resultType="com.bbs.demo.domain.Comments">
         SELECT
-        id, content, create_date AS createDate,
+        id, content, create_date AS createDate, images,
         comment_id AS commentId, note_id AS noteId, comment_author_id AS commentAuthorId
         FROM comments
         WHERE note_id = #{noteId}
@@ -25,9 +25,9 @@
 
     <!-- 특정 댓글 조회 (대댓글 관계 확인을 위해) -->
     <select id="getCommentById" resultType="com.bbs.demo.domain.Comments">
-        SELECT c.id, c.content, c.create_date, c.last_modified_date, c.images, c.comment_id, c.note_id, c.comment_author_id
-        FROM comments c
-        WHERE c.id = #{id}
+        SELECT id, content, create_date, last_modified_date, images, comment_id, note_id, comment_author_id
+        FROM comments
+        WHERE id = #{id}
     </select>
 
     <!-- 댓글 삭제 -->

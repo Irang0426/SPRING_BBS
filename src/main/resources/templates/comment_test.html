@@ -33,14 +33,14 @@
 
         <!-- 댓글 입력 폼 -->
         <h3>댓글 작성</h3>
-        <form action="/comments/add" method="post">
+        <form action="/comments/add" method="post" enctype="multipart/form-data">
             <input type="hidden" name="noteId" th:value="2"/>
             <input type="hidden" name="commentAuthorId" th:value="36"/>
             <textarea class="comment_content" name="content" rows="4" cols="50" maxlength="300" placeholder="댓글을 입력하세요"></textarea>
 			<br>
 			<span class="char-count">0</span>/300
 	        <!-- 파일 업로드 -->
-	        <input type="file" name="files" multiple /><br>
+	        <input type="file" name="imageFile" multiple /><br>
             <button type="submit">댓글 작성</button>
         </form>
 
@@ -51,8 +51,11 @@
                 <!-- 댓글 내용 -->
                 <div class="comment-content">
                     <span th:text="${comment.commentAuthorId}">작성자</span>
-                    <span th:text="${#temporals.format(comment.createDate, 'yyyy-MM-dd HH:mm')}">작성일</span>
-                    <img alt="이미지" th:src="${comment.images}" />
+                    <span th:text="${#temporals.format(comment.createDate, 'yyyy-MM-dd HH:mm')}">작성일</span><br>
+                    <img th:if="${comment.images}"
+                         th:src="@{/comments/images(id=${comment.id})}"
+                         alt="댓글 이미지"
+                         style="max-width: 200px;" /><br>
                     <p class="comment_content" th:text="${comment.content}">댓글 내용</p>
                     <button type="button" class="edit-comment-btn">수정</button>
                     <form action="/comments/delete" method="post" style="display:inline;">
@@ -62,7 +65,7 @@
                     </form>
                 </div>
                 <!-- 댓글 수정 폼 -->
-                <form class="edit-comment-form" action="/comments/update" method="post">
+                <form class="edit-comment-form" action="/comments/update" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="id" th:value="${comment.id}">
                     <input type="hidden" name="noteId" th:value="2">
                     <input type="hidden" name="commentAuthorId" th:value="36"/>
@@ -70,7 +73,7 @@
 					<br>
 					<span class="char-count">0</span>/300
 			        <!-- 파일 업로드 -->
-			        <input type="file" name="files" multiple /><br>
+                    <input type="file" name="imageFile" multiple /><br>
 			        
                     <button type="submit">등록</button>
                     <button type="button" class="cancel-edit">취소</button>
@@ -78,7 +81,7 @@
                 <!-- 대댓글 작성 버튼 -->
                 <button type="button" class="reply-toggle-btn">답글쓰기</button>
                 <!-- 대댓글 입력 폼 -->
-                <form class="reply-form" action="/comments/add" method="post" style="margin-top:10px;">
+                <form class="reply-form" action="/comments/add" method="post" style="margin-top:10px;" enctype="multipart/form-data">
                     <input type="hidden" name="noteId" th:value="2"/>
                     <input type="hidden" name="commentAuthorId" th:value="36"/>
                     <input type="hidden" name="commentId" th:value="${comment.id}"/>
@@ -86,7 +89,7 @@
 					<br>
 					<span class="char-count">0</span>/300
 			        <!-- 파일 업로드 -->
-			        <input type="file" name="files" multiple /><br>
+                    <input type="file" name="imageFile" multiple /><br>
                     <button type="submit">등록</button>
                     <button type="button" class="reply-cancel-btn">취소</button>
                 </form>
@@ -105,7 +108,7 @@
                             </form>
                         </div>
                         <!-- 대댓글 수정 폼 -->
-                        <form class="edit-comment-form" action="/comments/update" method="post">
+                        <form class="edit-comment-form" action="/comments/update" method="post" enctype="multipart/form-data">
                             <input type="hidden" name="id" th:value="${reply.id}">
                             <input type="hidden" name="noteId" th:value="2">
                             <input type="hidden" name="commentAuthorId" th:value="36"/>
@@ -114,7 +117,7 @@
 							<br>
 							<span class="char-count">0</span>/300
 					        <!-- 파일 업로드 -->
-					        <input type="file" name="files" multiple /><br>
+                            <input type="file" name="imageFile" multiple /><br>
                             <button type="submit">등록</button>
                             <button type="button" class="cancel-edit">취소</button>
                         </form>

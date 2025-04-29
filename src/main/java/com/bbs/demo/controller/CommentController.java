@@ -3,10 +3,16 @@ package com.bbs.demo.controller;
 import com.bbs.demo.domain.Comments;
 import com.bbs.demo.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -26,7 +32,9 @@ public class CommentController {
 
     // 댓글 작성
     @PostMapping("/add")
-    public String addComment(@ModelAttribute Comments comment) {
+    public String addComment(@ModelAttribute Comments comment, @RequestParam("imageFile") MultipartFile imageFile) throws IOException {
+        comment.setImages(imageFile.getBytes());
+
         // 부모 댓글이 존재하는지 확인
         if (comment.getCommentId() != null) {
             Comments parent = commentService.getCommentById(comment.getCommentId());
@@ -49,5 +57,19 @@ public class CommentController {
     public String updateComment(@ModelAttribute Comments comment) {
         commentService.updateComment(comment);
         return "redirect:/comments/list?noteId=" + comment.getNoteId();
+    }
+
+    @GetMapping("/images")
+    public ResponseEntity<byte[]> getCommentImage(@RequestParam("id") int id) {
+        Comments comment = commentService.getCommentById(id);
+        byte[] imageData = comment.getImages();
+
+        if (imageData == null || imageData.length == 0) {
+            return ResponseEntity.notFound().build();
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG); // 필요시 IMAGE_PNG 등으로 변경
+        return new ResponseEntity<>(imageData, headers, HttpStatus.OK);
     }
 }
