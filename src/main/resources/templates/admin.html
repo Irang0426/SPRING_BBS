@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <title>회원 관리</title>
-<script>
+<script th:inline="javascript">
 const TableManager = {
   state: {
     sortDirections: [], // 각 컬럼의 정렬 방향 ('asc' or 'desc')
@@ -17,7 +17,8 @@ const TableManager = {
     order: "asc",       // 현재 정렬 방향
     sort: "id",         // 현재 정렬 기준 컬럼
     partial: false,
-    url: "users"
+    url: "users",
+    totalPageCount: -1
   },
 
   init(url, sortNameArray) {
@@ -80,14 +81,19 @@ const TableManager = {
 	        document.querySelector("tbody").innerHTML = html;
 	        this.state.partial = false;
 	        this.bindDeleteButtons();
+	        console.log("totalPageCount(partial ajax): ",[[${totalPageCount}]]);
+	        this.changeList(this.state.totalPageCount < 0 ? [[${totalPageCount}]] : this.state.totalPageCount);
 	      });
 	} else {
 	    fetch(`/admin/${url}`)
 	      .then(res => res.text())
 	      .then(html => {
 	        document.querySelector("table").innerHTML = html;
+	        this.state.totalPageCount = document.getElementById('totalPageCount').value;
+	        console.log("totalPageCount(ajax): ",this.state.totalPageCount);
 	        this.state.partial = false;
 	        this.bindDeleteButtons();
+	        this.changeList(this.state.totalPageCount);
 	      });
 	}
   },
@@ -117,6 +123,59 @@ const TableManager = {
 	            form.submit();
 	        });
 	    });
+	},
+	
+	changeList(pageCount) {
+		let pagingtr =  document.getElementById("paging");
+		
+		totalPageCount = pageCount;
+		console.log("totalPageCount: ", totalPageCount);
+		console.log("page: ", this.state.page);
+
+		let back = totalPageCount - 5 >= 1 ? totalPageCount - 5 : 1;
+		let front = totalPageCount + 5 <= totalPageCount ? totalPageCount + 5 : totalPageCount
+		        
+		let backTo = back - 1 >= 1 ? back - 1 : 1;
+		let frontTo = front + 1 <= totalPageCount ? front + 1 : totalPageCount;
+		
+        pagingtr.innerHTML = 
+            `<td class='page-nav'>
+                <a onclick="TableManager.changePage(${backTo})" class="page-link">&lt;&lt;</a>
+            </td>` +
+            this.paging(back, front) + 
+            `<td class="page-nav">
+                <a onclick="TableManager.changePage(${frontTo})" class="page-link">&gt;&gt;</a>
+            </td>`;
+	},
+	
+	changePage(movingPage) {
+	    let page = document.getElementById("nowpage");
+	    page.value = movingPage;
+	    
+	    this.state.page = movingPage - 1;
+	    this.state.partial = true;
+	    this.pageAjax();
+	},
+	
+	paging(back, front) {
+	    let page = "";
+	    
+	    for(let i = back; i <= front; i++) {
+	    	if(i == document.getElementById("nowpage").value) {
+	    		page += `
+	    			  <td class="page-nav nowPage">
+	    			    <a onclick="TableManager.changePage(${i})" class="page-link">${i}</a>
+	    			  </td>
+				`;
+	    		continue;
+	    	}
+			page += `
+			  <td class="page-nav">
+			    <a onclick="TableManager.changePage(${i})" class="page-link">${i}</a>
+			  </td>
+			  `;
+	    }
+	    return page;
 	}
 };
 TableManager.init("users",["id", "nickname", "email", "reg_date", "last_access_date", "user_grade"]);
@@ -138,7 +197,6 @@ TableManager.init("users",["id", "nickname", "email", "reg_date", "last_access_d
 		<a href="#" onclick="TableManager.set('notes', ['id', 'title', 'content', 'create_date', 'last_modified_date', 'board_id', 'writer_id', 'file_id'])">게시글</a> |
 		<a href="#" onclick="TableManager.set('comments', ['id', 'content', 'create_date', 'last_modified_date', 'comment_id', 'note_id', 'comment_author_id'])">댓글</a>
     </nav>
-    
     <h2>회원 목록</h2>
     <select id="pageLimitSelect" onchange="TableManager.updateLimitSize(this.value)" >
       <option value="none">=== 정렬 개수 선택 ===</option>
@@ -148,32 +206,42 @@ TableManager.init("users",["id", "nickname", "email", "reg_date", "last_access_d
 	  <option value="100">100</option>
 	</select>
 	
-	    <table border="1">
-	        <thead><th onclick="TableManager.updateSort(0)">회원 번호</th><th onclick="TableManager.updateSort(1)">이름</th>
-	        	<th onclick="TableManager.updateSort(2)">이메일</th><th onclick="TableManager.updateSort(3)">가입일</th>
-	        	<th onclick="TableManager.updateSort(4)">마지막 접속일</th><th onclick="TableManager.updateSort(5)">등급</th>
-	        	<th>삭제</th></thead>
-	        <tbody>
-			        <tr th:each="item: ${users}">
-			        	<td th:text="${item.id}"></td>
-			        	<td th:text="${item.nickName}"></td>
-			        	<td th:text="${item.email}"></td>
-			        	<td th:text="${item.regDate}"></td>
-			        	<td th:text="${item.lastAccessDate}"></td>
-			        	<td th:text="${item.userGrade}"></td>
-			        	<td>
-			        		<form class="delete-form" action="/admin/users/delete" method="post">
-			        			<input type="hidden" name="id" th:value="${item.id}" />
-			        			<input type="hidden" name="params"/>
-					        	<button type="button" class="delete-button">삭제</button>
-			        		</form>
-			        	</td>
-			        </tr>
-	        </tbody>
-	    </table>
-<script type="text/javascript">
+    <table border="1">
+        <thead><th onclick="TableManager.updateSort(0)">회원 번호</th><th onclick="TableManager.updateSort(1)">이름</th>
+        	<th onclick="TableManager.updateSort(2)">이메일</th><th onclick="TableManager.updateSort(3)">가입일</th>
+        	<th onclick="TableManager.updateSort(4)">마지막 접속일</th><th onclick="TableManager.updateSort(5)">등급</th>
+        	<th>삭제</th></thead>
+        <tbody>
+		        <tr th:each="item: ${users}">
+		        	<td th:text="${item.id}"></td>
+		        	<td th:text="${item.nickName}"></td>
+		        	<td th:text="${item.email}"></td>
+		        	<td th:text="${item.regDate}"></td>
+		        	<td th:text="${item.lastAccessDate}"></td>
+		        	<td th:text="${item.userGrade}"></td>
+		        	<td>
+		        		<form class="delete-form" action="/admin/users/delete" method="post">
+		        			<input type="hidden" name="id" th:value="${item.id}" />
+		        			<input type="hidden" name="params"/>
+				        	<button type="button" class="delete-button">삭제</button>
+		        		</form>
+		        	</td>
+		        </tr>
+        </tbody>
+    </table>
+   	<input id="nowpage" value=1 hidden="hidden">
+    <table>
+	    <tr id="paging">
+	    </tr>
+    </table>
+<script th:inline="javascript">
+TableManager.changeList([[${totalPageCount}]]);
+
+
 window.onload = function() {
 	const urlParams = new URLSearchParams(window.location.search);
+	console.log("urlParams: ",urlParams);
+	
 	
 	const defaultUrl = urlParams.get('url');
 	if (defaultUrl) {

@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bbs.demo.domain.Admin;
+import com.bbs.demo.domain.Page;
 import com.bbs.demo.mapper.AdminMapper;
+import com.bbs.demo.mapper.PageMapper;
 
 import jakarta.transaction.Transactional;
 
@@ -15,15 +17,19 @@ public class AdminService {
 
     @Autowired
     private AdminMapper adminMapper;
+    @Autowired
+    private PageMapper pageMapper;
 
-    private Admin createPageCondition(Map<String, String> params) {
-        return new Admin()
+    public Admin createPageCondition(Map<String, String> params) {
+        Admin admin = new Admin()
             .setOrderby(params.getOrDefault("orderby", "asc"))
             .setSortby(params.getOrDefault("sortby", "id"))
             .setPage(Integer.parseInt(params.getOrDefault("page", "0")))
-            .setLimit(Integer.parseInt(params.getOrDefault("limit", "20")));
+            .setLimit(Integer.parseInt(params.getOrDefault("limit", "20")))
+            .setUrl(params.getOrDefault("url", "users"));
+        return admin.setTotalPageCount(adminMapper.pageCount(admin));
     }
-
+    
     public Object getUsers(Map<String, String> params) {
         return adminMapper.findAllUserByPage(createPageCondition(params));
     }

@@ -1,4 +1,5 @@
 <table border="1" th:fragment="usertable (users)">
+	<input id="totalPageCount" th:value="${totalPageCount}" hidden="hidden">
     <thead><th onclick="TableManager.updateSort(0)">회원 번호</th><th onclick="TableManager.updateSort(1)">이름</th>
     	<th onclick="TableManager.updateSort(2)">이메일</th><th onclick="TableManager.updateSort(3)">가입일</th>
     	<th onclick="TableManager.updateSort(4)">마지막 접속일</th><th onclick="TableManager.updateSort(5)">등급</th>
@@ -23,6 +24,7 @@
 </table>
 
 <table border="1" th:fragment="boardtable (boards)">
+	<input id="totalPageCount" th:value="${totalPageCount}" hidden="hidden">
     <thead><th onclick="TableManager.updateSort(0)">게시판 번호</th><th onclick="TableManager.updateSort(1)">게시판 이름</th>
     	<th onclick="TableManager.updateSort(2)">개설일</th><th onclick="TableManager.updateSort(3)">수정일</th>
     	<th>삭제</th></thead>
@@ -46,6 +48,7 @@
 
 
 <table border="1" th:fragment="notetable (notes)">
+	<input id="totalPageCount" th:value="${totalPageCount}" hidden="hidden">
     <thead><th onclick="TableManager.updateSort(0)">게시글 번호</th><th onclick="TableManager.updateSort(1)">제목</th>
     	<th onclick="TableManager.updateSort(2)">내용</th><th onclick="TableManager.updateSort(3)">작성일</th>
     	<th onclick="TableManager.updateSort(4)">수정일</th><th onclick="TableManager.updateSort(5)">게시판 번호</th>
@@ -75,6 +78,7 @@
 
 
 <table border="1" th:fragment="commenttable (comments)">
+	<input id="totalPageCount" th:value="${totalPageCount}" hidden="hidden">
     <thead><th onclick="TableManager.updateSort(0)">댓글 번호</th><th onclick="TableManager.updateSort(1)">내용</th>
     	<th onclick="TableManager.updateSort(2)">작성일</th><th onclick="TableManager.updateSort(3)">수정일</th>
     	<th onclick="TableManager.updateSort(4)">부모 댓글 번호</th><th onclick="TableManager.updateSort(5)">게시글 번호</th>

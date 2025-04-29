@@ -1,12 +1,21 @@
 package com.bbs.demo.domain;
 
 public class Admin {
+	private String url;
 	private String sortby;
 	private int page;
 	private int limit;
 	private String orderby;
 	private int offset = page*limit;
+	private int totalPageCount;
 	
+	public String getUrl() {
+		return url;
+	}
+	public Admin setUrl(String url) {
+		this.url = url;
+		return this;
+	}
 	public String getSortby() {
 		return sortby;
 	}
@@ -37,5 +46,19 @@ public class Admin {
 	}
 	public int getOffset() {
 		return offset;
+	}
+	public Admin setTotalPageCount(int totalCount) {
+		if(totalCount % this.limit != 0) {
+			this.totalPageCount = (int)(totalCount / this.limit) + 1;
+		}
+		else {
+			this.totalPageCount = (int)(totalCount / this.limit);
+		}
+		
+		System.out.println("totalPageCount"+this.totalPageCount);
+		return this;
+	}
+	public int getTotalPageCount() {
+		return totalPageCount;
 	}
 }

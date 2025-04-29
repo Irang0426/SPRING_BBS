@@ -17,6 +17,8 @@ public interface AdminMapper {
 	List<Notes> findAllNoteByPage(Admin admin);
 	List<Comments> findAllCommentByPage(Admin admin);
 
+	int pageCount(Admin admin);
+	
 	void deleteUsers(int id);
 	void deleteBoards(int id);
 	void deleteNotes(int id);

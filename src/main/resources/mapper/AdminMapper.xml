@@ -32,6 +32,14 @@
 		LIMIT #{offset}, #{limit}
 	</select>
 	
+	
+	<select id="pageCount" parameterType="com.bbs.demo.domain.Admin" resultType="int">
+		SELECT count(*) FROM ${url}
+	</select>
+	
+	
+	
+	
 	<delete id="deleteUsers" parameterType="int">
 		DELETE FROM users WHERE id = #{id}
 	</delete>

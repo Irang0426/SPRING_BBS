@@ -14,9 +14,8 @@ public class SecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
 		http
 				.authorizeHttpRequests((auth) -> auth
-						//.requestMatchers("/").permitAll()
+						//.requestMatchers("/", "/login").permitAll()
 						//.requestMatchers("/admin").hasRole("ADMIN")
-						//.requestMatchers("/list").hasRole("USER")
 						.anyRequest().permitAll()	//authentical인가 뭐시기는 권한 얻어오라는 뜻
 				);
 		
@@ -24,9 +23,9 @@ public class SecurityConfig {
 		/*http
 				.formLogin((auth) -> auth.loginPage("/login")
 						.loginProcessingUrl("/login")
-						.defaultSuccessUrl("/list")
+						.defaultSuccessUrl("/board/list")
 						.failureUrl("/login?loginerror=1")
-						.permitAll()
+						.
 				);*/
 		
 		http
