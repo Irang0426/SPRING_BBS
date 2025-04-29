@@ -59,6 +59,7 @@ public class LoginController{
 		loginMember.setNickName(member.getNickName());
 		loginMember.setUserGrade(member.getUserGrade());
 		loginMember.setRegDate(member.getRegDate());
+		loginMember.setLastAccessDate(member.getLastAccessDate());
 		loginMember.setUserGradeString((UserGrade.fromGrade(loginMember.getUserGrade())).toString());
 		
 		session.setAttribute("loginMember", loginMember);
