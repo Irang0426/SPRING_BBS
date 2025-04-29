@@ -1,7 +1,5 @@
 package com.bbs.demo.controller;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,15 +7,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
 
 import com.bbs.demo.service.AdminService;
 
-import jakarta.transaction.Transactional;
 
 @Controller
 @RequestMapping("/admin")
@@ -25,12 +20,6 @@ public class AdminController {
 	
 	@Autowired
 	private AdminService adminS;
-	
-	private final TemplateEngine templateEngine;
-
-	public AdminController(TemplateEngine templateEngine) {
-	    this.templateEngine = templateEngine;
-	}
 	
 	@GetMapping("")
 	public String adminMain(@RequestParam Map<String, String> params, Model model) {
@@ -114,32 +103,34 @@ public class AdminController {
 		return "admin_tables :: commenttbody";
 	}
 	
+	@PostMapping("/boards/create")
+	public String createBoard(@RequestBody Map<String, String> params) {
+		System.out.println("\t\t\t\t### 보드 만들기 컨트롤러 들어옴");
+	    return "redirect:/admin?" + adminS.createBoard(params);
+	}
+	
 	//삭제 후 돌아오는 요청
 	@PostMapping("/users/delete")
 	public String deleteUsers(@RequestParam("params") String rawParams, @RequestParam("id") int id) {
 		adminS.deleteUsers(id);
-		System.out.println("redirect:/admin?"+ rawParams);
 		return "redirect:/admin?"+ rawParams;
 	}
 
 	@PostMapping("/boards/delete")
 	public String deleteBoards(@RequestParam("params") String rawParams, @RequestParam("id") int id) {
 		adminS.deleteBoards(id);
-		System.out.println("redirect:/admin?"+ rawParams);
 		return "redirect:/admin?"+ rawParams;
 	}
 
 	@PostMapping("/notes/delete")
 	public String deleteNotes(@RequestParam("params") String rawParams, @RequestParam("id") int id) {
 		adminS.deleteNotes(id);
-		System.out.println("redirect:/admin?"+ rawParams);
 		return "redirect:/admin?"+ rawParams;
 	}
 
 	@PostMapping("/comments/delete")
 	public String deleteComments(@RequestParam("params") String rawParams, @RequestParam("id") int id) {
 		adminS.deleteComments(id);
-		System.out.println("redirect:/admin?"+ rawParams);
 		return "redirect:/admin?"+ rawParams;
 	}
 }

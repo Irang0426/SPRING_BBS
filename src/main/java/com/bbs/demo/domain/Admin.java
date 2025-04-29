@@ -44,6 +44,10 @@ public class Admin {
 		this.orderby = orderby;
 		return this;
 	}
+	public Admin setOffset() {
+		this.offset = page*limit;
+		return this;
+	}
 	public int getOffset() {
 		return offset;
 	}
@@ -55,7 +59,6 @@ public class Admin {
 			this.totalPageCount = (int)(totalCount / this.limit);
 		}
 		
-		System.out.println("totalPageCount"+this.totalPageCount);
 		return this;
 	}
 	public int getTotalPageCount() {
