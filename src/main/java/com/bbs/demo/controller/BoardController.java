@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bbs.demo.domain.Notes;
 import com.bbs.demo.domain.Page;
+import com.bbs.demo.domain.Users;
 import com.bbs.demo.mapper.BoardMapper;
 import com.bbs.demo.mapper.NoteMapper;
+
+import jakarta.servlet.http.HttpSession;
 
 import java.util.List;
 
@@ -27,9 +30,15 @@ public class BoardController {
 	private NoteMapper notemapper;
 	
 	@GetMapping("/list")
-	public String boardList(Model model) {
+	public String boardList(Model model, HttpSession session) {
 		Page page = new Page();
-
+		Users loginMember = (Users)session.getAttribute("loginMember");
+		
+		if(loginMember == null) {
+			return "/login";
+		}
+		
+		model.addAttribute("loginMember", loginMember);
 		model.addAttribute("boardList", boardmapper.findAllBoard());
 		model.addAttribute("pageInfo", page);
 		

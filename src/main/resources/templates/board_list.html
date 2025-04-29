@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -400,6 +400,495 @@
             document.getElementById('loadingModal').style.display = 'none';
         }
 
+    </script>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원 관리</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        
+        nav {
+            margin-bottom: 20px;
+        }
+        
+        nav a {
+            text-decoration: none;
+            margin-right: 10px;
+            color: #495057;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        nav a:hover {
+            color: #0d6efd;
+        }
+        
+        h2 {
+            color: #212529;
+            margin-bottom: 20px;
+        }
+        
+        .write-btn {
+            display: inline-block;
+        }
+        
+        #boardList {
+            width: 200px;
+        }
+        
+        #notelist {
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        #notelist tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        #notelist tr:hover {
+            background-color: #e9ecef;
+        }
+        
+        #paging {
+            text-align: center;
+        }
+        
+        #paging td {
+            padding: 0;
+        }
+        
+        #paging a {
+            display: block;
+            padding: 10px 15px;
+            color: #495057;
+            text-decoration: none;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        
+        #paging a:hover {
+            background-color: #e9ecef;
+            color: #0d6efd;
+        }
+        
+        #paging .nowPage {
+            background-color: #e9ecef;
+            color: #0d6efd;
+        }
+        
+        .table-responsive {
+            overflow-x: auto;
+        }
+        
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .page-nav-table {
+            border-collapse: separate;
+            border-spacing: 5px;
+        }
+        
+        #loadingModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5); /* 어두운 반투명 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 6px solid #ccc;
+            border-top-color: #333;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .user-info-section {
+		    /* 높이 제한 */
+		    max-height: 100px; /* 원하는 높이로 변경 가능 */
+		    overflow-y: auto; /* 컨텐츠가 많을 경우 스크롤 */
+		}
+		
+		.control-section {
+		    /* 검색탭 높이 제한 */
+		    max-height: 70px; /* 원하는 높이로 변경 가능 */
+		}
+        
+        .search-container {
+            width: 70%;
+            margin: 0 auto;
+        }
+        
+        .search-input-group {
+            display: flex;
+            width: 100%;
+        }
+        
+        .search-input-group input {
+            flex-grow: 1;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+            height: 40px;
+        }
+        
+		.search-input-group button {
+		    border-top-left-radius: 0;
+		    border-bottom-left-radius: 0;
+		    height: 40px;
+		    /* 수정사항: 버튼 너비 늘리기 */
+		    padding-left: 15px;
+		    padding-right: 15px;
+		    /* 수정사항: 버튼 내 텍스트 크기 줄이기 */
+		    font-size: 0.9rem;
+		    /* 텍스트가 넘치지 않도록 보장 */
+		    white-space: nowrap;
+		    min-width: 70px;
+		}
+        
+        .user-info-section {
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+    </style>
+</head>
+<body th:onload="changeList()">
+    <input id="nowpage" value=1 hidden="hidden">
+    <div id="loadingModal" style="display: none;">
+        <div class="spinner"></div>
+    </div>
+    <div class="container">
+        <!-- 1. 네비게이션 -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light rounded mb-4">
+            <div class="container-fluid">
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/}">홈</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/board/list}">게시판</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/file/read?note_id=1}">파일 업로드</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/login}">로그인</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/register}">회원가입</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/admin}">관리자</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- 통합된 공간에 4가지 요소 배치 -->
+        <div class="card shadow-sm">
+            <!-- 1. 게시글 목록 제목 -->
+            <div class="card-header bg-primary text-white">
+                <h2 class="mb-0 fs-4">게시글 목록</h2>
+            </div>
+            
+            <!-- 2. 유저 정보 -->
+            <div class="card-body pt-3 pb-3 border-bottom">
+                <div class="user-info-section">
+                    <h5 class="mb-3 text-secondary">유저 정보</h5>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p class="mb-1"><strong>이름:</strong><span th:text=" ${loginMember.nickName}"></span></p>
+                        </div>
+                        <div class="col-md-4">
+                            <p class="mb-1"><strong>등급:</strong><span th:text=" ${loginMember.userGradeString}"></span></p>
+                        </div>
+                        <div class="col-md-4">
+                            <p class="mb-1"><strong>최근 접속:</strong><span th:text=" ${loginMember.lastAccessDate}"></span>9</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 3. 글작성/검색/카테고리 설정 -->
+            <div class="card-body pt-3 pb-3 border-bottom">
+                <div class="control-section">
+                    <div class="row align-items-center">
+                        <!-- 글작성 버튼 (좌측) -->
+                        <div class="col-md-3">
+                            <a th:href="@{/note/register}" class="btn btn-primary write-btn">[글 작성]</a>
+                        </div>
+                        
+                        <!-- 검색 (중앙 - 60-70% 공간) -->
+                        <div class="col-md-6">
+                            <div class="search-container">
+                                <div class="search-input-group">
+                                    <input id="searchNote" name="content" class="form-control" placeholder="검색어를 입력하세요">
+                                    <button type="button" onclick="searchNote()" class="btn btn-outline-primary">검색</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 보드 선택 (우측) -->
+                        <div class="col-md-3 text-end">
+                            <select id="boardList" name="boardList" th:onchange="changeList(1)" class="form-select float-end">
+                                <option th:each="board : ${boardList}"
+                                        th:id="${board.id}"
+                                        th:value="${board.id}"
+                                        th:text="${board.name}"></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 4. 테이블 -->
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="notelist" class="table table-bordered table-hover">
+                    </table>
+                </div>
+                
+                <div class="pagination-container">
+                    <table class="page-nav-table">
+                        <tr id="paging">
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript">
+        const changeList = (boardChange = 0) => {
+            console.log("Page : ", boardChange);
+            let page;
+            if(boardChange == 1) {
+                page = 1;
+                document.getElementById("searchNote").value = "";
+            }
+            else {
+                page = document.getElementById("nowpage").value;           
+            }
+            
+            let value =  document.getElementById("boardList").value;
+            let source = document.getElementById("boardList");
+            let notetable = document.getElementById("notelist");
+            
+            notetable.innerHTML = "<tr><td colspan='4' class='text-center py-3'>작성된 글이 없습니다.</td></tr>";
+            
+            console.log("value : ", value);
+            
+            const formData = new URLSearchParams();
+            formData.append("boardPos", value);
+            formData.append("pagePos", page);
+            
+            fetch(
+                "/pagingtest/page",
+                {
+                    method: "POST",
+                    body: formData,
+                }
+            )
+            .then((response) => {
+                console.log("res: ", response);
+                if (response.ok) {
+                    return response.json()
+                }
+            })
+            .then((data) => {
+                console.log("data: ", data);
+                const items = data.noteList;
+                const pageInfo = data.pageInfo;
+                page.value = pageInfo.page;
+                
+                let pagingtr =  document.getElementById("paging");
+                if(items.length == 0) {
+                    notetable.innerHTML = "<tr><td colspan='4' class='text-center py-3'>작성된 글이 없습니다.</td></tr>";
+                    pagingtr.innerHTML = "";                  
+                    return;
+                }
+                
+                notetable.innerHTML = `
+                    <thead class="table-dark">
+                        <tr>
+                            <th>번호</th>
+                            <th>제목</th>
+                            <th>내용</th>
+                            <th>작성일</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                `;
+                
+                const tbody = notetable.querySelector('tbody');
+                
+                for (i in items) {
+                    console.log("item: ", items[i]);
+                    const noteList = document.createElement("tr");
+                    noteList.setAttribute("onclick", `goDetail(${items[i].board_id}, ${items[i].id})`);
+                    noteList.innerHTML = `
+                        <td class="col-md-1">${items[i].id}</td>
+                        <td class="col-md-2">${items[i].title}</td>
+                        <td class="col-md-7">${items[i].content}</td>
+                        <td class="col-md-2">${items[i].createDate}</td>
+                    `;
+                    tbody.appendChild(noteList);
+                }
+                
+                let back = pageInfo.page - 5 >= 1 ? pageInfo.page - 5 : 1;
+                let front = pageInfo.page + 5 <= pageInfo.pageLen ? pageInfo.page + 5 : pageInfo.pageLen
+                        
+                let backTo = back - 1 >= 1 ? back - 1 : 1;
+                let frontTo = front + 1 <= pageInfo.pageLen ? front + 1 : pageInfo.pageLen;
+                
+                
+                pagingtr.innerHTML = 
+                    "<td class='page-nav'>" +
+                        "<a onclick=" + `changePage(${backTo})` + " class='page-link'>&lt;&lt;</a>" +
+                    "</td>" +
+                    paging(back, front) + 
+                    "<td class='page-nav'>" +
+                        "<a onclick=" + `changePage(${frontTo})` + " class='page-link'>&gt;&gt;</a>" +
+                    "</td>";
+            })
+        }
+        
+        const goDetail = (board, id) => {
+            console.log("datas: ", board, id);
+            let readNote = document.createElement("a");
+            let link = "/note/read?id=" + id;
+            
+            readNote.setAttribute("href", link);
+            readNote.click();
+        }
+        
+        const searchNote = (page = 1) => {
+            let value =  document.getElementById("boardList").value;
+            let content =  document.getElementById("searchNote").value;
+            let notetable = document.getElementById("notelist");
+            
+            showLoading();
+            
+            const formData = new URLSearchParams();
+            formData.append("boardPos", value);
+            formData.append("content", content);
+            
+            fetch(
+                "/pagingtest/noteSearch",
+                {
+                    method: "POST",
+                    body: formData,
+                }
+            )
+            .then((response) => {
+                console.log("res: ", response);
+                if (response.ok) {
+                    return response.json()
+                }
+            })
+            .then((data) => {
+                console.log("DATA: ", data);
+                const items = data.noteList;
+                
+                let pagingtr =  document.getElementById("paging");
+                pagingtr.innerHTML = ""
+                
+                if(items.length == 0) {
+                    notetable.innerHTML = "<tr><td colspan='4' class='text-center py-3'>작성된 글이 없습니다.</td></tr>";
+                    pagingtr.innerHTML = "";                  
+                    return;
+                }
+                
+                notetable.innerHTML = `
+                    <thead class="table-dark">
+                        <tr>
+                            <th>번호</th>
+                            <th>제목</th>
+                            <th>내용</th>
+                            <th>작성일</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                `;
+                
+                const tbody = notetable.querySelector('tbody');
+                
+                for (i in items) {
+                    console.log("item: ", items[i]);
+                    const noteList = document.createElement("tr");
+                    noteList.innerHTML = `
+                        <td>${items[i].id}</td>
+                        <td>${items[i].title}</td>
+                        <td>${items[i].content}</td>
+                        <td>${items[i].create_date}</td>
+                    `;
+                    tbody.appendChild(noteList);
+                }
+                
+                hideLoading();
+                
+            })
+        }
+        
+        const changePage = (movingPage) => {
+            let page = document.getElementById("nowpage");
+            page.value = movingPage;
+            
+            changeList();
+        }
+        
+        const paging = (back, front) => {
+            let page = "";
+            
+            for(let i = back; i <= front; i++) {
+                if(i == document.getElementById("nowpage").value) {
+                    page += "<td class='page-nav nowPage'>" + "<a onclick=" + `changePage(${i})` + " class='page-link'>" + `${i}` + "</a></td>";
+                    continue;
+                }
+                page += "<td class='page-nav'>" + "<a onclick=" + `changePage(${i})` + " class='page-link'>" + `${i}` + "</a></td>";
+            }
+            
+            return page;
+        }
+        
+        function showLoading() {
+            document.getElementById('loadingModal').style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingModal').style.display = 'none';
+        }
     </script>
 </body>
 </html>
