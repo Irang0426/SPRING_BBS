@@ -39,6 +39,8 @@
             <textarea class="comment_content" name="content" rows="4" cols="50" maxlength="300" placeholder="댓글을 입력하세요"></textarea>
 			<br>
 			<span class="char-count">0</span>/300
+	        <!-- 파일 업로드 -->
+	        <input type="file" name="files" multiple /><br>
             <button type="submit">댓글 작성</button>
         </form>
 
@@ -50,6 +52,7 @@
                 <div class="comment-content">
                     <span th:text="${comment.commentAuthorId}">작성자</span>
                     <span th:text="${#temporals.format(comment.createDate, 'yyyy-MM-dd HH:mm')}">작성일</span>
+                    <img alt="이미지" th:src="${comment.images}" />
                     <p class="comment_content" th:text="${comment.content}">댓글 내용</p>
                     <button type="button" class="edit-comment-btn">수정</button>
                     <form action="/comments/delete" method="post" style="display:inline;">
@@ -66,7 +69,10 @@
 		            <textarea class="comment_content" name="content" th:text="${comment.content}" rows="4" cols="50" maxlength="300" placeholder="댓글을 입력하세요"></textarea>
 					<br>
 					<span class="char-count">0</span>/300
-                    <button type="submit">수정 완료</button>
+			        <!-- 파일 업로드 -->
+			        <input type="file" name="files" multiple /><br>
+			        
+                    <button type="submit">등록</button>
                     <button type="button" class="cancel-edit">취소</button>
                 </form>
                 <!-- 대댓글 작성 버튼 -->
@@ -79,6 +85,8 @@
 		            <textarea class="comment_content" name="content" rows="4" cols="50" maxlength="300" placeholder="댓글을 입력하세요"></textarea>
 					<br>
 					<span class="char-count">0</span>/300
+			        <!-- 파일 업로드 -->
+			        <input type="file" name="files" multiple /><br>
                     <button type="submit">등록</button>
                     <button type="button" class="reply-cancel-btn">취소</button>
                 </form>
@@ -105,8 +113,9 @@
                             <textarea class="comment_content" name="content" th:text="${reply.content}" rows="4" cols="50" maxlength="300" placeholder="댓글을 입력하세요"></textarea>
 							<br>
 							<span class="char-count">0</span>/300
-		                    <button type="submit">등록</button>
-                            <button type="submit">수정 완료</button>
+					        <!-- 파일 업로드 -->
+					        <input type="file" name="files" multiple /><br>
+                            <button type="submit">등록</button>
                             <button type="button" class="cancel-edit">취소</button>
                         </form>
                     </li>
