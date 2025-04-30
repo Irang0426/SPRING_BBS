@@ -53,53 +53,53 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-    const noteId = $('input[name="noteId"]').val();
-    const userId = $('input[name="commentAuthorId"]').val();
-
-    function renderComment(comment, depth = 0) {
-        const isReply = depth > 0;
-        const padding = isReply ? 'style="margin-left:30px;"' : '';
-        let html = `<li ${padding} data-id="${comment.id}">
-            <div>
-                <strong>${comment.commentAuthorId}</strong> (${comment.lastModifiedDate})<br>
-                ${comment.images ? `<img src="/comments/images?id=${comment.id}" style="max-width:200px;"><br>` : ''}
-                <p>${comment.content}</p>
-                <button class="edit-btn">수정</button>
-                <button class="delete-btn">삭제</button>
-                ${!isReply ? `<button class="reply-toggle-btn">답글쓰기</button>` : ''}
-            </div>
-
-            <form class="edit-form" style="display:none;" enctype="multipart/form-data">
-                <input type="hidden" name="id" value="${comment.id}">
-                <textarea name="content" rows="3" cols="80">${comment.content}</textarea><br>
-                <input type="file" name="imageFile"><br>
-                <button type="submit">수정완료</button>
-                <button type="button" class="cancel-edit">취소</button>
-            </form>
-
-            ${!isReply ? `
-            <form class="reply-form" style="display:none;" enctype="multipart/form-data">
-                <input type="hidden" name="noteId" value="${noteId}">
-                <input type="hidden" name="commentAuthorId" value="${userId}">
-                <input type="hidden" name="commentId" value="${comment.id}">
-                <textarea name="content" rows="3" cols="80" placeholder="답글을 입력하세요"></textarea><br>
-                <input type="file" name="imageFile"><br>
-                <button type="submit">등록</button>
-                <button type="button" class="reply-cancel-btn">취소</button>
-            </form>` : ''}
-        `;
-
-        if (comment.children && comment.children.length > 0) {
-            html += '<ul>';
-            comment.children.forEach(reply => {
-                html += renderComment(reply, depth + 1);
-            });
-            html += '</ul>';
-        }
-
-        html += '</li>';
-        return html;
-    }
+	const noteId = $('input[name="noteId"]').val();
+	const userId = $('input[name="commentAuthorId"]').val();
+	
+	function renderComment(comment, depth = 0) {
+	    const isReply = depth > 0;
+	    const padding = isReply ? 'style="margin-left:30px;"' : '';
+	    let html = `<li ${padding} data-id="${comment.id}" ${isReply ? 'data-reply="true"' : ''}>
+	        <div class="comment-content">
+	            <strong>${comment.commentAuthorId}</strong> (${comment.lastModifiedDate})<br>
+	            ${comment.images ? `<img src="/comments/images?id=${comment.id}" style="max-width:200px;"><br>` : ''}
+	            <p>${comment.content}</p>
+	            <button class="edit-btn">수정</button>
+	            <button class="delete-btn">삭제</button>
+	            ${!isReply ? `<button class="reply-toggle-btn">답글쓰기</button>` : ''}
+	        </div>
+	
+	        <form class="edit-form" style="display:none;" enctype="multipart/form-data">
+	            <input type="hidden" name="id" value="${comment.id}">
+	            <textarea name="content" rows="3" cols="80">${comment.content}</textarea><br>
+	            <input type="file" name="imageFile"><br>
+	            <button type="submit">수정완료</button>
+	            <button type="button" class="cancel-edit">취소</button>
+	        </form>
+	
+	        ${!isReply ? `
+	        <form class="reply-form" style="display:none;" enctype="multipart/form-data">
+	            <input type="hidden" name="noteId" value="${noteId}">
+	            <input type="hidden" name="commentAuthorId" value="${userId}">
+	            <input type="hidden" name="commentId" value="${comment.id}">
+	            <textarea name="content" rows="3" cols="80" placeholder="답글을 입력하세요"></textarea><br>
+	            <input type="file" name="imageFile"><br>
+	            <button type="submit">등록</button>
+	            <button type="button" class="reply-cancel-btn">취소</button>
+	        </form>` : ''}
+	    `;
+	
+	    if (comment.children && comment.children.length > 0) {
+	        html += '<ul class="reply-list">';
+	        comment.children.forEach(reply => {
+	            html += renderComment(reply, depth + 1);
+	        });
+	        html += '</ul>';
+	    }
+	
+	    html += '</li>';
+	    return html;
+	}
 
     function loadComments() {
         $.getJSON(`/comments/json?noteId=${noteId}`, function(data) {
@@ -126,7 +126,7 @@
                 processData: false,
                 success: function() {
                     loadComments();
-                    $('.comment-form')[0].reset();
+                    $('.comment-form').trigger('reset');
                 }
             });
         });
@@ -139,21 +139,19 @@
             });
         });
 
-        // 수정 폼 열기/닫기
+        // 수정 폼 열기/닫기 - 개선된 코드
         $(document).on('click', '.edit-btn', function() {
             const $li = $(this).closest('li');
-            const isReply = $li.data('reply');
-
-            // 대댓글이 아닌 경우에만 수정 폼을 토글
-            if (!isReply) {
-                $li.find('.edit-form').toggle();
-                $li.find('div').toggle();
-            }
+            
+            // 클릭한 버튼이 포함된 div만 숨기고, 같은 레벨의 수정폼만 표시
+            $(this).closest('.comment-content').toggle();
+            $(this).closest('li').children('.edit-form').first().toggle();
         });
+        
         $(document).on('click', '.cancel-edit', function() {
             const $li = $(this).closest('li');
-            $li.find('.edit-form').hide();
-            $li.find('div').show();
+            $li.find('.edit-form').first().hide();
+            $li.children('.comment-content').show();
         });
 
         // 댓글 수정 제출

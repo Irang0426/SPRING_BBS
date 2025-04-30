@@ -47,11 +47,6 @@
         SET
             content = #{content},
             images = #{images},
-	        comment_id = 
-			  <choose>
-			    <when test="commentId != null">#{commentId}</when>
-			    <otherwise>NULL</otherwise>
-			  </choose>,
             last_modified_date = NOW()
         WHERE
             id = #{id}
