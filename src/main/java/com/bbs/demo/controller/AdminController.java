@@ -32,6 +32,8 @@ public class AdminController {
 			model.addAttribute("notes", adminS.getNotes(params));
 		} else if (url.equals("comments")) {
 			model.addAttribute("comments", adminS.getComments(params));
+		} else if (url.equals("files")) {
+			model.addAttribute("files", adminS.getFiles(params));
 		}
 		model.addAttribute("totalPageCount", adminS.createPageCondition(params).getTotalPageCount());
 		return "admin";
@@ -64,6 +66,13 @@ public class AdminController {
 		model.addAttribute("totalPageCount", adminS.createPageCondition(params).getTotalPageCount());
 		return "admin_tables :: commenttable";
 	}
+	
+	@GetMapping("/files")
+	public String files(@RequestParam Map<String, String> params, Model model) {
+	    model.addAttribute("files", adminS.getFiles(params));
+		model.addAttribute("totalPageCount", adminS.createPageCondition(params).getTotalPageCount());
+		return "admin_tables :: filetable";
+	}
 
 	@GetMapping("/users/partial")
 	public String usersTablePartial(@RequestParam Map<String, String> params, Model model) {
@@ -91,6 +100,13 @@ public class AdminController {
 		model.addAttribute("comments", adminS.getComments(params));
 		model.addAttribute("totalPageCount", adminS.createPageCondition(params).getTotalPageCount());
 		return "admin_tables :: commenttbody";
+	}
+	
+	@GetMapping("/files/partial")
+	public String filesTablePartial(@RequestParam Map<String, String> params, Model model) {
+		model.addAttribute("files", adminS.getFiles(params));
+		model.addAttribute("totalPageCount", adminS.createPageCondition(params).getTotalPageCount());
+		return "admin_tables :: filetbody";
 	}
 	
 	@PostMapping("/boards/create")
@@ -126,6 +142,12 @@ public class AdminController {
 	@PostMapping("/comments/delete")
 	public String deleteComments(@RequestParam("params") String rawParams, @RequestParam("id") int id) {
 		adminS.deleteComments(id);
+		return "redirect:/admin?"+ rawParams;
+	}
+
+	@PostMapping("/files/delete")
+	public String deleteFiles(@RequestParam("params") String rawParams, @RequestParam("id") int id) {
+		adminS.deleteFiles(id);
 		return "redirect:/admin?"+ rawParams;
 	}
 }

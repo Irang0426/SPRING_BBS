@@ -31,6 +31,12 @@
 		ORDER BY ${sortby} ${orderby}
 		LIMIT #{offset}, #{limit}
 	</select>
+	<select id="findAllFileByPage" parameterType="com.bbs.demo.domain.Admin" resultType="com.bbs.demo.domain.Files">
+		SELECT *
+		FROM files
+		ORDER BY ${sortby} ${orderby}
+		LIMIT #{offset}, #{limit}
+	</select>
 	
 	
 	<insert id="createBoard" parameterType="String">
@@ -67,6 +73,9 @@
 	</delete>
 	<delete id="deleteComments" parameterType="int">
 		DELETE FROM comments WHERE id = #{id}
+	</delete>
+	<delete id="deleteFiles" parameterType="int">
+		DELETE FROM files WHERE id = #{id}
 	</delete>
 	
 	<delete id="deleteFilesbyUserId" parameterType="int">
@@ -120,13 +129,13 @@
 		DELETE FROM notes WHERE board_id = #{boardId}
 	</delete>
 	
-	<delete id="deleteFiles" parameterType="int">
+	<delete id="deleteFilesbyNoteId" parameterType="int">
 		DELETE FROM files WHERE note_id = #{noteId}
 	</delete>
-	<delete id="deleteViewCount" parameterType="int">
+	<delete id="deleteViewCountbyNoteId" parameterType="int">
 		DELETE FROM view_count WHERE note_id = #{noteId}
 	</delete>
-	<delete id="deleteNoteToken" parameterType="int">
+	<delete id="deleteNoteTokenbyNoteId" parameterType="int">
 		DELETE FROM note_token WHERE note_id = #{noteId}
 	</delete>
 	<delete id="deleteCommentsbyNoteId" parameterType="int">

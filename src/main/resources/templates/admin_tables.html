@@ -1,8 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<body>
+
 <div id="listTableDiv" th:fragment="usertable (users)">
 <h2>회원 목록</h2>
 <div class="control-bar"><div></div>
 <select id="pageLimitSelect" onchange="TableManager.updateLimitSize(this.value)" >
-  <option value="none" selected="selected" disabled="disabled">=== 정렬 개수 선택 ===</option>
+  <option value="0" selected="selected" disabled="disabled">=== 정렬 개수 선택 ===</option>
   <option value="10">10</option>
   <option value="20">20</option>
   <option value="50">50</option>
@@ -19,8 +24,8 @@
      	<td th:text="${item.id}"></td>
      	<td th:text="${item.nickName}"></td>
      	<td th:text="${item.email}"></td>
-     	<td th:text="${item.regDate}"></td>
-     	<td th:text="${item.lastAccessDate}"></td>
+     	<td th:text="${#temporals.format(item.regDate, 'yy-MM-dd HH:mm:ss')}"></td>
+     	<td th:text="${#temporals.format(item.lastAccessDate, 'yy-MM-dd HH:mm:ss')}"></td>
      	<td th:text="${item.userGrade}"></td>
        	<td>
        		<form class="update-grade" action="/admin/users/updateGrade" method="post">
@@ -51,7 +56,7 @@
 	<button type="button" onclick="TableManager.createBoard()">생성 완료</button>
 </form>
 <select id="pageLimitSelect" onchange="TableManager.updateLimitSize(this.value)" >
-  <option value="none" selected="selected" disabled="disabled">=== 정렬 개수 선택 ===</option>
+  <option value="0" selected="selected" disabled="disabled">=== 정렬 개수 선택 ===</option>
   <option value="10">10</option>
   <option value="20">20</option>
   <option value="50">50</option>
@@ -67,8 +72,8 @@
 	    <tr th:each="item: ${boards}">
 	    	<td th:text="${item.id}"></td>
 	    	<td th:text="${item.name}"></td>
-	    	<td th:text="${item.create_date}"></td>
-	    	<td th:text="${item.last_modified_date}"></td>
+	    	<td th:text="${#temporals.format(item.create_date, 'yy-MM-dd HH:mm:ss')}"></td>
+	    	<td th:text="${#temporals.format(item.last_modified_date, 'yy-MM-dd HH:mm:ss')}"></td>
 	       	<td>
 	       		<form class="delete-form" action="/admin/boards/delete" method="post">
 	       			<input type="hidden" name="id" th:value="${item.id}" />
@@ -86,7 +91,7 @@
 <h2>게시글 목록</h2>
 <div class="control-bar"><div></div>
 <select id="pageLimitSelect" onchange="TableManager.updateLimitSize(this.value)" >
-  <option value="none" selected="selected" disabled="disabled">=== 정렬 개수 선택 ===</option>
+  <option value="0" selected="selected" disabled="disabled">=== 정렬 개수 선택 ===</option>
   <option value="10">10</option>
   <option value="20">20</option>
   <option value="50">50</option>
@@ -104,8 +109,8 @@
 	    	<td th:text="${item.id}"></td>
 	    	<td th:text="${item.title}"></td>
 	    	<td th:text="${item.content}"></td>
-	    	<td th:text="${item.createDate}"></td>
-	    	<td th:text="${item.lastModifiedDate}"></td>
+	    	<td th:text="${#temporals.format(item.createDate, 'yy-MM-dd HH:mm:ss')}"></td>
+	    	<td th:text="${#temporals.format(item.lastModifiedDate, 'yy-MM-dd HH:mm:ss')}"></td>
 	    	<td th:text="${item.boardId}"></td>
 	    	<td th:text="${item.userId}"></td>
 	       	<td>
@@ -125,7 +130,7 @@
 <h2>댓글 목록</h2>
 <div class="control-bar"><div></div>
 <select id="pageLimitSelect" onchange="TableManager.updateLimitSize(this.value)" >
-  <option value="none" selected="selected" disabled="disabled">=== 정렬 개수 선택 ===</option>
+  <option value="0" selected="selected" disabled="disabled">=== 정렬 개수 선택 ===</option>
   <option value="10">10</option>
   <option value="20">20</option>
   <option value="50">50</option>
@@ -142,8 +147,8 @@
 	    <tr th:each="item: ${comments}">
 	    	<td th:text="${item.id}"></td>
 	    	<td th:text="${item.content}"></td>
-	    	<td th:text="${item.createDate}"></td>
-	    	<td th:text="${item.lastModifiedDate}"></td>
+	    	<td th:text="${#temporals.format(item.createDate, 'yy-MM-dd HH:mm:ss')}"></td>
+	    	<td th:text="${#temporals.format(item.lastModifiedDate, 'yy-MM-dd HH:mm:ss')}"></td>
 	    	<td th:text="${item.commentId}"></td>
 	    	<td th:text="${item.noteId}"></td>
 	    	<td th:text="${item.commentAuthorId}"></td>
@@ -159,3 +164,39 @@
     </tbody>
 </table>
 </div>
+
+<div id="listTableDiv" th:fragment="filetable (files)">
+<h2>댓글 목록</h2>
+<div class="control-bar"><div></div>
+<select id="pageLimitSelect" onchange="TableManager.updateLimitSize(this.value)" >
+  <option value="0" selected="selected" disabled="disabled">=== 정렬 개수 선택 ===</option>
+  <option value="10">10</option>
+  <option value="20">20</option>
+  <option value="50">50</option>
+  <option value="100">100</option>
+</select>
+</div>
+<table border="1">
+    <thead><th onclick="TableManager.updateSort(0)">파일 번호</th><th onclick="TableManager.updateSort(1)">파일 이름</th>
+    	<th onclick="TableManager.updateSort(2)">파일 크기</th><th onclick="TableManager.updateSort(3)">노트 번호</th>
+    	<th>삭제</th></thead>
+    <tbody th:fragment="filetbody (files)">
+	    <tr th:each="item: ${files}">
+	    	<td th:text="${item.id}"></td>
+	    	<td th:text="${item.filename}"></td>
+	    	<td th:text="${item.files.length}+ bytes"></td>
+	    	<td th:text="${item.note_id}"></td>
+	       	<td>
+	       		<form class="delete-form" action="/admin/files/delete" method="post">
+	       			<input type="hidden" name="id" th:value="${item.id}" />
+			        <input type="hidden" name="params"/>
+		        	<button type="button" class="delete-button">삭제</button>
+	       		</form>
+	       	</td>
+	    </tr>
+	<tr style="display:none;"><td><input id="totalPageCount" th:value="${totalPageCount}" hidden="hidden"></td></tr>
+    </tbody>
+</table>
+</div>
+</body>
+</html>

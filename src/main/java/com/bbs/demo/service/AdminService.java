@@ -63,9 +63,7 @@ public class AdminService {
     }
 
     public Object getNotes(Map<String, String> params) {
-    	Admin admin = isUniqueColumn(params);
-
-    	List<Notes> notes = adminMapper.findAllNoteByPage(admin);
+    	List<Notes> notes = adminMapper.findAllNoteByPage(isUniqueColumn(params));
     	
     	for (int i=0; i< notes.size(); i++) {
     		notes.get(i).setContent(shortContent(notes.get(i).getContent()));
@@ -75,6 +73,10 @@ public class AdminService {
 
     public Object getComments(Map<String, String> params) {
         return adminMapper.findAllCommentByPage(isUniqueColumn(params));
+    }
+
+    public Object getFiles(Map<String, String> params) {
+        return adminMapper.findAllFileByPage(isUniqueColumn(params));
     }
     
     public void updateUserGrade(int id, int newGrade) {
@@ -107,9 +109,9 @@ public class AdminService {
 
 	@Transactional
     public void deleteNotes(int id) {
-		adminMapper.deleteFiles(id);
-		adminMapper.deleteViewCount(id);
-		adminMapper.deleteNoteToken(id);
+		adminMapper.deleteFilesbyNoteId(id);
+		adminMapper.deleteViewCountbyNoteId(id);
+		adminMapper.deleteNoteTokenbyNoteId(id);
     	adminMapper.deleteCommentsbyNoteId(id);
     	adminMapper.deleteNotes(id);
     }
@@ -118,5 +120,10 @@ public class AdminService {
     public void deleteComments(int id) {
 		adminMapper.deleteCommentsbyParentId(id);
     	adminMapper.deleteComments(id);
+    }
+
+	@Transactional
+    public void deleteFiles(int id) {
+    	adminMapper.deleteFiles(id);
     }
 }
