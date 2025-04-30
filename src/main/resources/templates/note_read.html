@@ -38,7 +38,7 @@
         <legend>댓글 작성</legend>
         <form class="comment-form" enctype="multipart/form-data">
             <input type="hidden" name="noteId" th:value="${note.id}" />
-            <input type="hidden" name="commentAuthorId" th:value="${note.userId}" />
+            <input type="hidden" name="commentAuthorId" th:value="${session.loginMember.id}" />
             <textarea class="comment_content" name="content" rows="4" cols="90" placeholder="댓글을 입력해 주세요."></textarea><br>
             <span class="char-count">0</span>/300
             <input type="file" name="imageFile" accept="image/*" /><br>

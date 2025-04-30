@@ -426,7 +426,7 @@ TableManager.init("users",["id", "nickname", "email", "reg_date", "last_access_d
     <h2>회원 목록</h2>
     <div class="control-bar"><div></div>
     <select id="pageLimitSelect" onchange="TableManager.updateLimitSize(this.value)" >
-      <option value="none">=== 정렬 개수 선택 ===</option>
+      <option value="none" selected="selected" disabled="disabled">=== 정렬 개수 선택 ===</option>
 	  <option value="10">10</option>
 	  <option value="20">20</option>
 	  <option value="50">50</option>
