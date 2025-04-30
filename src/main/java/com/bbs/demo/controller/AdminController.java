@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -34,7 +33,6 @@ public class AdminController {
 		} else if (url.equals("comments")) {
 			model.addAttribute("comments", adminS.getComments(params));
 		}
-		System.out.println(adminS.createPageCondition(params).getTotalPageCount());
 		model.addAttribute("totalPageCount", adminS.createPageCondition(params).getTotalPageCount());
 		return "admin";
 	}
@@ -42,7 +40,6 @@ public class AdminController {
 	@GetMapping("/users")
 	public String users(@RequestParam Map<String, String> params, Model model) {
 		model.addAttribute("users", adminS.getUsers(params));
-		System.out.println(adminS.createPageCondition(params).getTotalPageCount());
 		model.addAttribute("totalPageCount", adminS.createPageCondition(params).getTotalPageCount());
 		return "admin_tables :: usertable";
 	}
@@ -50,7 +47,6 @@ public class AdminController {
 	@GetMapping("/boards")
 	public String boards(@RequestParam Map<String, String> params, Model model) {
 		model.addAttribute("boards", adminS.getBoards(params));
-		System.out.println(adminS.createPageCondition(params).getTotalPageCount());
 		model.addAttribute("totalPageCount", adminS.createPageCondition(params).getTotalPageCount());
 		return "admin_tables :: boardtable";
 	}
@@ -58,7 +54,6 @@ public class AdminController {
 	@GetMapping("/notes")
 	public String notes(@RequestParam Map<String, String> params, Model model) {
 		model.addAttribute("notes", adminS.getNotes(params));
-		System.out.println(adminS.createPageCondition(params).getTotalPageCount());
 		model.addAttribute("totalPageCount", adminS.createPageCondition(params).getTotalPageCount());
 		return "admin_tables :: notetable";
 	}
@@ -66,7 +61,6 @@ public class AdminController {
 	@GetMapping("/comments")
 	public String comments(@RequestParam Map<String, String> params, Model model) {
 	    model.addAttribute("comments", adminS.getComments(params));
-		System.out.println(adminS.createPageCondition(params).getTotalPageCount());
 		model.addAttribute("totalPageCount", adminS.createPageCondition(params).getTotalPageCount());
 		return "admin_tables :: commenttable";
 	}
@@ -74,7 +68,6 @@ public class AdminController {
 	@GetMapping("/users/partial")
 	public String usersTablePartial(@RequestParam Map<String, String> params, Model model) {
 		model.addAttribute("users", adminS.getUsers(params));
-		System.out.println(adminS.createPageCondition(params).getTotalPageCount());
 		model.addAttribute("totalPageCount", adminS.createPageCondition(params).getTotalPageCount());
 	    return "admin_tables :: usertbody";
 	}
@@ -82,7 +75,6 @@ public class AdminController {
 	@GetMapping("/boards/partial")
 	public String boardsTablePartial(@RequestParam Map<String, String> params, Model model) {
 		model.addAttribute("boards", adminS.getBoards(params));
-		System.out.println(adminS.createPageCondition(params).getTotalPageCount());
 		model.addAttribute("totalPageCount", adminS.createPageCondition(params).getTotalPageCount());
 		return "admin_tables :: boardtbody";
 	}
@@ -90,7 +82,6 @@ public class AdminController {
 	@GetMapping("/notes/partial")
 	public String notesTablePartial(@RequestParam Map<String, String> params, Model model) {
 		model.addAttribute("notes", adminS.getNotes(params));
-		System.out.println(adminS.createPageCondition(params).getTotalPageCount());
 		model.addAttribute("totalPageCount", adminS.createPageCondition(params).getTotalPageCount());
 		return "admin_tables :: notetbody";
 	}
@@ -98,7 +89,6 @@ public class AdminController {
 	@GetMapping("/comments/partial")
 	public String commentsTablePartial(@RequestParam Map<String, String> params, Model model) {
 		model.addAttribute("comments", adminS.getComments(params));
-		System.out.println(adminS.createPageCondition(params).getTotalPageCount());
 		model.addAttribute("totalPageCount", adminS.createPageCondition(params).getTotalPageCount());
 		return "admin_tables :: commenttbody";
 	}

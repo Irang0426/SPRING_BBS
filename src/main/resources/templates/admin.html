@@ -102,6 +102,13 @@
     padding: 5px 10px;
     border-radius: 4px;
   }
+  
+  .control-bar {
+	  display: flex;
+	  justify-content: space-between;
+	  align-items: center;
+	  margin-bottom: 15px;
+	}
 
   #insertBoard input[type="text"] {
     padding: 5px;
@@ -120,6 +127,11 @@
   #insertBoard button:hover, .update-button:hover {
     background-color: #218838;
   }
+  
+  #pageLimitSelect {
+	  padding: 5px;
+	  font-size: 14px;
+	}
 </style>
 <script th:inline="javascript">
 const TableManager = {
@@ -402,13 +414,14 @@ TableManager.init("users",["id", "nickname", "email", "reg_date", "last_access_d
     </nav>
     <hr>
     <nav>
-		<a href="#" onclick="TableManager.set('users', ['id', 'nickname', 'email', 'reg_date', 'last_access_date', 'user_grade'])">회원</a> |
-		<a href="#" onclick="TableManager.set('boards', ['id', 'name', 'create_date', 'last_modified_date'])">게시판</a> |
-		<a href="#" onclick="TableManager.set('notes', ['id', 'title', 'content', 'create_date', 'last_modified_date', 'board_id', 'user_id'])">게시글</a> |
+		<a href="#" onclick="TableManager.set('users', ['id', 'nickname', 'email', 'reg_date', 'last_access_date', 'user_grade'])">회원</a> | 
+		<a href="#" onclick="TableManager.set('boards', ['id', 'name', 'create_date', 'last_modified_date'])">게시판</a> | 
+		<a href="#" onclick="TableManager.set('notes', ['id', 'title', 'content', 'create_date', 'last_modified_date', 'board_id', 'user_id'])">게시글</a> | 
 		<a href="#" onclick="TableManager.set('comments', ['id', 'content', 'create_date', 'last_modified_date', 'comment_id', 'note_id', 'comment_author_id'])">댓글</a>
     </nav>
     <div id="listTableDiv">
     <h2>회원 목록</h2>
+    <div class="control-bar"><div></div>
     <select id="pageLimitSelect" onchange="TableManager.updateLimitSize(this.value)" >
       <option value="none">=== 정렬 개수 선택 ===</option>
 	  <option value="10">10</option>
@@ -416,6 +429,7 @@ TableManager.init("users",["id", "nickname", "email", "reg_date", "last_access_d
 	  <option value="50">50</option>
 	  <option value="100">100</option>
 	</select>
+	</div>
     <table border="1">
         <thead><th onclick="TableManager.updateSort(0)">회원 번호</th><th onclick="TableManager.updateSort(1)">이름</th>
         	<th onclick="TableManager.updateSort(2)">이메일</th><th onclick="TableManager.updateSort(3)">가입일</th>

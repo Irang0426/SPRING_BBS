@@ -1,23 +1,15 @@
 package com.bbs.demo.service;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bbs.demo.domain.Admin;
 import com.bbs.demo.domain.Notes;
-import com.bbs.demo.domain.Page;
 import com.bbs.demo.domain.Users;
 import com.bbs.demo.mapper.AdminMapper;
-import com.bbs.demo.mapper.PageMapper;
 
 import jakarta.transaction.Transactional;
 
@@ -56,11 +48,9 @@ public class AdminService {
     
     public String createBoard(Map<String, String> params) {
         Admin admin = createPageCondition(params);
-        System.out.println("\t\t\t\tService params: "+params);
 	    String boardName = (String) params.get("boardName");
 	    adminMapper.createBoard(boardName);
 	    
-	    System.out.println("page="+admin.getPage()+"&limit="+admin.getLimit()+"&order="+admin.getOrderby()+"&sort="+admin.getSortby()+"&url="+admin.getUrl());
 	    return "page="+admin.getPage()+"&limit="+admin.getLimit()+"&order="+admin.getOrderby()+"&sort="+admin.getSortby()+"&url="+admin.getUrl();
     }
     
@@ -108,17 +98,11 @@ public class AdminService {
 	@Transactional
     public void deleteBoards(int id) {
 		adminMapper.deleteFilesbyBoardId(id);
-		System.out.println("Files 삭제 완료");
 		adminMapper.deleteViewCountbyBoardId(id);
-		System.out.println("ViewCount 삭제 완료");
 		adminMapper.deleteNoteTokenbyBoardId(id);
-		System.out.println("NoteToken 삭제 완료");
 		adminMapper.deleteCommentsbyBoardId(id);
-		System.out.println("Comments 삭제 완료");
 		adminMapper.deleteNotesbyBoardId(id);
-		System.out.println("Notes 삭제 완료");
     	adminMapper.deleteBoards(id);
-		System.out.println("Boards 삭제 완료");
     }
 
 	@Transactional
