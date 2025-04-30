@@ -23,6 +23,20 @@
 <hr>
 
 <h2>게시글 상세 보기</h2>
+<table border="1">
+    <thead>
+    <tr>
+        <th>파일 이름</th>
+        <th>노트 번호</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="file : ${files}">
+        <td><a th:href="@{/file/download(id=${file.id})}" th:text="${file.filename}">파일 이름</a></td>
+        <td th:text="${#arrays.length(file.files)}">파일 크기</td>
+    </tr>
+    </tbody>
+</table><br>
 <p><strong>제목:</strong> <span th:text="${note.title}">제목</span></p>
 <p><strong>작성자:</strong> <span th:text="${nickname}">닉네임</span></p>
 <p><strong>작성일:</strong> <span th:text="${#temporals.format(note.createDate, 'yyyy-MM-dd HH:mm')}">작성일</span></p>
