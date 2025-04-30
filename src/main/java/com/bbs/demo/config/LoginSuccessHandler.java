@@ -35,6 +35,7 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
         String email = authentication.getName();
         Users user = loginMemberMapper.findbyEmail(email);
         user.setUserGradeString((UserGrade.fromGrade(user.getUserGrade())).toString());
+        user.setPassword("");
 
         // 세션에 저장
         HttpSession session = request.getSession();
