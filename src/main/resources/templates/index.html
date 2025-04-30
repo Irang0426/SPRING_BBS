@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -434,6 +434,475 @@
         console.error("Error:", error);
         hideLoading();
       });
+    }
+  </script>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>홈</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #6A5ACD;
+      --primary-light: #E6E4FF;
+      --accent: #FF6B6B;
+      --background: #F9F9F9;
+      --card-bg: #FFFFFF;
+      --text: #333333;
+      --text-light: #666666;
+      --border: #E0E0E0;
+      --shadow: 0 4px 12px rgba(0,0,0,0.08);
+      --radius: 12px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Pretendard', sans-serif;
+      background-color: var(--background);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      background-color: var(--card-bg);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 5px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--text);
+      padding: 8px 16px;
+      border-radius: var(--radius);
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    nav a:hover {
+      background-color: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .active {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    .section {
+      margin-bottom: 40px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      margin-bottom: 24px;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .section-title i {
+      margin-right: 12px;
+      background-color: var(--primary-light);
+      color: var(--primary);
+      border-radius: 50%;
+      padding: 8px;
+      font-size: 18px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .stat-card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+    }
+
+    .stat-card i {
+      font-size: 28px;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+
+    .stat-label {
+      color: var(--text-light);
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .info-card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+      border-left: 4px solid var(--primary);
+    }
+
+    .info-card:hover {
+      box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+    }
+
+    .info-card h3 {
+      margin-bottom: 12px;
+    }
+
+    .info-card h3 a {
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .info-card h3 a:hover {
+      text-decoration: underline;
+    }
+
+    .meta {
+      font-size: 13px;
+      color: var(--text-light);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .meta i {
+      font-size: 12px;
+    }
+
+    .excerpt {
+      color: var(--text);
+      font-size: 14px;
+      white-space: pre-line;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 5;
+      -webkit-box-orient: vertical;
+      max-height: 120px; /* 대략 5줄 높이 */
+    }
+
+    .refresh-btn {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: var(--radius);
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      margin-bottom: 24px;
+      transition: background-color 0.2s;
+    }
+
+    .refresh-btn:hover {
+      background-color: #5849b8;
+    }
+
+    .refresh-btn i {
+      margin-right: 8px;
+    }
+
+    .loading-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+      
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body onload="refresh()">
+  <div id="loadingModal" class="loading-modal" style="display: none;">
+    <div class="spinner"></div>
+  </div>
+
+  <header>
+    <nav>
+      <a href="/" class="logo">커뮤니티</a>
+      <div class="nav-links">
+        <a href="/" class="active"><i class="fas fa-home"></i> 홈</a>
+        <a href="/board/list"><i class="fas fa-list"></i> 게시판</a>
+        <a href="/file/read?note_id=1"><i class="fas fa-upload"></i> 파일 업로드</a>
+        <a href="/login" th:if="${session.loginMember == null}"><i class="fas fa-sign-in-alt"></i> 로그인</a>
+        <a href="/register" th:if="${session.loginMember == null}"><i class="fas fa-user-plus"></i> 회원가입</a>
+        <a href="/logout" th:if="${session.loginMember != null}"><i class="fas fa-sign-out-alt"></i> 로그아웃</a>
+		<a href="/admin" th:if="${session.loginMember != null && session.loginMember.userGradeString == 'ADMIN'}"><i class="fas fa-cog"></i> 관리자</a>
+      </div>
+    </nav>
+  </header>
+
+  <div class="container">
+    <section class="section">
+      <h2 class="section-title"><i class="fas fa-chart-bar"></i> 사이트 통계</h2>
+      
+      <button class="refresh-btn" onclick="refresh()">
+        <i class="fas fa-sync-alt"></i> 새로고침
+      </button>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <i class="fas fa-users"></i>
+          <div class="stat-label">전체 회원 수</div>
+          <div class="stat-value" id="user">35명</div>
+        </div>
+        
+        <div class="stat-card">
+          <i class="fas fa-clipboard-list"></i>
+          <div class="stat-label">전체 게시글 수</div>
+          <div class="stat-value" id="note">87건</div>
+        </div>
+
+        <div class="stat-card">
+          <i class="fas fa-file-upload"></i>
+          <div class="stat-label">파일 업로드 게시글</div>
+          <div class="stat-value" id="filenote">12건</div>
+        </div>
+        
+        <div class="stat-card">
+          <i class="fas fa-file-alt"></i>
+          <div class="stat-label">전체 파일 업로드 수</div>
+          <div class="stat-value" id="file">12건</div>
+        </div>
+
+        <div class="stat-card">
+          <i class="fas fa-comments"></i>
+          <div class="stat-label">댓글 수</div>
+          <div class="stat-value" id="comment">215건</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title"><i class="fas fa-user-check"></i> 최근 가입한 회원</h2>
+
+      <div class="info-card">
+        <h3><i class="fas fa-user-circle"></i> <span id="newUserName">springdev2025</span></h3>
+        <div class="meta">
+          <span><i class="fas fa-calendar-alt"></i>&nbsp;가입일: <span id="newUserReg">2025-04-12</span></span>
+          <span><i class="fas fa-envelope"></i> <span id="newUserGrade">springdev2025@test.com</span></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title"><i class="fas fa-pen-fancy"></i> 최근 작성된 게시글</h2>
+
+      <div class="info-card">
+        <h3><a href="board_read.html" id="note1Name">Thymeleaf 기본 문법 정리</a></h3>
+        <div class="meta">
+          <span><i class="fas fa-user"></i> <span id="note1writer">user5</span></span>
+          <span><i class="fas fa-calendar"></i> <span id="note1create">2025-04-11</span></span>
+        </div>
+        <p class="excerpt" id="note1content">Thymeleaf는 HTML 템플릿에서 변수를 출력하거나 조건문 등을 처리할 수 있도록 도와주는 템플릿 엔진입니다...</p>
+      </div>
+      
+      <div class="info-card">
+        <h3><a href="board_read.html"  id="note2Name">Spring Boot와 MyBatis 연동하기</a></h3>
+        <div class="meta">
+          <span><i class="fas fa-user"></i> <span id="note2writer">admin</span></span>
+          <span><i class="fas fa-calendar"></i> <span id="note2create">2025-04-10</span></span>
+        </div>
+        <p class="excerpt" id="note2content">MyBatis는 SQL을 XML 또는 어노테이션으로 분리하여 사용할 수 있게 해주는 프레임워크입니다...</p>
+      </div>
+    </section>
+  </div>
+  
+  <script type="text/javascript">
+    function showLoading() {
+      document.getElementById('loadingModal').style.display = 'flex';
+    }
+    
+    function hideLoading() {
+      document.getElementById('loadingModal').style.display = 'none';
+    }
+
+    // 내용을 최대 5줄로 제한하는 함수
+    function formatContent(content) {
+      if (!content) return '';
+      
+      // 줄바꿈 보존
+      let lines = content.split('\n');
+      
+      // 최대 5줄만 유지
+      if (lines.length > 5) {
+        lines = lines.slice(0, 5);
+      }
+      
+      return lines.join('\n');
+    }
+
+    const refresh = () => {
+      showLoading();
+      
+      fetch(
+        "/data/datas",
+        {
+          method: "POST",
+          body: "",
+        }
+      )
+      .then((response) => {
+        console.log("res: ", response);
+        if (response.ok) {
+          return response.json()
+        }
+      })
+      .then((data) => {
+        console.log("DATA: ", data);
+        
+        let users = document.getElementById("user");
+        let note = document.getElementById("note");
+        let filenote = document.getElementById("filenote");
+        let file = document.getElementById("file");
+        let comment = document.getElementById("comment");
+        
+        users.innerHTML = data.AllMember + "명";
+        note.innerHTML = data.AllNotes + "건";
+        filenote.innerHTML = data.AllNoteFiles + "건";
+        file.innerHTML = data.AllFiles + "건";
+        comment.innerHTML = data.AllComments + "건";
+        
+        let newUserName = document.getElementById("newUserName");
+        let newUserReg = document.getElementById("newUserReg");
+        let newUserGrade = document.getElementById("newUserGrade");
+        
+        newUserName.innerHTML = data.newUser.nickName;
+        newUserReg.innerHTML = data.newUser.regDate;
+        newUserGrade.innerHTML = data.newUser.userGradeString;
+        
+        let note1Name = document.getElementById("note1Name");
+        let note1writer = document.getElementById("note1writer");
+        let note1create = document.getElementById("note1create");
+        let note1content = document.getElementById("note1content");
+        
+        note1Name.innerHTML = data.newNotes[0].title;
+        note1Name.setAttribute("href", "/note/read?id=" + data.newNotes[0].id);
+        note1create.innerHTML = changeDate(data.newNotes[0].createDate);
+        note1writer.innerHTML = data.newNotes[0].userId;
+        // 내용 포매팅 적용
+        note1content.innerHTML = formatContent(data.newNotes[0].content);
+        
+        let note2Name = document.getElementById("note2Name");
+        note2Name.setAttribute("href", "/note/read?id=" + data.newNotes[1].id);
+        let note2writer = document.getElementById("note2writer");
+        let note2create = document.getElementById("note2create");
+        let note2content = document.getElementById("note2content");
+
+        note2Name.innerHTML = data.newNotes[1].title;
+        note2create.innerHTML = changeDate(data.newNotes[1].createDate);
+        note2writer.innerHTML = data.newNotes[1].userId;
+        // 내용 포매팅 적용
+        note2content.innerHTML = formatContent(data.newNotes[1].content);
+        
+        hideLoading();
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        hideLoading();
+      });
+    }
+    
+    const changeDate = (date) => {
+    	return date = date.substring(0, 4) + "-" + date.substring(5, 7) + "-" + date.substring(8, 10)
+    					+ " " + date.substring(11, 13) + ":" + date.substring(14, 16);
     }
   </script>
 </body>

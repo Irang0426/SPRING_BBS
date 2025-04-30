@@ -370,7 +370,7 @@
                         <td class="col-1"><p>${items[i].id}</p></td>
                         <td class="col-2"><p>${items[i].title}</p></td>
                         <td class="col-7"><p>${items[i].content}</p></td>
-                        <td class="col-2"><p>${items[i].createDate}</p></td>
+                        <td class="col-2"><p>${changeDate(items[i].createDate)}</p></td>
                     `;
                     tbody.appendChild(noteList);
                 }
@@ -428,17 +428,17 @@
             })
             .then((data) => {
                 console.log("DATA: ", data);
-                const items = data.noteList;
-                
                 let pagingtr =  document.getElementById("paging");
-                pagingtr.innerHTML = ""
-                
-                if(items.length == 0) {
+                if(!data) {
                     notetable.innerHTML = "<tr><td colspan='4' class='text-center py-3'>작성된 글이 없습니다.</td></tr>";
                     pagingtr.innerHTML = "";                      
-                    hideLoading();            
+                    hideLoading();
                     return;
                 }
+                const items = data.noteList;
+                
+                pagingtr.innerHTML = ""
+                
                 
                 notetable.innerHTML = `
                     <thead class="table-dark">
@@ -462,7 +462,7 @@
                         <td>${items[i].id}</td>
                         <td>${items[i].title}</td>
                         <td>${items[i].content}</td>
-                        <td>${items[i].create_date}</td>
+                        <td>${changeDate(items[i].createDate)}</td>
                     `;
                     tbody.appendChild(noteList);
                 }
@@ -506,6 +506,11 @@
         	
         	href = "/note/register?boardId=" + value;
         	location.href = href;
+        }
+        
+        const changeDate = (date) => {
+        	return date = date.substring(0, 4) + "-" + date.substring(5, 7) + "-" + date.substring(8, 10)
+        					+ " " + date.substring(11, 13) + ":" + date.substring(14, 16);
         }
     </script>
 </body>
