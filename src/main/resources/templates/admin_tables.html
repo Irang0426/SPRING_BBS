@@ -1,5 +1,6 @@
 <div id="listTableDiv" th:fragment="usertable (users)">
 <h2>회원 목록</h2>
+<div class="control-bar"><div></div>
 <select id="pageLimitSelect" onchange="TableManager.updateLimitSize(this.value)" >
   <option value="none">=== 정렬 개수 선택 ===</option>
   <option value="10">10</option>
@@ -7,6 +8,7 @@
   <option value="50">50</option>
   <option value="100">100</option>
 </select>
+</div>
 <table border="1">
     <thead><th onclick="TableManager.updateSort(0)">회원 번호</th><th onclick="TableManager.updateSort(1)">이름</th>
     	<th onclick="TableManager.updateSort(2)">이메일</th><th onclick="TableManager.updateSort(3)">가입일</th>
@@ -43,6 +45,11 @@
 
 <div id="listTableDiv" th:fragment="boardtable (boards)">
 <h2>게시판 목록</h2>
+<div class="control-bar">
+<form id="insertBoard" method="post" action="/admin/boards/create">
+	<input type="text" id="boardName" placeholder="신규 게시판 이름 입력" />
+	<button type="button" onclick="TableManager.createBoard()">생성 완료</button>
+</form>
 <select id="pageLimitSelect" onchange="TableManager.updateLimitSize(this.value)" >
   <option value="none">=== 정렬 개수 선택 ===</option>
   <option value="10">10</option>
@@ -50,10 +57,7 @@
   <option value="50">50</option>
   <option value="100">100</option>
 </select>
-<form id="insertBoard" method="post" action="/admin/boards/create">
-	<input type="text" id="boardName" placeholder="신규 게시판 이름 입력" />
-	<button type="button" onclick="TableManager.createBoard()">생성 완료</button>
-</form>
+</div>
 <table border="1">
     <thead>
     	<th onclick="TableManager.updateSort(0)">게시판 번호</th><th onclick="TableManager.updateSort(1)">게시판 이름</th>
@@ -76,10 +80,11 @@
 	<tr style="display:none;"><td><input id="totalPageCount" th:value="${totalPageCount}" hidden="hidden"></td></tr>
     </tbody>
 </table>
-
+</div>
 
 <div id="listTableDiv" th:fragment="notetable (notes)">
 <h2>게시글 목록</h2>
+<div class="control-bar"><div></div>
 <select id="pageLimitSelect" onchange="TableManager.updateLimitSize(this.value)" >
   <option value="none">=== 정렬 개수 선택 ===</option>
   <option value="10">10</option>
@@ -87,6 +92,7 @@
   <option value="50">50</option>
   <option value="100">100</option>
 </select>
+</div>
 <table border="1">
     <thead><th onclick="TableManager.updateSort(0)">게시글 번호</th><th onclick="TableManager.updateSort(1)">제목</th>
     	<th onclick="TableManager.updateSort(2)">내용</th><th onclick="TableManager.updateSort(3)">작성일</th>
@@ -117,6 +123,7 @@
 
 <div id="listTableDiv" th:fragment="commenttable (comments)">
 <h2>댓글 목록</h2>
+<div class="control-bar"><div></div>
 <select id="pageLimitSelect" onchange="TableManager.updateLimitSize(this.value)" >
   <option value="none">=== 정렬 개수 선택 ===</option>
   <option value="10">10</option>
@@ -124,6 +131,7 @@
   <option value="50">50</option>
   <option value="100">100</option>
 </select>
+</div>
 <table border="1">
     <thead><th onclick="TableManager.updateSort(0)">댓글 번호</th><th onclick="TableManager.updateSort(1)">내용</th>
     	<th onclick="TableManager.updateSort(2)">작성일</th><th onclick="TableManager.updateSort(3)">수정일</th>
