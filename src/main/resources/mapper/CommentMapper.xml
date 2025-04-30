@@ -14,7 +14,7 @@
     <!-- 게시글에 달린 댓글 조회 -->
     <select id="getCommentsByNoteId" resultType="com.bbs.demo.domain.Comments">
         SELECT
-        id, content, create_date AS createDate, images,
+        id, content, create_date AS createDate, images, last_modified_date AS lastModifiedDate,
         comment_id AS commentId, note_id AS noteId, comment_author_id AS commentAuthorId
         FROM comments
         WHERE note_id = #{noteId}
@@ -52,9 +52,7 @@
 			    <when test="commentId != null">#{commentId}</when>
 			    <otherwise>NULL</otherwise>
 			  </choose>,
-            last_modified_date = NOW(),
-            note_id = #{noteId},
-            comment_author_id = #{commentAuthorId}
+            last_modified_date = NOW()
         WHERE
             id = #{id}
     </update>

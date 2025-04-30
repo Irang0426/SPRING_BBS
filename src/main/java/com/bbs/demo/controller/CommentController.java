@@ -8,11 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -22,48 +22,69 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
-    // 게시글에 달린 댓글 조회
-    @GetMapping("/list")
-    public String getComments(@RequestParam("noteId") int noteId, Model model) {
-        List<Comments> comments = commentService.getCommentsByNoteId(noteId);
-        model.addAttribute("comments", comments);
-        return "comment_test";  // 댓글을 표시할 게시글 상세 페이지 (예시)
+    // ✅ 댓글 목록 JSON 반환
+    @GetMapping("/json")
+    @ResponseBody
+    public List<Comments> getCommentsJson(@RequestParam("noteId") int noteId) {
+        return commentService.getCommentsByNoteId(noteId);
     }
 
-    // 댓글 작성
-    @PostMapping("/add")
-    public String addComment(@ModelAttribute Comments comment, @RequestParam("imageFile") MultipartFile imageFile) throws IOException {
-
+    // ✅ 댓글 등록 (AJAX)
+    @PostMapping("/ajax/add")
+    @ResponseBody
+    public ResponseEntity<?> addCommentAjax(@ModelAttribute Comments comment,
+                                            @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) throws IOException {
         if (imageFile != null && !imageFile.isEmpty()) {
             comment.setImages(imageFile.getBytes());
         } else {
-            comment.setImages(null);  // 👈 여기 꼭 넣기
+            comment.setImages(null);
         }
 
-        // 부모 댓글이 존재하는지 확인
         if (comment.getCommentId() != null) {
             Comments parent = commentService.getCommentById(comment.getCommentId());
             if (parent == null) {
-                throw new IllegalArgumentException("부모 댓글이 존재하지 않습니다.");
+                return ResponseEntity.badRequest().body("부모 댓글이 존재하지 않습니다.");
             }
         }
-        commentService.addComment(comment);
-        return "redirect:/note/read?id=" + comment.getNoteId();
+
+        Comments saved = commentService.addComment(comment);
+        return ResponseEntity.ok(saved);
     }
 
-    // 댓글 삭제
-    @PostMapping("/delete")
-    public String deleteComment(@RequestParam("id") int id, @RequestParam("noteId") int noteId) {
+    // ✅ 댓글 수정 (AJAX)
+    @PostMapping("/ajax/update")
+    @ResponseBody
+    public ResponseEntity<?> updateCommentAjax(@RequestParam("id") int id,
+                                               @RequestParam("content") String content,
+                                               @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) throws IOException {
+        // 댓글을 DB에서 가져오기
+        Comments comment = commentService.getCommentById(id);
+        if (comment != null) {
+            // 수정할 댓글 내용 설정
+            comment.setContent(content);
+
+            // 이미지가 있으면 업데이트
+            if (imageFile != null && !imageFile.isEmpty()) {
+                comment.setImages(imageFile.getBytes());
+            }
+
+            // 댓글 업데이트
+            commentService.updateComment(comment);
+            return ResponseEntity.ok(comment);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("댓글을 찾을 수 없습니다.");
+        }
+    }
+
+    // ✅ 댓글 삭제 (AJAX)
+    @PostMapping("/ajax/delete")
+    @ResponseBody
+    public ResponseEntity<?> deleteCommentAjax(@RequestParam("id") int id) {
         commentService.deleteComment(id);
-        return "redirect:/comments/list?noteId=" + noteId;
-    }
-    
-    @PostMapping("/update")
-    public String updateComment(@ModelAttribute Comments comment) {
-        commentService.updateComment(comment);
-        return "redirect:/comments/list?noteId=" + comment.getNoteId();
+        return ResponseEntity.ok("삭제 성공");
     }
 
+    // ✅ 댓글 이미지 반환
     @GetMapping("/images")
     public ResponseEntity<byte[]> getCommentImage(@RequestParam("id") int id) {
         Comments comment = commentService.getCommentById(id);
@@ -74,7 +95,7 @@ public class CommentController {
         }
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_JPEG); // 필요시 IMAGE_PNG 등으로 변경
+        headers.setContentType(MediaType.IMAGE_JPEG);
         return new ResponseEntity<>(imageData, headers, HttpStatus.OK);
     }
 }

@@ -5,314 +5,199 @@
     <title>게시글 상세</title>
 </head>
 <body>
-    <nav>
-        <a href="/">홈</a> |
-        <a href="/board/list">게시판</a> |
-        <a href="/file/read?note_id=1">파일 업로드</a> |
-        <a href="/login">로그인</a> |
-        <a href="/register">회원가입</a> |
-        <a href="/admin">관리자</a>
-    </nav>
-    <hr>
+<nav>
+    <a href="/">홈</a> |
+    <a href="/board/list">게시판</a> |
+    <a href="/file/read?note_id=1">파일 업로드</a> |
+    <a href="/login">로그인</a> |
+    <a href="/register">회원가입</a> |
+    <a href="/admin">관리자</a>
+</nav>
+<hr>
 
-    <h2>게시글 상세 보기</h2>
+<h2>게시글 상세 보기</h2>
 
-    <table th:if="${files != null and !files.isEmpty()}">
-        <thead>
-        <tr>
-            <th>파일 번호</th>
-            <th>파일 이름</th>
-            <th>파일 크기</th>
-            <th>노트 번호</th>
-        </tr>
-        </thead>
-        <tbody>
-            <tr th:each="file : ${files}">
-                <td th:text="${file.id}">파일 번호</td>
-                <td><a th:href="@{/file/download(id=${file.id})}" th:text="${file.filename}">파일 이름</a></td>
-                <td th:text="${#arrays.length(file.files)}">파일 크기</td>
-                <td th:text="${file.note_id}">노트 번호</td>
-            </tr>
-        </tbody>
-    </table>
+<p><strong>제목:</strong> <span th:text="${note.title}">제목</span></p>
+<p><strong>작성자 ID:</strong> <span th:text="${note.userId}">작성자</span></p>
+<p><strong>작성일:</strong> <span th:text="${#temporals.format(note.createDate, 'yyyy-MM-dd HH:mm')}">작성일</span></p>
+<p><strong>내용:</strong> <span th:text="${note.content}">내용</span></p>
 
-    <p><strong>제목:</strong> <span th:text="${note.title}">제목</span></p>
-    <p><strong>작성자 ID:</strong> <span th:text="${note.userId}">작성자</span></p>
-    <p><strong>작성일:</strong> 
-        <span th:text="${#temporals.format(note.createDate, 'yyyy-MM-dd HH:mm')}">작성일</span>
-    </p>
-    <p><strong>내용:</strong> <span th:text="${note.content}">내용</span></p>
+<a th:href="@{|/note/modify?id=${note.id}|}">[수정]</a> |
+<a href="#" onclick="deleteNote();">[삭제]</a> |
+<a href="/note/list">[목록]</a>
 
-    <a th:href="@{|/note/modify?id=${note.id}|}">[수정]</a> |
-    <a href="#" onclick="deleteNote();">[삭제]</a> |
-    <a href="/note/list">[목록]</a>
+<br><br><br>
 
-    <br><br><br><br><br><br>
+<!-- 댓글 영역 -->
+<div class="cm_list">
+    <fieldset>
+        <legend>댓글 작성</legend>
+        <form class="comment-form" enctype="multipart/form-data">
+            <input type="hidden" name="noteId" th:value="${note.id}" />
+            <input type="hidden" name="commentAuthorId" th:value="${note.userId}" />
+            <textarea name="content" rows="4" cols="90" placeholder="댓글을 입력해 주세요."></textarea><br>
+            <input type="file" name="imageFile" accept="image/*" /><br>
+            <button type="submit">등록</button>
+        </form>
+    </fieldset>
 
-    <!-- 댓글 렌더링 영역 -->
-    <div class="cm_list">
-        <!-- 댓글 입력 폼 -->
-        <fieldset>
-            <legend class="skipinfo">댓글 작성</legend>
-            <form action="/comments/add" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="noteId" th:value="${note.id}"/>
-                <input type="hidden" name="commentAuthorId" th:value="${note.userId}"/>
-                <textarea class="comment_content" name="content" rows="4" cols="90" placeholder="댓글을 입력해 주세요."></textarea>
-                <br>
-                <input type="file" name="imageFile" accept="image/*" /><br>
-                <button type="submit">등록</button>
-                <span class="char-count">0</span>/300
-            </form>
-        </fieldset>
+    <h3>댓글 목록</h3>
+    <ul id="comment-list"></ul>
+</div>
 
-        <!-- 댓글 목록 -->
-        <h3>댓글 목록</h3>
-        <ul>
-            <li th:each="comment : ${comments}">
-                <!-- 댓글 내용 -->
-                <div class="comment-content">
-                    <span th:text="${comment.commentAuthorId}">작성자</span>
-                    <span th:text="${#temporals.format(comment.createDate, 'yyyy-MM-dd HH:mm')}">작성일</span><br>
-                    <img th:if="${comment.images}"
-                         th:src="@{/comments/images(id=${comment.id})}"
-                         alt="댓글 이미지"
-                         style="max-width: 200px;" /><br>
-                    <p class="comment_content" th:text="${comment.content}">댓글 내용</p>
-                    <button type="button" class="edit-comment-btn">수정</button>
-                    <form action="/comments/delete" method="post" style="display:inline;">
-                        <input type="hidden" name="id" th:value="${comment.id}">
-                        <input type="hidden" name="noteId" th:value="${note.id}">
-                        <button type="submit">삭제</button>
-                    </form>
-                </div>
-                <!-- 댓글 수정 폼 -->
-                <form class="edit-comment-form" action="/comments/update" method="post" enctype="multipart/form-data">
-                    <input type="hidden" name="id" th:value="${comment.id}">
-                    <input type="hidden" name="noteId" th:value="${note.id}">
-                    <input type="hidden" name="commentAuthorId" th:value="${note.userId}"/>
-                    <textarea class="comment_content" name="content" th:text="${comment.content}" rows="4" cols="90" placeholder="댓글을 입력하세요"></textarea>
-                    <br>
-                    <input type="file" name="imageFile" accept="image/*" /><br>
-                    <button type="submit">등록</button>
-                    <span class="char-count">0</span>/300
-                    <button type="button" class="cancel-edit">취소</button>
-                </form>
-                <!-- 대댓글 작성 버튼 -->
-                <button type="button" class="reply-toggle-btn">답글쓰기</button>
-                <!-- 대댓글 입력 폼 -->
-                <form class="reply-form" action="/comments/add" method="post" style="margin-top:10px;" enctype="multipart/form-data">
-                    <input type="hidden" name="noteId" th:value="${note.id}"/>
-                    <input type="hidden" name="commentAuthorId" th:value="${note.userId}"/>
-                    <input type="hidden" name="commentId" th:value="${comment.id}"/>
-                    <textarea class="comment_content" name="content" rows="4" cols="90" placeholder="댓글을 입력하세요"></textarea>
-                    <br>
-                    <input type="file" name="imageFile" accept="image/*" /><br>
-                    <button type="submit">등록</button>
-                    <span class="char-count">0</span>/300
-                    <button type="button" class="reply-cancel-btn">취소</button>
-                </form>
-                <!-- 대댓글 목록 (1단계) -->
-                <ul th:if="${not #lists.isEmpty(comment.children)}" class="reply">
-                    <li th:each="reply : ${comment.children}">
-                        <div class="comment-content">
-                            <span th:text="${reply.commentAuthorId}">작성자</span>
-                            <span th:text="${#temporals.format(reply.lastModifiedDate, 'yyyy-MM-dd HH:mm')}">작성일</span>
-                            <p class="comment_content" th:text="${reply.content}">대댓글 내용</p>
-                            <button type="button" class="edit-comment-btn">수정</button>
-                            <form action="/comments/delete" method="post" style="display:inline;">
-                                <input type="hidden" name="id" th:value="${reply.id}">
-                                <input type="hidden" name="noteId" th:value="${note.id}">
-                                <button type="submit">삭제</button>
-                            </form>
-                        </div>
-                        <!-- 대댓글 수정 폼 -->
-                        <form class="edit-comment-form" action="/comments/update" method="post" enctype="multipart/form-data">
-                            <input type="hidden" name="id" th:value="${reply.id}">
-                            <input type="hidden" name="noteId" th:value="${note.id}">
-                            <input type="hidden" name="commentAuthorId" th:value="${note.userId}"/>
-                            <input type="hidden" name="commentId" th:value="${reply.commentId}"/>
-                            <textarea class="comment_content" name="content" th:text="${reply.content}" rows="4" cols="90" placeholder="댓글을 입력하세요"></textarea>
-                            <br>
-                            <input type="file" name="imageFile" accept="image/*" /><br>
-                            <button type="submit">등록</button>
-                            <span class="char-count">0</span>/300
-                            <button type="button" class="cancel-edit">취소</button>
-                        </form>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-
-</body>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery 추가 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-// 댓글/대댓글/수정폼 글자수 카운팅
-const textareas = document.querySelectorAll('.comment_content');
+    const noteId = $('input[name="noteId"]').val();
+    const userId = $('input[name="commentAuthorId"]').val();
 
-textareas.forEach(textarea => {
-  const counter = textarea.parentElement.querySelector('.char-count');
-  if (counter) {
-    textarea.addEventListener('input', function() {
-      counter.textContent = this.value.length;
-    });
-  }
-});
+    function renderComment(comment, depth = 0) {
+        const isReply = depth > 0;
+        const padding = isReply ? 'style="margin-left:30px;"' : '';
+        let html = `<li ${padding} data-id="${comment.id}">
+            <div>
+                <strong>${comment.commentAuthorId}</strong> (${comment.lastModifiedDate})<br>
+                ${comment.images ? `<img src="/comments/images?id=${comment.id}" style="max-width:200px;"><br>` : ''}
+                <p>${comment.content}</p>
+                <button class="edit-btn">수정</button>
+                <button class="delete-btn">삭제</button>
+                ${!isReply ? `<button class="reply-toggle-btn">답글쓰기</button>` : ''}
+            </div>
 
-$(function() {
-    // ✅ 페이지 로드시 수정폼/답글폼 숨기기
-    $('.edit-comment-form, .reply-form').hide();
+            <form class="edit-form" style="display:none;" enctype="multipart/form-data">
+                <input type="hidden" name="id" value="${comment.id}">
+                <textarea name="content" rows="3" cols="80">${comment.content}</textarea><br>
+                <input type="file" name="imageFile"><br>
+                <button type="submit">수정완료</button>
+                <button type="button" class="cancel-edit">취소</button>
+            </form>
 
-    // 댓글/대댓글 수정 폼 토글
-    $(document).on('click', '.edit-comment-btn', function() {
-        var $content = $(this).closest('.comment-content');
-        var commentText = $content.find('.comment_content').text().trim();
-        if (!commentText) {
-            commentText = $content.contents().filter(function() {
-                return this.nodeType === 3;
-            }).text().trim();
+            ${!isReply ? `
+            <form class="reply-form" style="display:none;" enctype="multipart/form-data">
+                <input type="hidden" name="noteId" value="${noteId}">
+                <input type="hidden" name="commentAuthorId" value="${userId}">
+                <input type="hidden" name="commentId" value="${comment.id}">
+                <textarea name="content" rows="3" cols="80" placeholder="답글을 입력하세요"></textarea><br>
+                <input type="file" name="imageFile"><br>
+                <button type="submit">등록</button>
+                <button type="button" class="reply-cancel-btn">취소</button>
+            </form>` : ''}
+        `;
+
+        if (comment.children && comment.children.length > 0) {
+            html += '<ul>';
+            comment.children.forEach(reply => {
+                html += renderComment(reply, depth + 1);
+            });
+            html += '</ul>';
         }
-        var $form = $content.next('.edit-comment-form');
-        var $textarea = $form.find('textarea');
-        var $counter = $form.find('.char-count');
-        $textarea.val(commentText);
-        $counter.text(commentText.length);
-        $content.hide();
-        $form.show();
-    });
 
-    $(document).on('click', '.cancel-edit', function() {
-        var $form = $(this).closest('.edit-comment-form');
-        $form.hide();
-        $form.prev('.comment-content').show();
-    });
-
-    // 대댓글 작성 폼 토글
-    $(document).on('click', '.reply-toggle-btn', function() {
-        var $li = $(this).closest('li');
-        $li.find('.reply-form').show();
-        $(this).hide();
-    });
-
-    $(document).on('click', '.reply-cancel-btn', function() {
-        var $li = $(this).closest('li');
-        $li.find('.reply-form').hide();
-        $li.find('.reply-toggle-btn').show();
-    });
-});
-
-<!--
-// 댓글 저장
-function insertComment() {
-const content = document.getElementById('content');
-const noteId = document.getElementById('noteId').value;
-const commentAuthorId = document.getElementById('commentAuthorId').value;
-
-if (!content.value.trim()) {
-    alert('댓글을 입력해 주세요.');
-    content.focus();
-    return;
-}
-
-const params = {
-    noteId: noteId,
-    content: content.value,
-    writer: commentAuthorId
-};
-
-$.ajax({
-    url: `/posts/${noteId}/comments`,
-    type: 'post',
-    contentType: 'application/json; charset=utf-8',
-    dataType: 'json',
-    data: JSON.stringify(params),
-    async: false,
-    success: function (response) {
-        console.log('저장 성공: ', response);
-        window.location.reload();
-    },
-    error: function (request, status, error) {
-        console.log('저장 실패: ', error);
+        html += '</li>';
+        return html;
     }
-});
-}
 
-// 댓글 리스트 조회
-function findAllComment() {
-const noteId = document.getElementById('noteId').value;
+    function loadComments() {
+        $.getJSON(`/comments/json?noteId=${noteId}`, function(data) {
+            let listHtml = '';
+            data.forEach(comment => {
+                listHtml += renderComment(comment);
+            });
+            $('#comment-list').html(listHtml);
+        });
+    }
 
-$.ajax({
-    url: `/posts/${noteId}/comments`,
-    type: 'get',
-    dataType: 'json',
-    async: false,
-    success: function (response) {
-        if (!response.length) {
-            document.querySelector('.cm_list').innerHTML = '<div class="cm_none"><p>등록된 댓글이 없습니다.</p></div>';
-            return false;
-        }
+    $(document).ready(function() {
+        loadComments();
 
-        let commentHtml = '';
-
-        response.forEach(row => {
-            commentHtml += `
-                <div>
-                    <span class="writer_img">
-                        <img src="/images/default_profile.png" width="30" height="30" alt="기본 프로필 이미지"/>
-                    </span>
-                    <p class="writer">
-                        <em>${row.writer}</em>
-                        <span class="date">${row.createDate}</span>
-                    </p>
-                    <div class="cont">
-                        <div class="txt_con">${row.content}</div>
-                    </div>
-                    <p class="func_btns">
-                        <button type="button" class="btns"><span class="icons icon_modify">수정</span></button>
-                        <button type="button" class="btns"><span class="icons icon_del">삭제</span></button>
-                    </p>
-                </div>
-            `;
+        // 댓글 등록
+        $(document).on('submit', '.comment-form', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            $.ajax({
+                url: '/comments/ajax/add',
+                method: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function() {
+                    loadComments();
+                    $('.comment-form')[0].reset();
+                }
+            });
         });
 
-        document.querySelector('.cm_list').innerHTML = commentHtml;
-    },
-    error: function (request, status, error) {
-        console.log(error);
-    }
-});
-}
+        // 댓글 삭제
+        $(document).on('click', '.delete-btn', function() {
+            const id = $(this).closest('li').data('id');
+            $.post('/comments/ajax/delete', { id }, function() {
+                loadComments();
+            });
+        });
 
-// 게시글 삭제
-function deleteNote() {
-const noteId = document.getElementById('noteId').value;
+        // 수정 폼 열기/닫기
+        $(document).on('click', '.edit-btn', function() {
+            const $li = $(this).closest('li');
+            const isReply = $li.data('reply');
 
-if (!confirm('정말 삭제하시겠습니까?')) {
-    return;
-}
+            // 대댓글이 아닌 경우에만 수정 폼을 토글
+            if (!isReply) {
+                $li.find('.edit-form').toggle();
+                $li.find('div').toggle();
+            }
+        });
+        $(document).on('click', '.cancel-edit', function() {
+            const $li = $(this).closest('li');
+            $li.find('.edit-form').hide();
+            $li.find('div').show();
+        });
 
-$.ajax({
-    url: `/note/remove?id=${noteId}`,
-    type: 'post',
-    success: function () {
-        alert('삭제되었습니다.');
-        window.location.href = '/board/list';
-    },
-    error: function (request, status, error) {
-        console.log('삭제 실패: ', error);
-        alert('삭제에 실패했습니다.');
-    }
-});
-}
+        // 댓글 수정 제출
+        $(document).on('submit', '.edit-form', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this); // 수정 폼의 데이터를 가져옴
+            $.ajax({
+                url: '/comments/ajax/update',  // 업데이트 URL
+                method: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    loadComments();  // 댓글 목록 새로고침
+                },
+                error: function(xhr, status, error) {
+                    console.error("댓글 수정 오류:", error);
+                }
+            });
+        });
 
-window.onload = () => {
-findAllComment();
-};
--->
+        // 답글 폼 열기/닫기
+        $(document).on('click', '.reply-toggle-btn', function() {
+            const $li = $(this).closest('li');
+            $li.find('.reply-form').show();
+            $(this).hide();
+        });
+        $(document).on('click', '.reply-cancel-btn', function() {
+            const $li = $(this).closest('li');
+            $li.find('.reply-form').hide();
+            $li.find('.reply-toggle-btn').show();
+        });
 
-
+        // 답글 등록
+        $(document).on('submit', '.reply-form', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            $.ajax({
+                url: '/comments/ajax/add',
+                method: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function() {
+                    loadComments();
+                }
+            });
+        });
+    });
 </script>
-
+</body>
 </html>

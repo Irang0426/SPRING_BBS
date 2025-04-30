@@ -17,8 +17,9 @@ public class CommentService {
     private CommentMapper commentMapper;
 
     // 댓글 작성
-    public void addComment(Comments comment) {
+    public Comments addComment(Comments comment) {
         commentMapper.insertComment(comment);
+        return comment;
     }
     
     public Comments getCommentById(int id) {
