@@ -4,6 +4,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bbs.demo.domain.Admin;
+import com.bbs.demo.domain.Notes;
 import com.bbs.demo.domain.Page;
 import com.bbs.demo.mapper.AdminMapper;
 import com.bbs.demo.mapper.PageMapper;
@@ -35,6 +37,14 @@ public class AdminService {
         return admin.setTotalPageCount(adminMapper.pageCount(admin));
     }
     
+    private String shortContent(String content) {
+    	if (content == null) {
+    		content = "";
+    	}
+    	String shortContent = content.length() > 20 ? content.substring(0,20)+"..." : content;
+    	return shortContent;
+    }
+    
     public String createBoard(Map<String, String> params) {
         Admin admin = createPageCondition(params);
         System.out.println("\t\t\t\tService params: "+params);
@@ -54,7 +64,11 @@ public class AdminService {
     }
 
     public Object getNotes(Map<String, String> params) {
-        return adminMapper.findAllNoteByPage(createPageCondition(params));
+    	List<Notes> notes = adminMapper.findAllNoteByPage(createPageCondition(params));
+    	for (int i=0; i< notes.size(); i++) {
+    		notes.get(i).setContent(shortContent(notes.get(i).getContent()));
+    	}
+        return notes;
     }
 
     public Object getComments(Map<String, String> params) {

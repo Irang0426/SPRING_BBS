@@ -4,6 +4,123 @@
 <head>
     <meta charset="UTF-8">
     <title>회원 관리</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 20px;
+    background-color: #f9f9f9;
+  }
+
+  nav {
+    margin-bottom: 10px;
+  }
+
+  nav a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    margin-right: 10px;
+  }
+
+  nav a:hover {
+    color: #007BFF;
+  }
+
+  hr {
+    border: none;
+    height: 1px;
+    background-color: #ccc;
+    margin: 20px 0;
+  }
+
+  h2 {
+    color: #444;
+    margin-bottom: 10px;
+  }
+
+  select {
+    padding: 5px;
+    font-size: 14px;
+    margin-bottom: 15px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    margin-top: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+  }
+
+  th {
+    background-color: #f0f0f0;
+    cursor: pointer;
+    color: #333;
+  }
+
+  th:hover {
+    background-color: #e0e0e0;
+  }
+
+  .delete-button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+
+  .delete-button:hover {
+    background-color: #c82333;
+  }
+
+  .page-nav {
+    padding: 10px;
+  }
+
+  .page-link {
+    text-decoration: none;
+    color: #007BFF;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .page-link:hover {
+    text-decoration: underline;
+  }
+
+  .nowPage a {
+    color: white;
+    background-color: #007BFF;
+    padding: 5px 10px;
+    border-radius: 4px;
+  }
+
+  #insertBoard input[type="text"] {
+    padding: 5px;
+    margin-right: 5px;
+  }
+
+  #insertBoard button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  #insertBoard button:hover {
+    background-color: #218838;
+  }
+</style>
 <script th:inline="javascript">
 const TableManager = {
   state: {
@@ -84,6 +201,7 @@ const TableManager = {
 	        this.bindDeleteButtons();
 	        this.changeList(this.state.totalPageCount < 0 ? [[${totalPageCount}]] : this.state.totalPageCount);
 	        this.createBoardButton();
+	        this.updateSortIcons();
 	      });
 	} else {
 	    fetch(`/admin/${url}`)
@@ -95,6 +213,7 @@ const TableManager = {
 	        this.bindDeleteButtons();
 	        this.changeList(this.state.totalPageCount);
 	        this.createBoardButton();
+	        this.updateSortIcons();
 	      });
 	}
   },
@@ -224,6 +343,24 @@ const TableManager = {
 			  `;
 	    }
 	    return page;
+	},
+	
+	updateSortIcons() {
+		const headers = document.querySelectorAll("thead th");
+		  headers.forEach((th, index) => {
+		    const direction = this.state.sortDirections?.[index]; // "asc", "desc" 또는 undefined
+		    let icon = "";
+	
+		    if (direction === "asc") {
+		      icon = " 🔼";
+		    } else if (direction === "desc") {
+		      icon = " 🔽";
+		    }
+	
+		    // 정렬 아이콘 중복 방지를 위해 기존 텍스트에서 아이콘 제거 후 다시 추가
+		    const baseText = th.textContent.replace(/[🔼🔽]/g, "").trim(); // 🔼, 🔽 제거
+		    th.textContent = baseText + icon;
+		  });
 	}
 };
 // 초기화
@@ -289,6 +426,7 @@ TableManager.changeList([[${totalPageCount}]]);
 
 // 삭제하고 돌아왔을 때 페이지 그대로 보이게 작동
 window.onload = function() {
+	TableManager.updateSortIcons();
 	const urlParams = new URLSearchParams(window.location.search);
 	
 	const defaultUrl = urlParams.get('url');
