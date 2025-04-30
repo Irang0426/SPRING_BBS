@@ -38,4 +38,21 @@ public class FileServiceImpl implements FileService {
     public Files getFileById(Integer id) {
         return fileMapper.findFileById(id);
     }
+
+    @Override
+    public void deleteFileById(Integer id) {
+        fileMapper.deleteFileById(id);
+    }
+
+    @Override
+    public void removeDeletedFiles(int noteId, List<Integer> remainingFileIds) {
+        List<Files> allFiles = fileMapper.findAllFilesByNoteId(noteId);
+
+        for (Files file : allFiles) {
+            // remainingFileIds가 null이거나 해당 파일이 목록에 없으면 삭제
+            if (remainingFileIds == null || !remainingFileIds.contains(file.getId())) {
+                fileMapper.deleteFileById(file.getId());
+            }
+        }
+    }
 }
