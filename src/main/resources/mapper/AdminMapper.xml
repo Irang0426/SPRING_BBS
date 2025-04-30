@@ -37,6 +37,12 @@
 		INSERT boards(name) values(#{name})
 	</insert>
 	
+	<update id="updateUserGrade" parameterType="com.bbs.demo.domain.Users">
+		UPDATE users
+		SET user_grade = #{userGrade}
+		WHERE id = #{id};
+	</update>
+	
 	
 	<select id="pageCount" parameterType="com.bbs.demo.domain.Admin" resultType="int">
 		SELECT count(*) FROM ${url}

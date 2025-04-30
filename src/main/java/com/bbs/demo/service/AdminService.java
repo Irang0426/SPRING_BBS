@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.bbs.demo.domain.Admin;
 import com.bbs.demo.domain.Notes;
 import com.bbs.demo.domain.Page;
+import com.bbs.demo.domain.Users;
 import com.bbs.demo.mapper.AdminMapper;
 import com.bbs.demo.mapper.PageMapper;
 
@@ -73,6 +74,13 @@ public class AdminService {
 
     public Object getComments(Map<String, String> params) {
         return adminMapper.findAllCommentByPage(createPageCondition(params));
+    }
+    
+    public void updateUserGrade(int id, int newGrade) {
+    	Users user = new Users();
+    	user.setId(id);
+    	user.setUserGrade(newGrade);
+    	adminMapper.updateUserGrade(user);
     }
     
 	@Transactional

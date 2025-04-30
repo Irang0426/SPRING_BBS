@@ -2,7 +2,7 @@
     <thead><th onclick="TableManager.updateSort(0)">회원 번호</th><th onclick="TableManager.updateSort(1)">이름</th>
     	<th onclick="TableManager.updateSort(2)">이메일</th><th onclick="TableManager.updateSort(3)">가입일</th>
     	<th onclick="TableManager.updateSort(4)">마지막 접속일</th><th onclick="TableManager.updateSort(5)">등급</th>
-    	<th>삭제</th></thead>
+    	<th>등급 변경</th><th>삭제</th></thead>
     <tbody th:fragment="usertbody (users)">
      <tr th:each="item: ${users}">
      	<td th:text="${item.id}"></td>
@@ -11,6 +11,14 @@
      	<td th:text="${item.regDate}"></td>
      	<td th:text="${item.lastAccessDate}"></td>
      	<td th:text="${item.userGrade}"></td>
+       	<td>
+       		<form class="update-grade" action="/admin/users/updateGrade" method="post">
+       			<input type="hidden" name="id" th:value="${item.id}" />
+       			<input type="hidden" name="newGrade" />
+       			<input type="hidden" name="params"/>
+	        	<button type="button" class="update-button">등급 변경</button>
+       		</form>
+       	</td>
        	<td>
        		<form class="delete-form" action="/admin/users/delete" method="post">
        			<input type="hidden" name="id" th:value="${item.id}" />

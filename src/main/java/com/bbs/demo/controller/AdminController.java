@@ -109,6 +109,12 @@ public class AdminController {
 	    return "redirect:/admin?" + adminS.createBoard(params);
 	}
 	
+	@PostMapping("/users/updateGrade")
+	public String updateUserGrade(@RequestParam("params") String rawParams, @RequestParam("id") int id, @RequestParam("newGrade") int newGrade) {
+		adminS.updateUserGrade(id, newGrade);
+		return "redirect:/admin?"+ rawParams;
+	}
+	
 	//삭제 후 돌아오는 요청
 	@PostMapping("/users/delete")
 	public String deleteUsers(@RequestParam("params") String rawParams, @RequestParam("id") int id) {
