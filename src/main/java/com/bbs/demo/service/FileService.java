@@ -10,4 +10,6 @@ public interface FileService {
     void storeFiles(MultipartFile[] multipartFile, Integer note_id) throws IOException;
     List<Files> getAllFilesByNoteId(Integer note_id);
     Files getFileById(Integer id);
+    void deleteFileById(Integer id);
+    void removeDeletedFiles(int noteId, List<Integer> remainingFileIds);
 }

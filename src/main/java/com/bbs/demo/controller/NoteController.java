@@ -99,16 +99,26 @@ public class NoteController {
     @GetMapping("/modify")
     public String modifyForm(@RequestParam("id") int id, Model model) {
         model.addAttribute("note", noteService.get(id));
+        model.addAttribute("files", fileService.getAllFilesByNoteId(id));
         return "note_modify";
     }
 
     @PostMapping("/modify")
-    public String modify(Notes notes, RedirectAttributes rttr) {
+    public String modify(@RequestParam("files") MultipartFile[] files,
+                         @RequestParam(value = "remainingFileIds", required = false) List<Integer> remainingFileIds,
+                         Notes notes, RedirectAttributes rttr) throws IOException {
+        noteService.modify(notes); // 게시글 내용 수정
+
+        // ✅ 기존 파일 중 삭제된 것 제거
+        fileService.removeDeletedFiles(notes.getId(), remainingFileIds);
+
+        // ✅ 새 파일 저장
+        fileService.storeFiles(files, notes.getId());
+
+        // ✅ 키워드 재추출
+        noteService.deleteTokens(notes.getId());
         Tokenizer tokenizer = new Tokenizer();
         Token token = new Token();
-
-        noteService.modify(notes);
-        noteService.deleteTokens(notes.getId());
 
         List<String> tokens = tokenizer.tokenizer(notes.getContent());
         Set<String> uniqueTokens = new HashSet<>(tokens);
@@ -120,7 +130,7 @@ public class NoteController {
         }
 
         rttr.addFlashAttribute("message", "수정 완료!");
-        return "redirect:/board/list";
+        return "redirect:/note/read?id=" + notes.getId();
     }
 
     @PostMapping("/remove")

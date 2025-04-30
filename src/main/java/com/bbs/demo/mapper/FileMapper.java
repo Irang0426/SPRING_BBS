@@ -10,4 +10,5 @@ public interface FileMapper {
     void insertFile(Files files);
     List<Files> findAllFilesByNoteId(Integer note_id);
     Files findFileById(Integer id);
+    void deleteFileById(Integer id);
 }

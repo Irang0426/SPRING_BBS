@@ -20,7 +20,24 @@
     
     <h2>게시글 수정</h2>
 
-    <form th:action="@{/note/modify}" method="post">
+    <form th:action="@{/note/modify}" method="post" enctype="multipart/form-data">
+
+        <!-- 기존 파일 표시 -->
+        <h3>기존 파일</h3>
+        <ul id="existingFiles">
+            <th:block th:each="file : ${files}">
+                <li>
+                    <a th:href="@{'/file/download?id=' + ${file.id}}" th:text="${file.filename}" target="_blank"></a>
+                    <button type="button" onclick="removeFile(this)">삭제</button>
+                    <input type="hidden" name="remainingFileIds" th:value="${file.id}" />
+                </li>
+            </th:block>
+        </ul>
+
+        <!-- 새 파일 업로드 -->
+        <h3>새 파일 추가</h3>
+        <input type="file" name="files" multiple /><br><br>
+
         <input type="hidden" name="id" th:value="${note.id}" />
 
         <input type="text" name="title" th:value="${note.title}" placeholder="제목"><br>
@@ -29,6 +46,11 @@
 
         <button type="submit">수정 완료</button>
     </form>
-
+<script>
+    function removeFile(button) {
+        const li = button.parentElement;
+        li.remove();
+    }
+</script>
 </body>
 </html>

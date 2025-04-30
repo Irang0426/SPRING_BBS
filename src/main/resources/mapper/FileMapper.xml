@@ -20,4 +20,8 @@
         FROM files
         WHERE id = #{id}
     </select>
+
+    <delete id="deleteFileById" parameterType="int">
+        DELETE FROM files WHERE id = #{id}
+    </delete>
 </mapper>
