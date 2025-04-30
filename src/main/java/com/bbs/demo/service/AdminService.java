@@ -4,6 +4,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -12,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bbs.demo.domain.Admin;
+import com.bbs.demo.domain.Notes;
 import com.bbs.demo.domain.Page;
+import com.bbs.demo.domain.Users;
 import com.bbs.demo.mapper.AdminMapper;
 import com.bbs.demo.mapper.PageMapper;
 
@@ -35,6 +38,22 @@ public class AdminService {
         return admin.setTotalPageCount(adminMapper.pageCount(admin));
     }
     
+    private String shortContent(String content) {
+    	if (content == null) {
+    		content = "";
+    	}
+    	String shortContent = content.length() > 20 ? content.substring(0,20)+"..." : content;
+    	return shortContent;
+    }
+    
+    private Admin isUniqueColumn(Map<String, String> params) {
+    	Admin admin = createPageCondition(params);
+    	if (adminMapper.recodeCount(admin) <= 1) {
+    		return admin.setOrderby("asc");
+    	}
+    	return admin;
+    }
+    
     public String createBoard(Map<String, String> params) {
         Admin admin = createPageCondition(params);
         System.out.println("\t\t\t\tService params: "+params);
@@ -46,19 +65,33 @@ public class AdminService {
     }
     
     public Object getUsers(Map<String, String> params) {
-        return adminMapper.findAllUserByPage(createPageCondition(params));
+        return adminMapper.findAllUserByPage(isUniqueColumn(params));
     }
 
     public Object getBoards(Map<String, String> params) {
-        return adminMapper.findAllBoardByPage(createPageCondition(params));
+        return adminMapper.findAllBoardByPage(isUniqueColumn(params));
     }
 
     public Object getNotes(Map<String, String> params) {
-        return adminMapper.findAllNoteByPage(createPageCondition(params));
+    	Admin admin = isUniqueColumn(params);
+
+    	List<Notes> notes = adminMapper.findAllNoteByPage(admin);
+    	
+    	for (int i=0; i< notes.size(); i++) {
+    		notes.get(i).setContent(shortContent(notes.get(i).getContent()));
+    	}
+        return notes;
     }
 
     public Object getComments(Map<String, String> params) {
-        return adminMapper.findAllCommentByPage(createPageCondition(params));
+        return adminMapper.findAllCommentByPage(isUniqueColumn(params));
+    }
+    
+    public void updateUserGrade(int id, int newGrade) {
+    	Users user = new Users();
+    	user.setId(id);
+    	user.setUserGrade(newGrade);
+    	adminMapper.updateUserGrade(user);
     }
     
 	@Transactional

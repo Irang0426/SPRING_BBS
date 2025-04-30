@@ -105,8 +105,13 @@ public class AdminController {
 	
 	@PostMapping("/boards/create")
 	public String createBoard(@RequestParam Map<String, String> params) {
-		System.out.println("\t\t\t\t### 보드 만들기 컨트롤러 들어옴 "+params);
 	    return "redirect:/admin?" + adminS.createBoard(params);
+	}
+	
+	@PostMapping("/users/updateGrade")
+	public String updateUserGrade(@RequestParam("params") String rawParams, @RequestParam("id") int id, @RequestParam("newGrade") int newGrade) {
+		adminS.updateUserGrade(id, newGrade);
+		return "redirect:/admin?"+ rawParams;
 	}
 	
 	//삭제 후 돌아오는 요청

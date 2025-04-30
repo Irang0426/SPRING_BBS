@@ -18,7 +18,9 @@ public interface AdminMapper {
 	List<Comments> findAllCommentByPage(Admin admin);
 	
 	void createBoard(String name);
-
+	void updateUserGrade(Users user);
+	
+	int recodeCount(Admin admin);
 	int pageCount(Admin admin);
 	
 	void deleteUsers(int id);
