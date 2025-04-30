@@ -5,12 +5,13 @@ import com.bbs.demo.domain.Notes;
 import com.bbs.demo.domain.Token;
 import com.bbs.demo.domain.Users;
 import com.bbs.demo.mapper.BoardMapper;
-import com.bbs.demo.mapper.LoginMemberMapper; // ✅ 작성자 닉네임 조회용 Mapper 추가
-
+import com.bbs.demo.mapper.LoginMemberMapper;
 import com.bbs.demo.service.CommentService;
 import com.bbs.demo.service.FileService;
 import com.bbs.demo.service.NoteService;
 import com.bbs.demo.service.Tokenizer;
+
+import jakarta.servlet.http.HttpSession; // ✅ 세션 사용을 위한 import
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,20 +29,11 @@ import java.util.Set;
 @RequestMapping("/note")
 public class NoteController {
 
-    @Autowired
-    private NoteService noteService;
-
-    @Autowired
-    private FileService fileService;
-
-    @Autowired
-    private BoardMapper boardmapper;
-
-    @Autowired
-    private CommentService commentService;
-
-    @Autowired
-    private LoginMemberMapper loginMemberMapper; // ✅ 작성자 조회용 Mapper 주입
+    @Autowired private NoteService noteService;
+    @Autowired private FileService fileService;
+    @Autowired private BoardMapper boardmapper;
+    @Autowired private CommentService commentService;
+    @Autowired private LoginMemberMapper loginMemberMapper; // ✅ 작성자 닉네임 조회용 Mapper
 
     @GetMapping("/list")
     public String list(Model model) {
@@ -61,7 +53,15 @@ public class NoteController {
     @PostMapping("/register")
     public String register(@RequestParam("files") MultipartFile[] files,
                            Notes notes,
+                           HttpSession session, // ✅ 세션에서 로그인 유저 확인
                            RedirectAttributes rttr) throws IOException {
+
+        Users loginUser = (Users) session.getAttribute("loginMember"); // ✅ 세션에서 유저 꺼냄
+        if (loginUser == null) {
+            return "redirect:/login";
+        }
+
+        notes.setUserId(loginUser.getId()); // ✅ 작성자 ID 삽입
 
         Tokenizer tokenizer = new Tokenizer();
         Token token = new Token();
@@ -89,13 +89,12 @@ public class NoteController {
         model.addAttribute("files", fileService.getAllFilesByNoteId(id));
         model.addAttribute("comments", commentService.getCommentsByNoteId(id));
 
-        // 🔥 작성자의 닉네임을 가져와서 모델에 추가
+        // ✅ 작성자의 닉네임 조회 후 모델에 전달
         Users writer = loginMemberMapper.findById(note.getUserId());
-        model.addAttribute("nickname", writer.getNickName());
+        model.addAttribute("nickname", writer != null ? writer.getNickName() : "탈퇴한 사용자");
 
         return "note_read";
     }
-
 
     @GetMapping("/modify")
     public String modifyForm(@RequestParam("id") int id, Model model) {
