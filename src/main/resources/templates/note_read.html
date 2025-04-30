@@ -13,7 +13,7 @@
         <a href="/login" th:if="${session.loginMember == null}"><i class="fas fa-sign-in-alt"></i> 로그인</a>
         <a href="/register" th:if="${session.loginMember == null}"><i class="fas fa-user-plus"></i> 회원가입</a>
         <a href="/logout" th:if="${session.loginMember != null}"><i class="fas fa-sign-out-alt"></i> 로그아웃</a>
-        <a href="/admin"><i class="fas fa-cog"></i> 관리자</a>
+        <a href="/admin" th:if="${session.loginMember != null && session.loginMember.userGradeString == 'ADMIN'}"><i class="fas fa-cog"></i> 관리자</a>
       </div>
 </nav>
 <hr>
@@ -21,9 +21,11 @@
 <h2>게시글 상세 보기</h2>
 
 <p><strong>제목:</strong> <span th:text="${note.title}">제목</span></p>
-<p><strong>작성자 ID:</strong> <span th:text="${note.userId}">작성자</span></p>
+<p><strong>작성자:</strong> <span th:text="${nickname}">닉네임</span></p>
 <p><strong>작성일:</strong> <span th:text="${#temporals.format(note.createDate, 'yyyy-MM-dd HH:mm')}">작성일</span></p>
-<p><strong>내용:</strong> <span th:text="${note.content}">내용</span></p>
+<p><strong>내용:</strong></p>
+<div style="white-space: pre-wrap;" th:text="${note.content}"></div>
+
 
 <a th:href="@{|/note/modify?id=${note.id}|}">[수정]</a> |
 <a href="#" onclick="deleteNote();">[삭제]</a> |

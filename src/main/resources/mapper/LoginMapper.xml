@@ -15,5 +15,11 @@
         INSERT INTO users (nickname, email, password, user_grade)
         VALUES (#{nickName}, #{email}, #{password}, 1)
     </insert>
+    
+    <!-- 🔧 사용자 ID를 기반으로 users 테이블에서 해당 사용자의 정보를 조회하는 쿼리 -->
+	<select id="findById" parameterType="int" resultType="com.bbs.demo.domain.Users">
+	    SELECT * FROM users WHERE id = #{id}
+	</select>
+    
 
 </mapper>
