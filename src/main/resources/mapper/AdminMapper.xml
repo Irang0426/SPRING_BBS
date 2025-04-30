@@ -37,6 +37,7 @@
 		INSERT boards(name) values(#{name})
 	</insert>
 	
+	
 	<update id="updateUserGrade" parameterType="com.bbs.demo.domain.Users">
 		UPDATE users
 		SET user_grade = #{userGrade}
@@ -44,6 +45,10 @@
 	</update>
 	
 	
+	<select id="recodeCount" parameterType="com.bbs.demo.domain.Admin" resultType="int">
+		SELECT count(DISTINCT(${sortby}))
+		FROM ${url}
+	</select>
 	<select id="pageCount" parameterType="com.bbs.demo.domain.Admin" resultType="int">
 		SELECT count(*) FROM ${url}
 	</select>

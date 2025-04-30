@@ -190,9 +190,8 @@ const TableManager = {
   // ajax 동작에 관한 함수 정보 받아오고 변수 정리
   pageAjax() {
     const { sort, order, page, limit, url, boardName } = this.state;
-    
 	if (this.state.partial) {
-    	fetch(`/admin/${url}/partial?sortby=${sort}&orderby=${order}&page=${page}&limit=${limit}`)
+    	fetch(`/admin/${url}/partial?sortby=${sort}&orderby=${order}&page=${page}&limit=${limit}&url=${url}`)
 	      .then(res => res.text())
 	      .then(html => {
 	        document.querySelector("tbody").innerHTML = html;
@@ -200,7 +199,6 @@ const TableManager = {
 	        this.state.partial = false;
 	        this.bindDeleteButtons();
 	        this.changeList(this.state.totalPageCount < 0 ? [[${totalPageCount}]] : this.state.totalPageCount);
-	        this.createBoardButton();
 	        this.bindUpdateButtons();
 	        this.updateSortIcons();
 	      });
@@ -208,36 +206,15 @@ const TableManager = {
 	    fetch(`/admin/${url}`)
 	      .then(res => res.text())
 	      .then(html => {
-	        document.querySelector("table").innerHTML = html;
+	        document.querySelector("#listTableDiv").innerHTML = html;
 	        this.state.totalPageCount = document.getElementById('totalPageCount').value;
 	        this.state.partial = false;
 	        this.bindDeleteButtons();
 	        this.changeList(this.state.totalPageCount);
-	        this.createBoardButton();
 	        this.bindUpdateButtons();
 	        this.updateSortIcons();
 	      });
 	}
-  },
-  // 게시판은 관리자에서만 추가 가능
-  createBoardButton() {
-	  if (this.state.url === "boards") {
-		  // 생성 버튼 만들어 넣기
-		  document.querySelector("#insertBoard").innerHTML = `
-		  	<button onclick="TableManager.showInput()">게시판 생성</button>
-		  `;
-	  } else {
-		  // 생성 버튼 없애기
-		  document.querySelector("#insertBoard").innerHTML = '';
-	  }
-  },
-  
-  showInput() {
-	const container = document.getElementById("insertBoard");
-	container.innerHTML = `
-	  <input type="text" id="boardName" placeholder="게시판 이름 입력" />
-	  <button type="button" onclick="TableManager.createBoard()">생성 완료</button>
-	`;
   },
   
   // 게시판 생성 버튼 구현
@@ -427,10 +404,10 @@ TableManager.init("users",["id", "nickname", "email", "reg_date", "last_access_d
     <nav>
 		<a href="#" onclick="TableManager.set('users', ['id', 'nickname', 'email', 'reg_date', 'last_access_date', 'user_grade'])">회원</a> |
 		<a href="#" onclick="TableManager.set('boards', ['id', 'name', 'create_date', 'last_modified_date'])">게시판</a> |
-		<a href="#" onclick="TableManager.set('notes', ['id', 'title', 'content', 'create_date', 'last_modified_date', 'board_id', 'writer_id'])">게시글</a> |
+		<a href="#" onclick="TableManager.set('notes', ['id', 'title', 'content', 'create_date', 'last_modified_date', 'board_id', 'user_id'])">게시글</a> |
 		<a href="#" onclick="TableManager.set('comments', ['id', 'content', 'create_date', 'last_modified_date', 'comment_id', 'note_id', 'comment_author_id'])">댓글</a>
     </nav>
-    
+    <div id="listTableDiv">
     <h2>회원 목록</h2>
     <select id="pageLimitSelect" onchange="TableManager.updateLimitSize(this.value)" >
       <option value="none">=== 정렬 개수 선택 ===</option>
@@ -439,7 +416,6 @@ TableManager.init("users",["id", "nickname", "email", "reg_date", "last_access_d
 	  <option value="50">50</option>
 	  <option value="100">100</option>
 	</select>
-	<form id="insertBoard" method="post" action="/admin/boards/create">	</form>
     <table border="1">
         <thead><th onclick="TableManager.updateSort(0)">회원 번호</th><th onclick="TableManager.updateSort(1)">이름</th>
         	<th onclick="TableManager.updateSort(2)">이메일</th><th onclick="TableManager.updateSort(3)">가입일</th>
@@ -471,6 +447,7 @@ TableManager.init("users",["id", "nickname", "email", "reg_date", "last_access_d
 		        </tr>
         </tbody>
     </table>
+    </div>
    	<input id="nowpage" value=1 hidden="hidden">
     <table>
 	    <tr id="paging">
@@ -506,7 +483,7 @@ window.onload = function() {
 			TableManager.state.order = urlParams.get('order');
 			TableManager.state.sort = urlParams.get('sort');
 		    TableManager.state.url = defaultUrl;
-			TableManager.set('notes', ['id', 'title', 'content', 'create_date', 'last_modified_date', 'board_id', 'writer_id'])
+			TableManager.set('notes', ['id', 'title', 'content', 'create_date', 'last_modified_date', 'board_id', 'user_id'])
 		} else if (defaultUrl === "comments") {
 			TableManager.state.page = urlParams.get('page');
 			TableManager.state.limit = urlParams.get('limit');

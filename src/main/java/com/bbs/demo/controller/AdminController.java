@@ -105,7 +105,6 @@ public class AdminController {
 	
 	@PostMapping("/boards/create")
 	public String createBoard(@RequestParam Map<String, String> params) {
-		System.out.println("\t\t\t\t### 보드 만들기 컨트롤러 들어옴 "+params);
 	    return "redirect:/admin?" + adminS.createBoard(params);
 	}
 	

@@ -46,6 +46,14 @@ public class AdminService {
     	return shortContent;
     }
     
+    private Admin isUniqueColumn(Map<String, String> params) {
+    	Admin admin = createPageCondition(params);
+    	if (adminMapper.recodeCount(admin) <= 1) {
+    		return admin.setOrderby("asc");
+    	}
+    	return admin;
+    }
+    
     public String createBoard(Map<String, String> params) {
         Admin admin = createPageCondition(params);
         System.out.println("\t\t\t\tService params: "+params);
@@ -57,15 +65,18 @@ public class AdminService {
     }
     
     public Object getUsers(Map<String, String> params) {
-        return adminMapper.findAllUserByPage(createPageCondition(params));
+        return adminMapper.findAllUserByPage(isUniqueColumn(params));
     }
 
     public Object getBoards(Map<String, String> params) {
-        return adminMapper.findAllBoardByPage(createPageCondition(params));
+        return adminMapper.findAllBoardByPage(isUniqueColumn(params));
     }
 
     public Object getNotes(Map<String, String> params) {
-    	List<Notes> notes = adminMapper.findAllNoteByPage(createPageCondition(params));
+    	Admin admin = isUniqueColumn(params);
+
+    	List<Notes> notes = adminMapper.findAllNoteByPage(admin);
+    	
     	for (int i=0; i< notes.size(); i++) {
     		notes.get(i).setContent(shortContent(notes.get(i).getContent()));
     	}
@@ -73,7 +84,7 @@ public class AdminService {
     }
 
     public Object getComments(Map<String, String> params) {
-        return adminMapper.findAllCommentByPage(createPageCondition(params));
+        return adminMapper.findAllCommentByPage(isUniqueColumn(params));
     }
     
     public void updateUserGrade(int id, int newGrade) {

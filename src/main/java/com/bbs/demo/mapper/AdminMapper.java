@@ -20,6 +20,7 @@ public interface AdminMapper {
 	void createBoard(String name);
 	void updateUserGrade(Users user);
 	
+	int recodeCount(Admin admin);
 	int pageCount(Admin admin);
 	
 	void deleteUsers(int id);
