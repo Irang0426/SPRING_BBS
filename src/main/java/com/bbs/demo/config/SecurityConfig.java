@@ -7,6 +7,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -37,7 +38,8 @@ public class SecurityConfig {
 				.csrf(CsrfConfigurer::disable)
 				.cors(Customizer.withDefaults())
 				.authorizeHttpRequests((auth) -> auth
-						.requestMatchers("/", "/login/**", "/register/**").permitAll()
+						.requestMatchers("/.well-known/**").permitAll()
+						.requestMatchers("/", "/login/**", "/register/**", "/data", "/data/**").permitAll()
 						.requestMatchers("/admin/**").hasRole("ADMIN")
 						.anyRequest().hasAnyRole("TEST1", "TEST2", "TEST3", "TEST4", "TEST5", "TEST6", "TEST7", "TEST8", "TEST9", "ADMIN")	//authentical인가 뭐시기는 권한 얻어오라는 뜻
 				)
@@ -75,5 +77,10 @@ public class SecurityConfig {
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+    
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers("/.well-known/**");
     }
 }

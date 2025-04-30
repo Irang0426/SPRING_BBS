@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bbs.demo.mapper.IndexMapper">
+
+    <select id="userCount" resultType="int">
+        select count(*) from users;
+    </select>
+
+    <select id="noteCount" resultType="int">
+        select count(*) from notes;
+    </select>
+    
+    <select id="fileCount" resultType="int">
+        select count(*) from files;
+    </select>
+
+    <select id="fileNoteCount" resultType="int">
+        select count(c.id) from (select * from files group by note_id) as c;
+    </select>
+    
+    <select id="commentCount" resultType="int">
+        select count(*) from comments;
+    </select>
+    
+    <select id="newUser" parameterType="int" resultType="com.bbs.demo.domain.Users">
+        SELECT id, nickname, email, reg_date as regDate, last_access_date as lastAccessDate, user_grade as userGrade
+        		from users where id >= (#{count} - 5) order by id limit 1;
+    </select>
+    
+    <select id="newNotes" parameterType="int" resultType="com.bbs.demo.domain.Notes">
+        SELECT id, title, content, create_date as createDate,
+        	last_modified_date as lastModifiedDate, board_id as boardId,
+        	user_id as userId from notes where id >= (#{count} - 5) order by id limit 2;
+    </select>
+
+</mapper>
