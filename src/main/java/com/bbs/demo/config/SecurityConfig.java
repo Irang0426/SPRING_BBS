@@ -37,7 +37,7 @@ public class SecurityConfig {
 				.csrf(CsrfConfigurer::disable)
 				.cors(Customizer.withDefaults())
 				.authorizeHttpRequests((auth) -> auth
-						.requestMatchers("/", "/login/**").permitAll()
+						.requestMatchers("/", "/login/**", "/register/**").permitAll()
 						.requestMatchers("/admin/**").hasRole("ADMIN")
 						.anyRequest().hasAnyRole("TEST1", "TEST2", "TEST3", "TEST4", "TEST5", "TEST6", "TEST7", "TEST8", "TEST9", "ADMIN")	//authentical인가 뭐시기는 권한 얻어오라는 뜻
 				)

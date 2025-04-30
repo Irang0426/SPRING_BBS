@@ -33,7 +33,12 @@ public class CommentController {
     // 댓글 작성
     @PostMapping("/add")
     public String addComment(@ModelAttribute Comments comment, @RequestParam("imageFile") MultipartFile imageFile) throws IOException {
-        comment.setImages(imageFile.getBytes());
+
+        if (imageFile != null && !imageFile.isEmpty()) {
+            comment.setImages(imageFile.getBytes());
+        } else {
+            comment.setImages(null);  // 👈 여기 꼭 넣기
+        }
 
         // 부모 댓글이 존재하는지 확인
         if (comment.getCommentId() != null) {
@@ -43,7 +48,7 @@ public class CommentController {
             }
         }
         commentService.addComment(comment);
-        return "redirect:/comments/list?noteId=" + comment.getNoteId();
+        return "redirect:/note/read?id=" + comment.getNoteId();
     }
 
     // 댓글 삭제
