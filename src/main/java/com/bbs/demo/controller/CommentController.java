@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -21,12 +20,14 @@ public class CommentController {
 
     @Autowired
     private CommentService commentService;
+    
 
     // ✅ 댓글 목록 JSON 반환
     @GetMapping("/json")
     @ResponseBody
     public List<Comments> getCommentsJson(@RequestParam("noteId") int noteId) {
-        return commentService.getCommentsByNoteId(noteId);
+        List<Comments> comments = commentService.getCommentsByNoteId(noteId);
+    	return comments;
     }
 
     // ✅ 댓글 등록 (AJAX)

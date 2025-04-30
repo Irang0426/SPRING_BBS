@@ -87,12 +87,17 @@ function initCharacterCounter() {
 const noteId = $('input[name="noteId"]').val();
 const userId = $('input[name="commentAuthorId"]').val();
 
+const changeDate = (date) => {
+	return date = date.substring(0, 4) + "-" + date.substring(5, 7) + "-" + date.substring(8, 10)
+					+ " " + date.substring(11, 13) + ":" + date.substring(14, 16);
+}
+
 function renderComment(comment, depth = 0) {
     const isReply = depth > 0;
     const padding = isReply ? 'style="margin-left:30px;"' : '';
     let html = `<li ${padding} data-id="${comment.id}" ${isReply ? 'data-reply="true"' : ''}>
         <div class="comment-content">
-            <strong>${comment.commentAuthorId}</strong> (${comment.lastModifiedDate})<br>
+            <strong>${comment.authorNickName}</strong> (${changeDate(comment.lastModifiedDate)})<br>
             ${comment.images ? `<img src="/comments/images?id=${comment.id}" style="max-width:200px;"><br>` : ''}
             <p>${comment.content}</p>
             <button class="edit-btn">수정</button>
@@ -135,6 +140,7 @@ function renderComment(comment, depth = 0) {
 
 function loadComments() {
     $.getJSON(`/comments/json?noteId=${noteId}`, function(data) {
+    	console.log("Comment: ",data);
         $('#comment-list').html(data.map(comment => renderComment(comment)));
         initCharacterCounter();
     });

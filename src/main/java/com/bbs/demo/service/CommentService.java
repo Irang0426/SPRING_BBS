@@ -2,6 +2,8 @@ package com.bbs.demo.service;
 
 import com.bbs.demo.domain.Comments;
 import com.bbs.demo.mapper.CommentMapper;
+import com.bbs.demo.mapper.LoginMemberMapper;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,9 @@ public class CommentService {
     @Autowired
     private CommentMapper commentMapper;
 
+    @Autowired
+    private LoginMemberMapper loginmembermapper;
+
     // 댓글 작성
     public Comments addComment(Comments comment) {
         commentMapper.insertComment(comment);
@@ -29,6 +34,9 @@ public class CommentService {
     public List<Comments> getCommentsByNoteId(int noteId) {
         // 모든 댓글 조회 (대댓글 포함)
         List<Comments> all = commentMapper.getCommentsByNoteId(noteId);
+    	for(Comments comment : all) {
+    		comment.setAuthorNickName(loginmembermapper.findById(comment.getCommentAuthorId()).getNickName());
+    	}
         
         // 부모-자식 매핑
         Map<Integer, Comments> commentMap = new HashMap<>();

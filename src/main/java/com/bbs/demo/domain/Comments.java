@@ -16,8 +16,17 @@ public class Comments {
     private Integer commentId;  // 대댓글의 부모 댓글 ID (없으면 0 또는 null로 처리)
     private int noteId;  // 댓글이 달린 게시글 ID
     private int commentAuthorId;  // 댓글 작성자 ID
+    private String AuthorNickName;
 
-    private Comments parentComment;  // 대댓글을 위한 부모 댓글
+    public String getAuthorNickName() {
+		return AuthorNickName;
+	}
+
+	public void setAuthorNickName(String authorNickName) {
+		AuthorNickName = authorNickName;
+	}
+
+	private Comments parentComment;  // 대댓글을 위한 부모 댓글
     
     // Getters and Setters
 	public int getId() {
