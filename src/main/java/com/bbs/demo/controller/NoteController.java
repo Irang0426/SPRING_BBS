@@ -4,6 +4,7 @@ import com.bbs.demo.domain.Boards;
 import com.bbs.demo.domain.Notes;
 import com.bbs.demo.domain.Token;
 import com.bbs.demo.mapper.BoardMapper;
+import com.bbs.demo.service.CommentService;
 import com.bbs.demo.service.FileService;
 import com.bbs.demo.service.NoteService;
 import com.bbs.demo.service.Tokenizer;
@@ -32,6 +33,9 @@ public class NoteController {
 
     @Autowired
     private BoardMapper boardmapper; // ✅ 게시판 목록 조회용 Mapper 주입
+
+    @Autowired
+    private CommentService commentService;
 
     /**
      * 게시글 목록 조회
@@ -94,6 +98,7 @@ public class NoteController {
     public String read(@RequestParam("id") int id, Model model) {
         model.addAttribute("note", noteService.get(id));
         model.addAttribute("files", fileService.getAllFilesByNoteId(id));
+        model.addAttribute("comments", commentService.getCommentsByNoteId(id));
         return "note_read";
     }
 
