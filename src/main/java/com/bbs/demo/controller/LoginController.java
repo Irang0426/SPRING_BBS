@@ -29,6 +29,8 @@ public class LoginController{
 	
 	@GetMapping("/login")
 	public String loginForm() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		System.out.println("User roles: " + auth.getAuthorities());
 		return "login";
 	}
 	

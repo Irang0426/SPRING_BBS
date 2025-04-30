@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
+import com.bbs.demo.domain.UserGrade;
 import com.bbs.demo.domain.Users;
 import com.bbs.demo.mapper.LoginMemberMapper;
 
@@ -33,6 +34,7 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
                                         Authentication authentication) throws ServletException, IOException {
         String email = authentication.getName();
         Users user = loginMemberMapper.findbyEmail(email);
+        user.setUserGradeString((UserGrade.fromGrade(user.getUserGrade())).toString());
 
         // 세션에 저장
         HttpSession session = request.getSession();
