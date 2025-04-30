@@ -3,10 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>게시글 상세</title>
+    <style>
+        .char-count { color: #666; font-size: 0.9em; }
+        .edit-form, .reply-form { margin: 10px 0; padding: 10px; background: #f5f5f5; }
+    </style>
 </head>
 <body>
 <nav>
-      <div class="nav-links">
+    <div class="nav-links">
         <a href="/" class="active"><i class="fas fa-home"></i> 홈</a>
         <a href="/board/list"><i class="fas fa-list"></i> 게시판</a>
         <a href="/file/read?note_id=1"><i class="fas fa-upload"></i> 파일 업로드</a>
@@ -14,33 +18,29 @@
         <a href="/register" th:if="${session.loginMember == null}"><i class="fas fa-user-plus"></i> 회원가입</a>
         <a href="/logout" th:if="${session.loginMember != null}"><i class="fas fa-sign-out-alt"></i> 로그아웃</a>
         <a href="/admin" th:if="${session.loginMember != null && session.loginMember.userGradeString == 'ADMIN'}"><i class="fas fa-cog"></i> 관리자</a>
-      </div>
+    </div>
 </nav>
 <hr>
 
 <h2>게시글 상세 보기</h2>
-
 <p><strong>제목:</strong> <span th:text="${note.title}">제목</span></p>
 <p><strong>작성자:</strong> <span th:text="${nickname}">닉네임</span></p>
 <p><strong>작성일:</strong> <span th:text="${#temporals.format(note.createDate, 'yyyy-MM-dd HH:mm')}">작성일</span></p>
 <p><strong>내용:</strong></p>
 <div style="white-space: pre-wrap;" th:text="${note.content}"></div>
 
-
 <a th:href="@{|/note/modify?id=${note.id}|}">[수정]</a> |
 <a href="#" onclick="deleteNote();">[삭제]</a> |
 <a href="/note/list">[목록]</a>
 
-<br><br><br>
-
-<!-- 댓글 영역 -->
 <div class="cm_list">
     <fieldset>
         <legend>댓글 작성</legend>
         <form class="comment-form" enctype="multipart/form-data">
             <input type="hidden" name="noteId" th:value="${note.id}" />
             <input type="hidden" name="commentAuthorId" th:value="${note.userId}" />
-            <textarea name="content" rows="4" cols="90" placeholder="댓글을 입력해 주세요."></textarea><br>
+            <textarea class="comment_content" name="content" rows="4" cols="90" placeholder="댓글을 입력해 주세요."></textarea><br>
+            <span class="char-count">0</span>/300
             <input type="file" name="imageFile" accept="image/*" /><br>
             <button type="submit">등록</button>
         </form>
@@ -51,156 +51,159 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script>
-	const noteId = $('input[name="noteId"]').val();
-	const userId = $('input[name="commentAuthorId"]').val();
-	
-	function renderComment(comment, depth = 0) {
-	    const isReply = depth > 0;
-	    const padding = isReply ? 'style="margin-left:30px;"' : '';
-	    let html = `<li ${padding} data-id="${comment.id}" ${isReply ? 'data-reply="true"' : ''}>
-	        <div class="comment-content">
-	            <strong>${comment.commentAuthorId}</strong> (${comment.lastModifiedDate})<br>
-	            ${comment.images ? `<img src="/comments/images?id=${comment.id}" style="max-width:200px;"><br>` : ''}
-	            <p>${comment.content}</p>
-	            <button class="edit-btn">수정</button>
-	            <button class="delete-btn">삭제</button>
-	            ${!isReply ? `<button class="reply-toggle-btn">답글쓰기</button>` : ''}
-	        </div>
-	
-	        <form class="edit-form" style="display:none;" enctype="multipart/form-data">
-	            <input type="hidden" name="id" value="${comment.id}">
-	            <textarea name="content" rows="3" cols="80">${comment.content}</textarea><br>
-	            <input type="file" name="imageFile"><br>
-	            <button type="submit">수정완료</button>
-	            <button type="button" class="cancel-edit">취소</button>
-	        </form>
-	
-	        ${!isReply ? `
-	        <form class="reply-form" style="display:none;" enctype="multipart/form-data">
-	            <input type="hidden" name="noteId" value="${noteId}">
-	            <input type="hidden" name="commentAuthorId" value="${userId}">
-	            <input type="hidden" name="commentId" value="${comment.id}">
-	            <textarea name="content" rows="3" cols="80" placeholder="답글을 입력하세요"></textarea><br>
-	            <input type="file" name="imageFile"><br>
-	            <button type="submit">등록</button>
-	            <button type="button" class="reply-cancel-btn">취소</button>
-	        </form>` : ''}
-	    `;
-	
-	    if (comment.children && comment.children.length > 0) {
-	        html += '<ul class="reply-list">';
-	        comment.children.forEach(reply => {
-	            html += renderComment(reply, depth + 1);
-	        });
-	        html += '</ul>';
-	    }
-	
-	    html += '</li>';
-	    return html;
-	}
+// 문자 수 카운팅 함수
+function initCharacterCounter() {
+    $('.comment_content').off('input').on('input', function() {
+        const $counter = $(this).nextAll('.char-count').first();
+        const currentLength = $(this).val().length;
+        
+        $counter.text(currentLength);
+        
+        if (currentLength > 300) {
+            $(this).val($(this).val().substring(0, 300));
+            $counter.text(300).css('color', 'red');
+            setTimeout(() => alert('최대 300자까지 입력 가능합니다'), 100);
+        } else {
+            $counter.css('color', currentLength >= 280 ? 'orange' : '#666');
+        }
+    });
+}
 
-    function loadComments() {
-        $.getJSON(`/comments/json?noteId=${noteId}`, function(data) {
-            let listHtml = '';
-            data.forEach(comment => {
-                listHtml += renderComment(comment);
-            });
-            $('#comment-list').html(listHtml);
+const noteId = $('input[name="noteId"]').val();
+const userId = $('input[name="commentAuthorId"]').val();
+
+function renderComment(comment, depth = 0) {
+    const isReply = depth > 0;
+    const padding = isReply ? 'style="margin-left:30px;"' : '';
+    let html = `<li ${padding} data-id="${comment.id}" ${isReply ? 'data-reply="true"' : ''}>
+        <div class="comment-content">
+            <strong>${comment.commentAuthorId}</strong> (${comment.lastModifiedDate})<br>
+            ${comment.images ? `<img src="/comments/images?id=${comment.id}" style="max-width:200px;"><br>` : ''}
+            <p>${comment.content}</p>
+            <button class="edit-btn">수정</button>
+            <button class="delete-btn">삭제</button>
+            ${!isReply ? `<button class="reply-toggle-btn">답글쓰기</button>` : ''}
+        </div>
+
+        <form class="edit-form" style="display:none;" enctype="multipart/form-data">
+            <input type="hidden" name="id" value="${comment.id}">
+            <textarea class="comment_content" name="content" rows="3" cols="80">${comment.content}</textarea><br>
+            <input type="file" name="imageFile"><br>
+            <span class="char-count">${comment.content.length}</span>/300
+            <button type="submit">수정완료</button>
+            <button type="button" class="cancel-edit">취소</button>
+        </form>
+
+        ${!isReply ? `
+        <form class="reply-form" style="display:none;" enctype="multipart/form-data">
+            <input type="hidden" name="noteId" value="${noteId}">
+            <input type="hidden" name="commentAuthorId" value="${userId}">
+            <input type="hidden" name="commentId" value="${comment.id}">
+            <textarea class="comment_content" name="content" rows="3" cols="80" placeholder="답글을 입력하세요"></textarea><br>
+            <input type="file" name="imageFile"><br>
+            <span class="char-count">0</span>/300
+            <button type="submit">등록</button>
+            <button type="button" class="reply-cancel-btn">취소</button>
+        </form>` : ''}`;
+
+    if (comment.children && comment.children.length > 0) {
+        html += '<ul class="reply-list">';
+        comment.children.forEach(reply => {
+            html += renderComment(reply, depth + 1);
+        });
+        html += '</ul>';
+    }
+
+    html += '</li>';
+    return html;
+}
+
+function loadComments() {
+    $.getJSON(`/comments/json?noteId=${noteId}`, function(data) {
+        $('#comment-list').html(data.map(comment => renderComment(comment)));
+        initCharacterCounter();
+    });
+}
+
+$(document).ready(function() {
+    loadComments();
+    initCharacterCounter();
+
+    // 댓글 등록
+    $(document).on('submit', '.comment-form', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        if(validateForm(formData)) {
+            submitForm('/comments/ajax/add', formData);
+        }
+    });
+
+    // 댓글 수정
+    $(document).on('submit', '.edit-form', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        if(validateForm(formData)) {
+            submitForm('/comments/ajax/update', formData);
+        }
+    });
+
+    // 답글 등록
+    $(document).on('submit', '.reply-form', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        if(validateForm(formData)) {
+            submitForm('/comments/ajax/add', formData);
+        }
+    });
+
+    function validateForm(formData) {
+        const content = formData.get('content');
+        if(content.length > 300) {
+            alert('300자 이내로 입력해주세요');
+            return false;
+        }
+        return true;
+    }
+
+    function submitForm(url, formData) {
+        $.ajax({
+            url: url,
+            method: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: loadComments
         });
     }
 
-    $(document).ready(function() {
-        loadComments();
-
-        // 댓글 등록
-        $(document).on('submit', '.comment-form', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            $.ajax({
-                url: '/comments/ajax/add',
-                method: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function() {
-                    loadComments();
-                    $('.comment-form').trigger('reset');
-                }
-            });
-        });
-
-        // 댓글 삭제
-        $(document).on('click', '.delete-btn', function() {
-            const id = $(this).closest('li').data('id');
-            $.post('/comments/ajax/delete', { id }, function() {
-                loadComments();
-            });
-        });
-
-        // 수정 폼 열기/닫기 - 개선된 코드
-        $(document).on('click', '.edit-btn', function() {
-            const $li = $(this).closest('li');
-            
-            // 클릭한 버튼이 포함된 div만 숨기고, 같은 레벨의 수정폼만 표시
-            $(this).closest('.comment-content').toggle();
-            $(this).closest('li').children('.edit-form').first().toggle();
-        });
-        
-        $(document).on('click', '.cancel-edit', function() {
-            const $li = $(this).closest('li');
-            $li.find('.edit-form').first().hide();
-            $li.children('.comment-content').show();
-        });
-
-        // 댓글 수정 제출
-        $(document).on('submit', '.edit-form', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this); // 수정 폼의 데이터를 가져옴
-            $.ajax({
-                url: '/comments/ajax/update',  // 업데이트 URL
-                method: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    loadComments();  // 댓글 목록 새로고침
-                },
-                error: function(xhr, status, error) {
-                    console.error("댓글 수정 오류:", error);
-                }
-            });
-        });
-
-        // 답글 폼 열기/닫기
-        $(document).on('click', '.reply-toggle-btn', function() {
-            const $li = $(this).closest('li');
-            $li.find('.reply-form').show();
-            $(this).hide();
-        });
-        $(document).on('click', '.reply-cancel-btn', function() {
-            const $li = $(this).closest('li');
-            $li.find('.reply-form').hide();
-            $li.find('.reply-toggle-btn').show();
-        });
-
-        // 답글 등록
-        $(document).on('submit', '.reply-form', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            $.ajax({
-                url: '/comments/ajax/add',
-                method: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function() {
-                    loadComments();
-                }
-            });
-        });
+    // 수정 폼 토글
+    $(document).on('click', '.edit-btn', function() {
+        const $li = $(this).closest('li');
+        $li.children('.comment-content').toggle();
+        $li.children('.edit-form').toggle();
+        initCharacterCounter();  // 수정폼 초기화
     });
+
+    // 답글 폼 토글
+    $(document).on('click', '.reply-toggle-btn', function() {
+        const $li = $(this).closest('li');
+        $li.find('.reply-form').toggle();
+        $(this).hide();
+        initCharacterCounter();
+    });
+
+    // 삭제 기능
+    $(document).on('click', '.delete-btn', function() {
+        const id = $(this).closest('li').data('id');
+        $.post('/comments/ajax/delete', { id }, loadComments);
+    });
+
+    // 취소 버튼
+    $(document).on('click', '.cancel-edit, .reply-cancel-btn', function() {
+        $(this).closest('form').hide().prev('.comment-content').show();
+    });
+});
 </script>
 </body>
 </html>
