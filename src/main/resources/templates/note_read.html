@@ -703,7 +703,20 @@ $(document).ready(function() {
           <div class="info-value" th:text="${#temporals.format(note.createDate, 'yyyy-MM-dd HH:mm')}">작성일</div>
         </div>
       </div>
-      
+
+      <!-- 이미지 미리보기 -->
+      <div th:if="${files != null}">
+        <div th:each="file : ${files}">
+          <div th:if="${#strings.endsWith(file.filename.toLowerCase(), '.jpg') or
+                 #strings.endsWith(file.filename.toLowerCase(), '.jpeg') or
+                 #strings.endsWith(file.filename.toLowerCase(), '.png') or
+                 #strings.endsWith(file.filename.toLowerCase(), '.gif')}">
+            <img th:src="@{/note/image/{id}(id=${file.id})}" alt="첨부 이미지"
+                 style="max-width: 100%; height: auto; margin-bottom: 15px;">
+          </div>
+        </div>
+      </div>
+
       <!-- 게시글 내용 -->
       <h3 class="section-title" style="font-size: 18px;"><i class="fas fa-align-left"></i> 내용</h3>
       <div class="note-content" th:text="${note.content}"></div>
