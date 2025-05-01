@@ -50,5 +50,22 @@
 			GROUP BY n.id
 			HAVING count(n.id) >= #{count};
   </select>
+  
+  <select id="noteAllList" parameterType="map" resultType="com.bbs.demo.domain.Notes">
+  	SELECT n.id, n.title, n.content, n.create_date as createDate,
+        	n.last_modified_date as lastModifiedDate, n.board_id as boardId,
+        	n.user_id as userId
+		FROM notes n
+			INNER JOIN (
+				SELECT note_id
+				FROM note_token
+				WHERE token IN 
+			    <foreach collection="tokens" item="token" open="(" separator="," close=")">
+			        #{token}
+			    </foreach>
+			) nt ON n.id = nt.note_id
+			GROUP BY n.id
+			HAVING count(n.id) >= #{count};
+  </select>
 
 </mapper>

@@ -81,10 +81,6 @@ public class PageController {
 										@RequestParam(name="content") String content,
 										Model model) {
 		
-		Page page = new Page();
-		int pagecount = pagemapper.pageCount(boardPos);
-		page.setPageLen(pagecount);
-
 		Tokenizer tokenizer = new Tokenizer();
 		
 		List<String> tokens = tokenizer.tokenizer(content);
@@ -95,12 +91,21 @@ public class PageController {
 		
 		Map<String, Object> params = new HashMap<>();
 		Set<String> uniqueTokens = new HashSet<>(tokens);
+		List<Notes> searchResult = new ArrayList<>();
 		
-		params.put("board", boardPos);
-		params.put("tokens", uniqueTokens);
-		params.put("count", tokens.size());
-		
-		List<Notes> searchResult = pagemapper.noteList(params);
+		if(boardPos == 0) {
+			params.put("tokens", uniqueTokens);
+			params.put("count", tokens.size());
+			
+			searchResult = pagemapper.noteAllList(params);
+		}
+		else {
+			params.put("board", boardPos);
+			params.put("tokens", uniqueTokens);
+			params.put("count", tokens.size());
+			
+			searchResult = pagemapper.noteList(params);
+		}
 
 		// 페이징 처리후 출력
 		

@@ -523,7 +523,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>게시판</title>
   <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><!-- Bootstrap 5 CSS 추가 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  
   <style>
     :root {
       --primary: #6A5ACD;
@@ -1170,6 +1172,7 @@
         for (i in items) {
           console.log("item: ", items[i]);
           const noteList = document.createElement("tr");
+          noteList.setAttribute("onclick", `goDetail(${items[i].board_id}, ${items[i].id})`);
           noteList.innerHTML = `
             <td>${items[i].id}</td>
             <td>${items[i].title}</td>

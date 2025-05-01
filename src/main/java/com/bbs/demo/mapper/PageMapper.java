@@ -15,4 +15,5 @@ public interface PageMapper {
 	List<Notes> findInPage(Page pageDate);
 	int pageCount(int boardPos);
 	List<Notes> noteList(Map<String, Object> params);
+	List<Notes> noteAllList(Map<String, Object> params);
 }
