@@ -20,6 +20,11 @@
 	<select id="findById" parameterType="int" resultType="com.bbs.demo.domain.Users">
 	    SELECT * FROM users WHERE id = #{id}
 	</select>
-    
+        
+    <update id="lastLogin" parameterType="int">
+		UPDATE users
+			SET last_access_date = now()
+			WHERE id = #{id};
+    </update>
 
 </mapper>

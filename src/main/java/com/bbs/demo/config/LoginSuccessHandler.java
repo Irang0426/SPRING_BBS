@@ -33,9 +33,11 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws ServletException, IOException {
         String email = authentication.getName();
+        loginMemberMapper.lastLogin(loginMemberMapper.findbyEmail(email).getId());
         Users user = loginMemberMapper.findbyEmail(email);
         user.setUserGradeString((UserGrade.fromGrade(user.getUserGrade())).toString());
         user.setPassword("");
+        
 
         // 세션에 저장
         HttpSession session = request.getSession();
