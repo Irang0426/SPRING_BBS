@@ -207,6 +207,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>관리자 페이지</title>
+  <!-- 스타일 적용되지 않음
   <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -409,7 +410,7 @@
         overflow-x: auto;
       }
     }
-  </style>
+  </style> -->
 </head>
 <body>
 
@@ -490,7 +491,7 @@
     </thead>
     <tbody th:fragment="boardtbody (boards)">
       <tr th:each="item: ${boards}">
-        <td><a th:href="@{/board/list(id=${item.id})}" th:text="${item.id}"></a></td>
+        <td><a th:href="@{/board/list(id=${item.id})}" th:text="${item.id}" style="display: block; width: 100%;"></a></td>
         <td th:text="${item.name}"></td>
         <td th:text="${#temporals.format(item.create_date, 'yy-MM-dd HH:mm:ss')}"></td>
         <td th:text="${#temporals.format(item.last_modified_date, 'yy-MM-dd HH:mm:ss')}"></td>
@@ -577,7 +578,7 @@
     </thead>
     <tbody th:fragment="commenttbody (comments)">
       <tr th:each="item: ${comments}">
-        <td><a th:href="@{/note/read(id=${item.noteId})}" th:text="${item.id}"></a></td>
+        <td><a th:href="@{/note/read(id=${item.noteId})}" th:text="${item.id}" style="display: block; width: 100%;"></a></td>
         <td th:text="${item.content}"></td>
         <td th:text="${#temporals.format(item.createDate, 'yy-MM-dd HH:mm:ss')}"></td>
         <td th:text="${#temporals.format(item.lastModifiedDate, 'yy-MM-dd HH:mm:ss')}"></td>
@@ -619,7 +620,7 @@
     </thead>
     <tbody th:fragment="filetbody (files)">
       <tr th:each="item: ${files}">
-        <td><a th:href="@{/note/read(id=${item.note_id})}" th:text="${item.id}"></a></td>
+        <td><a th:href="@{/note/read(id=${item.note_id})}" th:text="${item.id}" style="display: block; width: 100%;"></a></td>
         <td th:text="${item.filename}"></td>
         <td th:text="${item.files.length}+ bytes"></td>
         <td th:text="${item.note_id}"></td>

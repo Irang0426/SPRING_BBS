@@ -619,6 +619,34 @@ window.onload = function() {
             margin: 30px auto;
             padding: 0 20px;
         }
+        
+        #insertBoard {
+	      display: flex;
+	      gap: 10px;
+	    }
+	
+	    input[type="text"] {
+	      padding: 10px;
+	      border: 1px solid var(--border);
+	      border-radius: var(--radius);
+	      width: 250px;
+	      font-family: 'Pretendard', sans-serif;
+	    }
+        
+	    button {
+	      background-color: var(--primary);
+	      color: white;
+	      border: none;
+	      padding: 10px 15px;
+	      border-radius: var(--radius);
+	      font-weight: 500;
+	      cursor: pointer;
+	      transition: background-color 0.2s;
+	      font-family: 'Pretendard', sans-serif;
+	      display: flex;
+	      align-items: center;
+	      justify-content: center;
+	    }
 
         .admin-nav {
             background-color: var(--card-bg);
@@ -782,6 +810,10 @@ window.onload = function() {
             background-color: var(--primary);
             padding: 8px 12px;
             border-radius: var(--radius);
+        }
+        
+        table a {
+        	display: block; width: 100%;
         }
 
         .loading-modal {
