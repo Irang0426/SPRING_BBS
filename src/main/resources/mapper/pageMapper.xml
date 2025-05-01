@@ -5,6 +5,19 @@
 
 <mapper namespace="com.bbs.demo.mapper.PageMapper">
 
+  <select id="findAllPage" parameterType="com.bbs.demo.domain.Page" resultType="com.bbs.demo.domain.Notes">
+    SELECT id, title, content, create_date as createDate,
+        	last_modified_date as lastModifiedDate, board_id as boardId,
+        	user_id as userId
+        FROM notes
+    	ORDER BY create_date DESC
+    	LIMIT #{offset}, #{pageSize};
+  </select>
+  
+  <select id="pageAllCount" parameterType="int" resultType="Integer">
+	SELECT count(*) FROM notes;
+  </select>
+  
   <select id="findInPage" parameterType="com.bbs.demo.domain.Page" resultType="com.bbs.demo.domain.Notes">
     SELECT id, title, content, create_date as createDate,
         	last_modified_date as lastModifiedDate, board_id as boardId,

@@ -981,6 +981,7 @@
           
           <div class="select-container">
             <select id="boardList" name="boardList" th:onchange="changeList(1)" class="custom-select">
+              <option id="0" value=0>전체</option>
               <option th:each="board : ${boardList}"
                       th:id="${board.id}"
                       th:value="${board.id}"
@@ -1107,8 +1108,8 @@
     const goDetail = (board, id) => {
       console.log("datas: ", board, id);
       let readNote = document.createElement("a");
-      let link = "/note/read?id=" + id;
-      
+	  link = "/note/read?id=" + id;  
+
       readNote.setAttribute("href", link);
       readNote.click();
     }
@@ -1214,6 +1215,9 @@
     
     const newNote = () => {
       let value = document.getElementById("boardList").value;
+      if(value == 0) {
+    	  value += 1;
+      }
       
       href = "/note/register?boardId=" + value;
       location.href = href;

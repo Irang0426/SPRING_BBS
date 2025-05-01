@@ -1,5 +1,6 @@
 package com.bbs.demo.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -33,22 +34,40 @@ public class PageController {
 	public Map<String, Object> PageList(@RequestParam(name="boardPos") int boardPos,
 							@RequestParam(name="pagePos") int pagePos,
 							Model model) {
+		
+		List<Notes> pageList = new ArrayList<>();
 		Page page = new Page();
-		int pagecount = pagemapper.pageCount(boardPos);
-		if(pagecount % page.getPageSize() != 0) {
-			pagecount = (int)(pagecount / page.getPageSize()) + 1;
+		
+		if(boardPos == 0) {
+			int pagecount = pagemapper.pageAllCount();
+			if(pagecount % page.getPageSize() != 0) {
+				pagecount = (int)(pagecount / page.getPageSize()) + 1;
+			}
+			else {
+				pagecount = (int)(pagecount / page.getPageSize());
+			}
+			
+			page.setBoardPos(boardPos);
+			page.setPage(pagePos);
+			page.setPageLen(pagecount);
+			
+			pageList = pagemapper.findAllPage(page);
 		}
 		else {
-			pagecount = (int)(pagecount / page.getPageSize());
+			int pagecount = pagemapper.pageCount(boardPos);
+			if(pagecount % page.getPageSize() != 0) {
+				pagecount = (int)(pagecount / page.getPageSize()) + 1;
+			}
+			else {
+				pagecount = (int)(pagecount / page.getPageSize());
+			}
+			
+			page.setBoardPos(boardPos);
+			page.setPage(pagePos);
+			page.setPageLen(pagecount);
+			
+			pageList = pagemapper.findInPage(page);
 		}
-		
-		page.setBoardPos(boardPos);
-		page.setPage(pagePos);
-		page.setPageLen(pagecount);
-		
-		List<Notes> pageList = pagemapper.findInPage(page);
-		model.addAttribute("boardList", pageList);
-		model.addAttribute("pageInfo", page);
 		
 		return Map.of(
 					"noteList", pageList,

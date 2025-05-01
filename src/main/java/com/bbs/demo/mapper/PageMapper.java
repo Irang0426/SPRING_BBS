@@ -10,6 +10,8 @@ import com.bbs.demo.domain.Page;
 
 @Mapper
 public interface PageMapper {
+	List<Notes> findAllPage(Page pageDate);
+	int pageAllCount();
 	List<Notes> findInPage(Page pageDate);
 	int pageCount(int boardPos);
 	List<Notes> noteList(Map<String, Object> params);
