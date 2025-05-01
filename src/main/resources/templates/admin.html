@@ -1255,6 +1255,7 @@ window.onload = function() {
     // 삭제하고 돌아왔을 때 페이지 그대로 보이게 작동
     window.onload = function() {
         TableManager.updateSortIcons();
+        TableManager.bindUpdateButtons();
         TableManager.changeList(TableManager.state.totalPageCount < 0 ? [[${totalPageCount}]] : TableManager.state.totalPageCount);
         const urlParams = new URLSearchParams(window.location.search);
         
@@ -1300,21 +1301,6 @@ window.onload = function() {
             }
         }
     }
-    const tbody = document.querySelector("tbody");
-
-    tbody.addEventListener("click", (e) => {
-      const tr = e.target.closest("tr"); // 클릭된 요소가 tr이 아니라도 상위 tr 탐색
-      if (!tr) return; // tr이 아니면 무시
-
-      console.log("클릭된 tr: ", tr);
-
-      const idCell = tr.querySelector(".id");
-      const id = idCell ? idCell.textContent.trim() : null;
-      if (id) {
-        console.log("이동할 ID:", id);
-        //window.location.href = `/note/read?id=${id}`;
-      }
-    });
     </script>
 </body>
 </html>
