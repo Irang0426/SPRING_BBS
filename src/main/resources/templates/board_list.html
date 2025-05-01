@@ -822,17 +822,64 @@
       text-decoration: none;
       color: var(--text);
       transition: all 0.2s ease;
+      width: 16%;
     }
 
-    .page-nav a:hover {
-      background-color: var(--primary-light);
-      color: var(--primary);
-    }
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
 
-    .page-nav.nowPage a {
-      background-color: var(--primary);
-      color: white;
-    }
+.paging {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 10px; /* 버튼 간격 일정하게 */
+}
+
+.paging li {
+  /* gap으로 간격 조절하므로 별도 마진 불필요 */
+}
+
+.paging a {
+  display: block;
+  min-width: 36px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  color: var(--text, #333);
+  background: none;
+  text-decoration: none;
+  text-align: center;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* 현재 페이지(active) 스타일 */
+.paging li.nowPage a {
+  background-color: var(--primary, #6A5ACD);
+  color: #fff;
+  cursor: default;
+  pointer-events: none;
+  box-shadow: none;
+}
+
+/* hover 효과: 현재 페이지 아닌 버튼에만 적용 */
+.paging li:not(.nowPage) a:hover {
+  background-color: var(--primary-light, #E6E4FF);
+  color: var(--primary, #6A5ACD);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  transform: translateY(-2px);
+}
+
+/* 클릭시 약간 눌리는 효과 */
+.paging li:not(.nowPage) a:active {
+  transform: translateY(1px);
+  transition-duration: 0.1s;
+}
 
     /* 반응형 디자인 */
     @media (max-width: 768px) {
@@ -951,11 +998,11 @@
         
         <!-- 페이지네이션 -->
         <div class="pagination-container">
-          <table class="page-nav-table">
-            <tr id="paging">
+          <nav class="page-nav-table">
+            <ul class="paging" id="paging">
               <!-- 페이지네이션 버튼은 JavaScript로 채워짐 -->
-            </tr>
-          </table>
+            </ul>
+          </nav>
         </div>
       </div>
     </div>
@@ -1047,13 +1094,13 @@
         
         
         pagingtr.innerHTML = 
-          "<td class='page-nav'>" +
+          "<li class='page-nav'>" +
             "<a onclick=" + `changePage(${backTo})` + ">&lt;&lt;</a>" +
-          "</td>" +
+          "</li>" +
           paging(back, front) + 
-          "<td class='page-nav'>" +
+          "<li class='page-nav'>" +
             "<a onclick=" + `changePage(${frontTo})` + ">&gt;&gt;</a>" +
-          "</td>";
+          "</li>";
       })
     }
     
