@@ -952,6 +952,9 @@ window.onload = function() {
                 this.state.page = 0;
                 this.bindUpdateButtons();
                 this.updateSortIcons();
+                setTimeout(() => {
+                	  this.updateTrLink();
+                	}, 0);
               });
         }
       },
@@ -1124,6 +1127,38 @@ window.onload = function() {
                 const baseText = th.textContent.replace(/[🔼🔽🔺🔻]/g, "").trim(); // 🔼, 🔽 제거
                 th.textContent = baseText + icon;
               });
+        },
+        
+        updateTrLink() {
+        	const tbody = document.querySelector("tbody");
+
+       	    tbody.addEventListener("click", (e) => {
+       	      const tr = e.target.closest("tr"); // 클릭된 요소가 tr이 아니라도 상위 tr 탐색
+       	      if (!tr) return; // tr이 아니면 무시
+
+       	      console.log("클릭된 tr: ", tr);
+
+       	      const idCell = tr.querySelector(".id");
+       	      const id = idCell ? idCell.textContent.trim() : null;
+       	      if (id) {
+       	        console.log("이동할 ID:", id);
+       	        switch (this.state.url) {
+                   case "boards":
+                       targetUrl = `/board/list?id=${id}`;
+                       break;
+                   case "notes":
+                   case "comments":
+                   case "files":
+                       targetUrl = `/note/read?id=${id}`;
+                       break;
+                   default:
+                       console.warn("알 수 없는 URL 타입:", this.state.url);
+                       return;
+              	 }
+        	     // 이동
+                 window.location.href = targetUrl;
+       	      }
+       	    });
         }
     };
     // 초기화
@@ -1265,6 +1300,21 @@ window.onload = function() {
             }
         }
     }
+    const tbody = document.querySelector("tbody");
+
+    tbody.addEventListener("click", (e) => {
+      const tr = e.target.closest("tr"); // 클릭된 요소가 tr이 아니라도 상위 tr 탐색
+      if (!tr) return; // tr이 아니면 무시
+
+      console.log("클릭된 tr: ", tr);
+
+      const idCell = tr.querySelector(".id");
+      const id = idCell ? idCell.textContent.trim() : null;
+      if (id) {
+        console.log("이동할 ID:", id);
+        //window.location.href = `/note/read?id=${id}`;
+      }
+    });
     </script>
 </body>
 </html>
