@@ -334,7 +334,7 @@
         <h3><i class="fas fa-user-circle"></i> <span id="newUserName">springdev2025</span></h3>
         <div class="meta">
           <span><i class="fas fa-calendar-alt"></i>&nbsp;가입일: <span id="newUserReg">2025-04-12</span></span>
-          <span><i class="fas fa-envelope"></i> <span id="newUserGrade">springdev2025@test.com</span></span>
+          <span><i class="fa-solid fa-ranking-star"></i> <span id="newUserGrade">springdev2025@test.com</span></span>
         </div>
       </div>
     </section>
@@ -433,7 +433,7 @@
         note1Name.innerHTML = data.newNotes[0].title;
         note1Name.setAttribute("href", "/note/read?id=" + data.newNotes[0].id);
         note1create.innerHTML = changeDate(data.newNotes[0].createDate);
-        note1writer.innerHTML = data.newNotes[0].userId;
+        note1writer.innerHTML = data.newNotes[0].writerNickname;
         // 내용 포매팅 적용
         note1content.innerHTML = formatContent(data.newNotes[0].content);
         
@@ -445,7 +445,7 @@
 
         note2Name.innerHTML = data.newNotes[1].title;
         note2create.innerHTML = changeDate(data.newNotes[1].createDate);
-        note2writer.innerHTML = data.newNotes[1].userId;
+        note2writer.innerHTML = data.newNotes[1].writerNickname;
         // 내용 포매팅 적용
         note2content.innerHTML = formatContent(data.newNotes[1].content);
         

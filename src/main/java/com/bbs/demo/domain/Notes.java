@@ -11,10 +11,19 @@ public class Notes {
     private LocalDateTime lastModifiedDate; // 마지막 수정일
     private Integer boardId;            // 소속 게시판 ID (foreign key)
     private Integer userId;             // 작성자 ID (foreign key)
+    private String writerNickname;
 
     // --- Getter & Setter ---
 
-    public Integer getId() {
+    public String getWriterNickname() {
+		return writerNickname;
+	}
+
+	public void setWriterNickname(String writerNickname) {
+		this.writerNickname = writerNickname;
+	}
+
+	public Integer getId() {
         return id;
     }
 

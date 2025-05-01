@@ -13,6 +13,7 @@ import com.bbs.demo.domain.Notes;
 import com.bbs.demo.domain.UserGrade;
 import com.bbs.demo.domain.Users;
 import com.bbs.demo.mapper.IndexMapper;
+import com.bbs.demo.mapper.LoginMemberMapper;
 
 @Controller
 @RequestMapping("/data")
@@ -20,6 +21,9 @@ public class IndexController {
 	
 	@Autowired
 	IndexMapper indexMapper;
+	
+	@Autowired
+	LoginMemberMapper loginMembereMapper;
 	
 	@PostMapping("/datas")
 	@ResponseBody
@@ -33,6 +37,10 @@ public class IndexController {
 		Users newUser = indexMapper.newUser(AllMember);
 		newUser.setUserGradeString(UserGrade.fromGrade(newUser.getUserGrade()).toString());
 		List<Notes> newNotes = indexMapper.newNotes(AllNotes);
+		
+		for(Notes note : newNotes) {
+			note.setWriterNickname(loginMembereMapper.findById(note.getUserId()).getNickName());
+		}
 		
 
 		return Map.of(
