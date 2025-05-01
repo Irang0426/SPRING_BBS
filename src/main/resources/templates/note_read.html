@@ -807,10 +807,6 @@ $(document).ready(function() {
               <textarea class="comment_content" name="content" rows="3">${comment.content}</textarea>
               
               <div class="form-bottom">
-                  <div>
-                      <span class="char-count">${comment.content.length}</span>/300
-                  </div>
-                  
                   <div class="file-input-container">
                       <label for="edit-file-${comment.id}">
                           <i class="fas fa-image"></i> 이미지 변경
@@ -818,6 +814,7 @@ $(document).ready(function() {
                       </label>
                       <span class="file-name"></span>
                   </div>
+                  <div><span class="char-count count">${comment.content.length}</span><span class="count">/300</span></div>
               </div>
               
               <div class="form-buttons">
@@ -833,11 +830,7 @@ $(document).ready(function() {
               <input type="hidden" name="commentId" value="${comment.id}">
               <textarea class="comment_content" name="content" placeholder="답글을 입력하세요"></textarea>
               
-              <div class="form-bottom">
-                  <div>
-                      <span class="char-count">0</span>/300
-                  </div>
-                  
+              <div class="form-bottom">            
                   <div class="file-input-container">
                       <label for="reply-file-${comment.id}">
                           <i class="fas fa-image"></i> 이미지 첨부
@@ -845,6 +838,7 @@ $(document).ready(function() {
                       </label>
                       <span class="file-name"></span>
                   </div>
+                  <div><span class="char-count count">${comment.content.length}</span><span class="count">/300</span></div>
               </div>
               
               <div class="form-buttons">
