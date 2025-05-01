@@ -21,7 +21,7 @@
     	<th>등급 변경</th><th>삭제</th></thead>
     <tbody th:fragment="usertbody (users)">
      <tr th:each="item: ${users}">
-     	<td><a th:href="@{/board/list(id=${item.id})}" th:text="${item.id}"></a></td>
+     	<td th:text="${item.id}"></td>
      	<td th:text="${item.nickName}"></td>
      	<td th:text="${item.email}"></td>
      	<td th:text="${#temporals.format(item.regDate, 'yy-MM-dd HH:mm:ss')}"></td>
@@ -70,7 +70,7 @@
     	<th>삭제</th></thead>
     <tbody th:fragment="boardtbody (boards)">
 	    <tr th:each="item: ${boards}">
-	    	<td th:text="${item.id}"></td>
+	    	<td><a th:href="@{/board/list(id=${item.id})}" th:text="${item.id}"></a></td>
 	    	<td th:text="${item.name}"></td>
 	    	<td th:text="${#temporals.format(item.create_date, 'yy-MM-dd HH:mm:ss')}"></td>
 	    	<td th:text="${#temporals.format(item.last_modified_date, 'yy-MM-dd HH:mm:ss')}"></td>
