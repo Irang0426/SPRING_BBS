@@ -791,7 +791,7 @@ $(document).ready(function() {
       const padding = isReply ? 'style="margin-left:30px;"' : '';
       let comment_button = "";
       let loginuser = [[${session.loginMember.id}]];
-      let notewriter = [[${note.userId}]];
+      let notewriter = comment.commentAuthorId;
       let isadmin = '[[${session.loginMember.userGradeString}]]';
       
       
