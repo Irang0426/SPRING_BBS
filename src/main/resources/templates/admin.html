@@ -940,14 +940,16 @@ window.onload = function() {
                 this.updateSortIcons();
               });
         } else {
-            fetch(`/admin/${url}`)
+            fetch(`/admin/${url}?page=0&limit=20&url=${url}`)
               .then(res => res.text())
               .then(html => {
                 document.querySelector("#listTableDiv").innerHTML = html;
                 this.state.totalPageCount = document.getElementById('totalPageCount').value;
                 this.state.partial = false;
                 this.bindDeleteButtons();
-                this.changeList(this.state.totalPageCount);
+                this.changeList(this.state.totalPageCount < 0 ? [[${totalPageCount}]] : this.state.totalPageCount);
+                this.changePage(1);
+                this.state.page = 0;
                 this.bindUpdateButtons();
                 this.updateSortIcons();
               });
@@ -1192,7 +1194,7 @@ window.onload = function() {
                                 <input type="hidden" name="id" th:value="${item.id}" />
                                 <input type="hidden" name="newGrade" />
                                 <input type="hidden" name="params"/>
-                                <button type="button" class="update-button">등급 변경</button>
+                                <button type="button" class="update-button"><i class="fas fa-edit"></i>등급 변경</button>
                             </form>
                         </td>
                         <td>
@@ -1214,11 +1216,11 @@ window.onload = function() {
     </div>
 
     <script th:inline="javascript">
-    TableManager.changeList([[${totalPageCount}]]);
 
     // 삭제하고 돌아왔을 때 페이지 그대로 보이게 작동
     window.onload = function() {
         TableManager.updateSortIcons();
+        TableManager.changeList(TableManager.state.totalPageCount < 0 ? [[${totalPageCount}]] : TableManager.state.totalPageCount);
         const urlParams = new URLSearchParams(window.location.search);
         
         const defaultUrl = urlParams.get('url');
