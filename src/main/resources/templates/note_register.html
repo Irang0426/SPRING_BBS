@@ -519,10 +519,15 @@
       <div class="form-group">
         <label for="boardId"><i class="fas fa-clipboard-list"></i> 게시판 선택</label>
         <select id="boardId" name="boardId" required>
-          <option value="">-- 게시판 선택 --</option>
           <option th:each="board : ${boardList}"
                   th:value="${board.id}"
-                  th:text="${board.name}"></option>
+                  th:text="${board.name}"
+                  th:if="${board.id == nowBoard}"
+                  selected="selected"></option>
+          <option th:each="board : ${boardList}"
+                  th:value="${board.id}"
+                  th:text="${board.name}"
+                  th:if="${board.id != nowBoard}"></option>
         </select>
       </div>
       

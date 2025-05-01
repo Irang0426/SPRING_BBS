@@ -43,10 +43,11 @@ public class NoteController {
     }
 
     @GetMapping("/register")
-    public String registerForm(Model model) {
+    public String registerForm(@RequestParam(name="boardId") int boardId ,Model model) {
         List<Boards> boardList = boardmapper.findAllBoard();
         model.addAttribute("boardList", boardList);
         model.addAttribute("note", new Notes());
+        model.addAttribute("nowBoard", boardId);
         return "note_register";
     }
 

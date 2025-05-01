@@ -45,7 +45,7 @@
 
 <a th:href="@{|/note/modify?id=${note.id}|}">[수정]</a> |
 <a href="#" onclick="deleteNote();">[삭제]</a> |
-<a href="/note/list">[목록]</a>
+<a href="/board/list">[목록]</a>
 
 <div class="cm_list">
     <fieldset>
@@ -710,9 +710,10 @@ $(document).ready(function() {
       
       <!-- 버튼 그룹 -->
       <div class="action-buttons">
-        <a th:href="@{|/note/modify?id=${note.id}|}" class="btn btn-outline"><i class="fas fa-edit"></i> 수정</a>
+        <a th:if="${session.loginMember.id == note.userId or session.loginMember.userGradeString == 'ADMIN'}" th:href="@{|/note/modify?id=${note.id}|}" class="btn btn-outline"><i class="fas fa-edit"></i> 수정</a>
+        <a th:if="${session.loginMember.id != note.userId and session.loginMember.userGradeString != 'ADMIN'}" class="btn btn-outline" onclick="alertUser()"><i class="fas fa-edit"></i> 수정</a>
         <a href="#" onclick="deleteNote();" class="btn btn-danger"><i class="fas fa-trash-alt"></i> 삭제</a>
-        <a href="/note/list" class="btn btn-primary"><i class="fas fa-list"></i> 목록</a>
+        <a href="/board/list" class="btn btn-primary"><i class="fas fa-list"></i> 목록</a>
       </div>
     </div>
     
@@ -750,6 +751,10 @@ $(document).ready(function() {
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
+  const alertUser = () => {
+	  alert("글을 수정하실 권한이 없습니다.");
+  }
+  
   // 문자 수 카운팅 함수
   function initCharacterCounter() {
       $('.comment_content').off('input').on('input', function() {
