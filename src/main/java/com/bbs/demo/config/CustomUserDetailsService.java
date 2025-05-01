@@ -30,7 +30,7 @@ public class CustomUserDetailsService implements org.springframework.security.co
 		return org.springframework.security.core.userdetails.User.builder()
 				.username(member.getEmail())
 				.password(member.getPassword())
-				.roles((UserGrade.fromGrade(member.getUserGrade())).toString())
+				.roles(Integer.toString(member.getUserGrade()))
 				.build();
 	}
 }

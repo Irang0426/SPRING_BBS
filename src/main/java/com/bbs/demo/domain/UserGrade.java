@@ -2,16 +2,16 @@ package com.bbs.demo.domain;
 
 
 public enum UserGrade {
-	TEST1(1),
-	TEST2(2),
-	TEST3(3),
-	TEST4(4),
-	TEST5(5),
-	TEST6(6),
-	TEST7(7),
-	TEST8(8),
-	TEST9(9),
-	ADMIN(10);
+	준회원(1),
+	새싹회원(2),
+	초급회원(3),
+	일반회원(4),
+	중급회원(5),
+	정회원(6),
+	고급회원(7),
+	명예회원(8),
+	운영진(9),
+	관리자(10);
 	
     private final int grade;	// enum 객체 생성시 value 값
 

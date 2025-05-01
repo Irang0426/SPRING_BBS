@@ -40,8 +40,8 @@ public class SecurityConfig {
 				.authorizeHttpRequests((auth) -> auth
 						.requestMatchers("/.well-known/**").permitAll()
 						.requestMatchers("/", "/login/**", "/register/**", "/data", "/data/**").permitAll()
-						.requestMatchers("/admin/**").hasRole("ADMIN")
-						.anyRequest().hasAnyRole("TEST1", "TEST2", "TEST3", "TEST4", "TEST5", "TEST6", "TEST7", "TEST8", "TEST9", "ADMIN")	//authentical인가 뭐시기는 권한 얻어오라는 뜻
+						.requestMatchers("/admin/**").hasRole("10")
+						.anyRequest().hasAnyRole("1", "2", "3", "4", "5", "6", "7", "8", "9", "10")	//authentical인가 뭐시기는 권한 얻어오라는 뜻
 				)
 				.exceptionHandling((except) ->
 					except
