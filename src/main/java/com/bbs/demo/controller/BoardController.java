@@ -30,7 +30,7 @@ public class BoardController {
 	private NoteMapper notemapper;
 	
 	@GetMapping("/list")
-	public String boardList(Model model, HttpSession session) {
+	public String boardList(@RequestParam(required = false ,name = "id", defaultValue = "0") int id, Model model, HttpSession session) {
 		Page page = new Page();
 		Users loginMember = (Users)session.getAttribute("loginMember");
 		
@@ -41,6 +41,7 @@ public class BoardController {
 		model.addAttribute("loginMember", loginMember);
 		model.addAttribute("boardList", boardmapper.findAllBoard());
 		model.addAttribute("pageInfo", page);
+		model.addAttribute("adminToBoard", id);
 		
 		return "board_list";
 	}

@@ -841,10 +841,6 @@
   gap: 10px; /* 버튼 간격 일정하게 */
 }
 
-.paging li {
-  /* gap으로 간격 조절하므로 별도 마진 불필요 */
-}
-
 .paging a {
   display: block;
   min-width: 36px;
@@ -1020,10 +1016,17 @@
         document.getElementById("searchNote").value = "";
       }
       else {
-        page = document.getElementById("nowpage").value;           
+	        page = document.getElementById("nowpage").value;    		
       }
-      
-      let value = document.getElementById("boardList").value;
+	  let adminToBoard = [[${adminToBoard}]];
+	  let value = 0;	
+	  if(adminToBoard != "0") {
+  		value = adminToBoard;
+  		document.getElementById(adminToBoard).setAttribute("selected", true)
+      }
+      else {
+      	value = document.getElementById("boardList").value;	  		
+  	  }
       let source = document.getElementById("boardList");
       let notetable = document.getElementById("notelist");
       
