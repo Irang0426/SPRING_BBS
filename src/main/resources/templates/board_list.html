@@ -914,7 +914,7 @@
               <p><strong>등급:</strong> <span th:text="${loginMember.userGradeString}"></span></p>
             </div>
             <div class="user-info-item">
-              <p><strong>최근 접속:</strong> <span th:text="${loginMember.lastAccessDate}"></span></p>
+              <p><strong>최근 접속:</strong> <span th:text="${#temporals.format(loginMember.lastAccessDate, 'yyyy-MM-dd HH:mm')}"></span></p>
             </div>
           </div>
         </div>
