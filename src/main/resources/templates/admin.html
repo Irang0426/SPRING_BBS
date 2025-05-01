@@ -947,14 +947,14 @@ window.onload = function() {
                 this.state.totalPageCount = document.getElementById('totalPageCount').value;
                 this.state.partial = false;
                 this.bindDeleteButtons();
+                setTimeout(() => {
+                	  this.updateTrLink();
+                	}, 0);
                 this.changeList(this.state.totalPageCount < 0 ? [[${totalPageCount}]] : this.state.totalPageCount);
                 this.changePage(1);
                 this.state.page = 0;
                 this.bindUpdateButtons();
                 this.updateSortIcons();
-                setTimeout(() => {
-                	  this.updateTrLink();
-                	}, 0);
               });
         }
       },
@@ -1136,6 +1136,13 @@ window.onload = function() {
        	      const tr = e.target.closest("tr"); // 클릭된 요소가 tr이 아니라도 상위 tr 탐색
        	      if (!tr) return; // tr이 아니면 무시
 
+       	      const tds = tr.querySelectorAll("td");
+	      	  const lastTd = tds[tds.length - 1];
+	
+	      	  if (e.target === lastTd || lastTd.contains(e.target)) {
+	      	    // 클릭된 요소가 마지막 td이거나 그 안쪽에 포함된 경우
+	      	    return;
+	      	  }
        	      console.log("클릭된 tr: ", tr);
 
        	      const idCell = tr.querySelector(".id");
@@ -1256,6 +1263,7 @@ window.onload = function() {
     window.onload = function() {
         TableManager.updateSortIcons();
         TableManager.bindUpdateButtons();
+        TableManager.bindDeleteButtons();
         TableManager.changeList(TableManager.state.totalPageCount < 0 ? [[${totalPageCount}]] : TableManager.state.totalPageCount);
         const urlParams = new URLSearchParams(window.location.search);
         
