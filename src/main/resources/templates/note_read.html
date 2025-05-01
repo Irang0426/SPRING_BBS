@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -228,5 +228,743 @@ $(document).ready(function() {
     });
 });
 </script>
+</body>
+</html>
+ -->
+ 
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>게시글 상세</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #6A5ACD;
+      --primary-light: #E6E4FF;
+      --accent: #FF6B6B;
+      --background: #F9F9F9;
+      --card-bg: #FFFFFF;
+      --text: #333333;
+      --text-light: #666666;
+      --border: #E0E0E0;
+      --shadow: 0 4px 12px rgba(0,0,0,0.08);
+      --radius: 12px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Pretendard', sans-serif;
+      background-color: var(--background);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      background-color: var(--card-bg);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 5px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--text);
+      padding: 8px 16px;
+      border-radius: var(--radius);
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    nav a:hover {
+      background-color: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .active {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      margin-bottom: 24px;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .section-title i {
+      margin-right: 12px;
+      background-color: var(--primary-light);
+      color: var(--primary);
+      border-radius: 50%;
+      padding: 8px;
+      font-size: 18px;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      margin: 24px 0;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: var(--radius);
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: #5849b8;
+    }
+
+    .btn-outline {
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      background-color: transparent;
+    }
+
+    .btn-outline:hover {
+      background-color: var(--primary-light);
+    }
+
+    .btn-danger {
+      background-color: var(--accent);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background-color: #e05555;
+    }
+
+    .file-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .file-table th,
+    .file-table td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .file-table th {
+      background-color: var(--primary-light);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .file-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .file-table a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .file-table a:hover {
+      text-decoration: underline;
+    }
+
+    .note-info {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .info-item {
+      background-color: var(--primary-light);
+      padding: 12px 16px;
+      border-radius: var(--radius);
+    }
+
+    .info-label {
+      font-size: 13px;
+      color: var(--text-light);
+      margin-bottom: 4px;
+    }
+
+    .info-value {
+      font-weight: 600;
+      color: var(--primary);
+    }
+    
+    .note-content {
+      margin-top: 24px;
+      padding: 20px;
+      background-color: var(--background);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      white-space: pre-wrap;
+      min-height: 200px;
+    }
+
+    .comment-section {
+      margin-top: 40px;
+    }
+
+    .comment-form,
+    .edit-form,
+    .reply-form {
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+    }
+
+    .comment-form textarea,
+    .edit-form textarea,
+    .reply-form textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 14px;
+      resize: vertical;
+      min-height: 100px;
+      margin-bottom: 12px;
+      font-family: 'Pretendard', sans-serif;
+    }
+
+    .comment-form textarea:focus,
+    .edit-form textarea:focus,
+    .reply-form textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-light);
+    }
+
+    .char-count {
+      color: var(--text-light);
+      font-size: 0.9em;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+
+    .form-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .form-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    #comment-list {
+      list-style: none;
+    }
+
+    .comment-item {
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .comment-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .comment-author {
+      font-weight: 600;
+    }
+
+    .comment-date {
+      font-size: 12px;
+      color: var(--text-light);
+    }
+
+    .comment-text {
+      margin-bottom: 12px;
+    }
+
+    .comment-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .comment-button {
+      font-size: 13px;
+      padding: 6px 12px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      background-color: var(--primary-light);
+      color: var(--primary);
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .comment-button:hover {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .delete-btn {
+      background-color: #ffe6e6;
+      color: var(--accent);
+    }
+
+    .delete-btn:hover {
+      background-color: var(--accent);
+      color: white;
+    }
+
+    .reply-list {
+      margin-left: 30px;
+      margin-top: 16px;
+      list-style: none;
+    }
+
+    .file-input-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .file-input-container label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      background: var(--primary-light);
+      color: var(--primary);
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .file-input-container input[type="file"] {
+      display: none;
+    }
+
+    .file-name {
+      font-size: 13px;
+      color: var(--text-light);
+    }
+
+    .comment-image {
+      max-width: 200px;
+      border-radius: var(--radius);
+      margin: 10px 0;
+    }
+
+    legend {
+      font-weight: 600;
+      color: var(--primary);
+      padding: 0 10px;
+      margin-bottom: 12px;
+    }
+
+    fieldset {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+      
+      .note-info {
+        grid-template-columns: 1fr;
+      }
+      
+      .action-buttons {
+        flex-wrap: wrap;
+      }
+      
+      .btn {
+        flex: 1;
+        text-align: center;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/" class="logo">커뮤니티</a>
+      <div class="nav-links">
+        <a href="/"><i class="fas fa-home"></i> 홈</a>
+        <a href="/board/list" class="active"><i class="fas fa-list"></i> 게시판</a>
+        <a href="/login" th:if="${session.loginMember == null}"><i class="fas fa-sign-in-alt"></i> 로그인</a>
+        <a href="/register" th:if="${session.loginMember == null}"><i class="fas fa-user-plus"></i> 회원가입</a>
+        <a href="/logout" th:if="${session.loginMember != null}"><i class="fas fa-sign-out-alt"></i> 로그아웃</a>
+        <a href="/admin" th:if="${session.loginMember != null && session.loginMember.userGradeString == 'ADMIN'}"><i class="fas fa-cog"></i> 관리자</a>
+      </div>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h2 class="section-title"><i class="fas fa-file-alt"></i> 게시글 상세 보기</h2>
+    
+    <div class="card">
+      <!-- 첨부 파일 테이블 -->
+      <table class="file-table" th:if="${files != null && !files.isEmpty()}">
+        <thead>
+          <tr>
+            <th>파일 이름</th>
+            <th>노트 번호</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="file : ${files}">
+            <td><a th:href="@{/file/download(id=${file.id})}" th:text="${file.filename}">파일 이름</a></td>
+            <td th:text="${#arrays.length(file.files)}">파일 크기</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <!-- 게시글 정보 -->
+      <div class="note-info">
+        <div class="info-item">
+          <div class="info-label">제목</div>
+          <div class="info-value" th:text="${note.title}">제목</div>
+        </div>
+        
+        <div class="info-item">
+          <div class="info-label">작성자</div>
+          <div class="info-value" th:text="${nickname}">닉네임</div>
+        </div>
+        
+        <div class="info-item">
+          <div class="info-label">작성일</div>
+          <div class="info-value" th:text="${#temporals.format(note.createDate, 'yyyy-MM-dd HH:mm')}">작성일</div>
+        </div>
+      </div>
+      
+      <!-- 게시글 내용 -->
+      <h3 class="section-title" style="font-size: 18px;"><i class="fas fa-align-left"></i> 내용</h3>
+      <div class="note-content" th:text="${note.content}"></div>
+      
+      <!-- 버튼 그룹 -->
+      <div class="action-buttons">
+        <a th:href="@{|/note/modify?id=${note.id}|}" class="btn btn-outline"><i class="fas fa-edit"></i> 수정</a>
+        <a href="#" onclick="deleteNote();" class="btn btn-danger"><i class="fas fa-trash-alt"></i> 삭제</a>
+        <a href="/note/list" class="btn btn-primary"><i class="fas fa-list"></i> 목록</a>
+      </div>
+    </div>
+    
+    <!-- 댓글 영역 -->
+    <div class="comment-section">
+      <h2 class="section-title"><i class="fas fa-comments"></i> 댓글</h2>
+      
+      <fieldset>
+        <legend>댓글 작성</legend>
+        <form class="comment-form" enctype="multipart/form-data">
+          <input type="hidden" name="noteId" th:value="${note.id}" />
+          <input type="hidden" name="commentAuthorId" th:value="${session.loginMember.id}" />
+          
+          <textarea class="comment_content" name="content" placeholder="댓글을 입력해 주세요."></textarea>
+          
+          <div class="form-bottom">
+            <div class="char-count">0</div>/300
+            
+            <div class="file-input-container">
+              <label for="comment-file">
+                <i class="fas fa-image"></i> 이미지 첨부
+                <input type="file" id="comment-file" name="imageFile" accept="image/*" />
+              </label>
+              <span class="file-name"></span>
+            </div>
+          </div>
+          
+          <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> 등록</button>
+        </form>
+      </fieldset>
+      
+      <h3 class="section-title" style="font-size: 18px;"><i class="fas fa-comment-dots"></i> 댓글 목록</h3>
+      <ul id="comment-list"></ul>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+  // 문자 수 카운팅 함수
+  function initCharacterCounter() {
+      $('.comment_content').off('input').on('input', function() {
+          const $counter = $(this).parent().find('.char-count').first();
+          const currentLength = $(this).val().length;
+          
+          $counter.text(currentLength);
+          
+          if (currentLength > 300) {
+              $(this).val($(this).val().substring(0, 300));
+              $counter.text(300).css('color', 'red');
+              setTimeout(() => alert('최대 300자까지 입력 가능합니다'), 100);
+          } else {
+              $counter.css('color', currentLength >= 280 ? 'orange' : '#666');
+          }
+      });
+  }
+
+  // 파일 선택 시 파일명 표시
+  $(document).on('change', 'input[type="file"]', function() {
+      const fileName = this.files[0]?.name || '';
+      $(this).closest('.file-input-container').find('.file-name').text(fileName);
+  });
+
+  const noteId = $('input[name="noteId"]').val();
+  const userId = $('input[name="commentAuthorId"]').val();
+
+  const changeDate = (date) => {
+      return date = date.substring(0, 4) + "-" + date.substring(5, 7) + "-" + date.substring(8, 10)
+                      + " " + date.substring(11, 13) + ":" + date.substring(14, 16);
+  }
+
+  function renderComment(comment, depth = 0) {
+      const isReply = depth > 0;
+      const padding = isReply ? 'style="margin-left:30px;"' : '';
+      let html = `<li ${padding} class="comment-item" data-id="${comment.id}" ${isReply ? 'data-reply="true"' : ''}>
+          <div class="comment-content">
+              <div class="comment-header">
+                  <span class="comment-author">${comment.authorNickName}</span>
+                  <span class="comment-date">${changeDate(comment.lastModifiedDate)}</span>
+              </div>
+              
+              ${comment.images ? `<img src="/comments/images?id=${comment.id}" class="comment-image" alt="댓글 이미지"><br>` : ''}
+              <p class="comment-text">${comment.content}</p>
+              
+              <div class="comment-actions">
+                  <button class="comment-button edit-btn"><i class="fas fa-edit"></i> 수정</button>
+                  <button class="comment-button delete-btn"><i class="fas fa-trash"></i> 삭제</button>
+                  ${!isReply ? `<button class="comment-button reply-toggle-btn"><i class="fas fa-reply"></i> 답글쓰기</button>` : ''}
+              </div>
+          </div>
+
+          <form class="edit-form" style="display:none;" enctype="multipart/form-data">
+              <input type="hidden" name="id" value="${comment.id}">
+              <textarea class="comment_content" name="content" rows="3">${comment.content}</textarea>
+              
+              <div class="form-bottom">
+                  <div>
+                      <span class="char-count">${comment.content.length}</span>/300
+                  </div>
+                  
+                  <div class="file-input-container">
+                      <label for="edit-file-${comment.id}">
+                          <i class="fas fa-image"></i> 이미지 변경
+                          <input type="file" id="edit-file-${comment.id}" name="imageFile" accept="image/*">
+                      </label>
+                      <span class="file-name"></span>
+                  </div>
+              </div>
+              
+              <div class="form-buttons">
+                  <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> 수정완료</button>
+                  <button type="button" class="btn btn-outline cancel-edit"><i class="fas fa-times"></i> 취소</button>
+              </div>
+          </form>
+
+          ${!isReply ? `
+          <form class="reply-form" style="display:none;" enctype="multipart/form-data">
+              <input type="hidden" name="noteId" value="${noteId}">
+              <input type="hidden" name="commentAuthorId" value="${userId}">
+              <input type="hidden" name="commentId" value="${comment.id}">
+              <textarea class="comment_content" name="content" placeholder="답글을 입력하세요"></textarea>
+              
+              <div class="form-bottom">
+                  <div>
+                      <span class="char-count">0</span>/300
+                  </div>
+                  
+                  <div class="file-input-container">
+                      <label for="reply-file-${comment.id}">
+                          <i class="fas fa-image"></i> 이미지 첨부
+                          <input type="file" id="reply-file-${comment.id}" name="imageFile" accept="image/*">
+                      </label>
+                      <span class="file-name"></span>
+                  </div>
+              </div>
+              
+              <div class="form-buttons">
+                  <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> 등록</button>
+                  <button type="button" class="btn btn-outline reply-cancel-btn"><i class="fas fa-times"></i> 취소</button>
+              </div>
+          </form>` : ''}`;
+
+      if (comment.children && comment.children.length > 0) {
+          html += '<ul class="reply-list">';
+          comment.children.forEach(reply => {
+              html += renderComment(reply, depth + 1);
+          });
+          html += '</ul>';
+      }
+
+      html += '</li>';
+      return html;
+  }
+
+  function loadComments() {
+      $.getJSON(`/comments/json?noteId=${noteId}`, function(data) {
+          console.log("Comment: ",data);
+          $('#comment-list').html(data.map(comment => renderComment(comment)));
+          initCharacterCounter();
+      });
+  }
+
+  $(document).ready(function() {
+      loadComments();
+      initCharacterCounter();
+
+      // 댓글 등록
+      $(document).on('submit', '.comment-form', function(e) {
+          e.preventDefault();
+          const formData = new FormData(this);
+          if(validateForm(formData)) {
+              submitForm('/comments/ajax/add', formData);
+              
+              // textarea 초기화
+              $(this).find('.comment_content').val('');
+              $(this).find('.file-name').text('');
+              $(this).find('input[type="file"]').val('');
+          }
+      });
+
+      // 댓글 수정
+      $(document).on('submit', '.edit-form', function(e) {
+          e.preventDefault();
+          const formData = new FormData(this);
+          if(validateForm(formData)) {
+              submitForm('/comments/ajax/update', formData);
+          }
+      });
+
+      // 답글 등록
+      $(document).on('submit', '.reply-form', function(e) {
+          e.preventDefault();
+          const formData = new FormData(this);
+          if(validateForm(formData)) {
+              submitForm('/comments/ajax/add', formData);
+          }
+      });
+
+      function validateForm(formData) {
+          const content = formData.get('content');
+          if(content.length > 300) {
+              alert('300자 이내로 입력해주세요');
+              return false;
+          }
+          return true;
+      }
+
+      function submitForm(url, formData) {
+          $.ajax({
+              url: url,
+              method: 'POST',
+              data: formData,
+              contentType: false,
+              processData: false,
+              success: loadComments
+          });
+      }
+
+      // 수정 폼 토글
+      $(document).on('click', '.edit-btn', function() {
+          const $li = $(this).closest('li');
+          $li.children('.comment-content').toggle();
+          $li.children('.edit-form').toggle();
+          initCharacterCounter();  // 수정폼 초기화
+      });
+
+      // 답글 폼 토글
+      $(document).on('click', '.reply-toggle-btn', function() {
+          const $li = $(this).closest('li');
+          $li.find('.reply-form').toggle();
+          $(this).hide();
+          initCharacterCounter();
+      });
+
+      // 삭제 기능
+      $(document).on('click', '.delete-btn', function() {
+          const id = $(this).closest('li').data('id');
+          $.post('/comments/ajax/delete', { id }, loadComments);
+      });
+
+      // 취소 버튼
+      $(document).on('click', '.cancel-edit, .reply-cancel-btn', function() {
+          $(this).closest('form').hide().prev('.comment-content').show();
+          $('.reply-toggle-btn').show();
+      });
+  });
+  
+  // 게시글 삭제 함수
+  function deleteNote() {
+      if(confirm('정말 게시글을 삭제하시겠습니까?')) {
+          location.href = `/note/delete?id=${noteId}`;
+      }
+  }
+  </script>
 </body>
 </html>

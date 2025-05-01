@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -22,7 +22,7 @@
 
     <form th:action="@{/note/modify}" method="post" enctype="multipart/form-data">
 
-        <!-- 기존 파일 표시 -->
+        기존 파일 표시
         <h3>기존 파일</h3>
         <ul id="existingFiles">
             <th:block th:each="file : ${files}">
@@ -34,7 +34,7 @@
             </th:block>
         </ul>
 
-        <!-- 새 파일 업로드 -->
+        새 파일 업로드
         <h3>새 파일 추가</h3>
         <input type="file" name="files" multiple /><br><br>
 
@@ -54,3 +54,199 @@
 </script>
 </body>
 </html>
+ -->
+ 
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>게시글 수정</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #6A5ACD;
+      --primary-light: #E6E4FF;
+      --accent: #FF6B6B;
+      --background: #F9F9F9;
+      --card-bg: #FFFFFF;
+      --text: #333333;
+      --text-light: #666666;
+      --border: #E0E0E0;
+      --shadow: 0 4px 12px rgba(0,0,0,0.08);
+      --radius: 12px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Pretendard', sans-serif;
+      background-color: var(--background);
+      color: var(--text);
+    }
+
+    nav {
+      background-color: var(--card-bg);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 5px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--text);
+      padding: 8px 16px;
+      border-radius: var(--radius);
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    nav a:hover {
+      background-color: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .active {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    h2 {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 20px;
+    }
+
+    h3 {
+      margin-top: 20px;
+      margin-bottom: 10px;
+      font-size: 18px;
+      color: var(--text-light);
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 14px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 150px;
+    }
+
+    input[type="file"] {
+      margin-bottom: 16px;
+    }
+
+    button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: var(--radius);
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #5849b8;
+    }
+
+    #existingFiles li {
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #existingFiles a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    #existingFiles a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-links">
+      <a href="/" class="active"><i class="fas fa-home"></i> 홈</a>
+      <a href="/board/list"><i class="fas fa-list"></i> 게시판</a>
+      <a href="/login" th:if="${session.loginMember == null}"><i class="fas fa-sign-in-alt"></i> 로그인</a>
+      <a href="/register" th:if="${session.loginMember == null}"><i class="fas fa-user-plus"></i> 회원가입</a>
+      <a href="/logout" th:if="${session.loginMember != null}"><i class="fas fa-sign-out-alt"></i> 로그아웃</a>
+      <a href="/admin" th:if="${session.loginMember != null && session.loginMember.userGradeString == 'ADMIN'}"><i class="fas fa-cog"></i> 관리자</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h2>게시글 수정</h2>
+
+    <form th:action="@{/note/modify}" method="post" enctype="multipart/form-data">
+      <h3>기존 파일</h3>
+      <ul id="existingFiles">
+        <th:block th:each="file : ${files}">
+          <li>
+            <a th:href="@{'/file/download?id=' + ${file.id}}" th:text="${file.filename}" target="_blank"></a>
+            <button type="button" onclick="removeFile(this)">삭제</button>
+            <input type="hidden" name="remainingFileIds" th:value="${file.id}" />
+          </li>
+        </th:block>
+      </ul>
+
+      <h3>새 파일 추가</h3>
+      <input type="file" name="files" multiple />
+
+      <input type="hidden" name="id" th:value="${note.id}" />
+
+      <input type="text" name="title" th:value="${note.title}" placeholder="제목" />
+
+      <textarea name="content" placeholder="내용" th:text="${note.content}"></textarea>
+
+      <button type="submit">수정 완료</button>
+    </form>
+  </div>
+
+  <script>
+    function removeFile(button) {
+      const li = button.parentElement;
+      li.remove();
+    }
+  </script>
+</body>
+</html>
+ 

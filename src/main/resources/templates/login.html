@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
@@ -89,5 +89,231 @@
         <input type="password" name="password" placeholder="비밀번호" required><br>
         <button type="submit">로그인</button>
     </form>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>로그인</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #6A5ACD;
+      --primary-light: #E6E4FF;
+      --accent: #FF6B6B;
+      --background: #F9F9F9;
+      --card-bg: #FFFFFF;
+      --text: #333333;
+      --text-light: #666666;
+      --border: #E0E0E0;
+      --shadow: 0 4px 12px rgba(0,0,0,0.08);
+      --radius: 12px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Pretendard', sans-serif;
+      background-color: var(--background);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      background-color: var(--card-bg);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 5px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--text);
+      padding: 8px 16px;
+      border-radius: var(--radius);
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    nav a:hover {
+      background-color: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .active {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 60px auto;
+      padding: 0 20px;
+    }
+
+    .login-card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 40px;
+      box-shadow: var(--shadow);
+    }
+
+    .page-title {
+      text-align: center;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-light);
+      margin-bottom: 8px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 16px;
+      transition: all 0.2s ease;
+      background-color: #f9f9f9;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-light);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 16px;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-top: 10px;
+    }
+
+    .login-btn:hover {
+      background-color: #5849b8;
+    }
+
+    .form-footer {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 14px;
+      color: var(--text-light);
+    }
+
+    .form-footer a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .form-footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+      
+      .container {
+        margin: 40px auto;
+      }
+      
+      .login-card {
+        padding: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/" class="logo">커뮤니티</a>
+      <div class="nav-links">
+        <a href="/"><i class="fas fa-home"></i> 홈</a>
+        <a href="/board/list"><i class="fas fa-list"></i> 게시판</a>
+        <a href="/login" class="active" th:if="${session.loginMember == null}"><i class="fas fa-sign-in-alt"></i> 로그인</a>
+        <a href="/register" th:if="${session.loginMember == null}"><i class="fas fa-user-plus"></i> 회원가입</a>
+        <a href="/logout" th:if="${session.loginMember != null}"><i class="fas fa-sign-out-alt"></i> 로그아웃</a>
+        <a href="/admin" th:if="${session.loginMember != null && session.loginMember.userGradeString == 'ADMIN'}"><i class="fas fa-cog"></i> 관리자</a>
+      </div>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="login-card">
+      <h1 class="page-title">로그인</h1>
+      
+      <form action="/login" method="post">
+        <div class="form-group">
+          <label for="username" class="form-label">아이디</label>
+          <input type="text" id="username" name="username" class="form-input" placeholder="아이디를 입력해주세요" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="password" class="form-label">비밀번호</label>
+          <input type="password" id="password" name="password" class="form-input" placeholder="비밀번호를 입력해주세요" required>
+        </div>
+        
+        <button type="submit" class="login-btn">
+          <i class="fas fa-sign-in-alt"></i> 로그인
+        </button>
+      </form>
+      
+      <div class="form-footer">
+        계정이 없으신가요? <a href="/register">회원가입</a>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

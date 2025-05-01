@@ -1,5 +1,5 @@
 <!-- null 값만 있는 항목 정렬하려 할 때 오류남-->
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -527,5 +527,710 @@ window.onload = function() {
 	}
 }
 </script>
+</body>
+</html>
+  -->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원 관리</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6A5ACD;
+            --primary-light: #E6E4FF;
+            --accent: #FF6B6B;
+            --background: #F9F9F9;
+            --card-bg: #FFFFFF;
+            --text: #333333;
+            --text-light: #666666;
+            --border: #E0E0E0;
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 5px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text);
+            padding: 8px 16px;
+            border-radius: var(--radius);
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        nav a:hover {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .admin-nav {
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 12px 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .admin-nav a {
+            text-decoration: none;
+            color: var(--text);
+            padding: 8px 16px;
+            border-radius: var(--radius);
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .admin-nav a:hover {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .admin-nav a.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 24px;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .section-title i {
+            margin-right: 12px;
+            background-color: var(--primary-light);
+            color: var(--primary);
+            border-radius: 50%;
+            padding: 8px;
+            font-size: 18px;
+        }
+
+        .control-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        select {
+            padding: 10px 15px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            background-color: var(--card-bg);
+            font-family: 'Pretendard', sans-serif;
+            font-size: 14px;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        select:hover {
+            border-color: var(--primary);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        th:hover {
+            background-color: #D9D6FF;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background-color: rgba(106, 90, 205, 0.05);
+        }
+
+        .update-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Pretendard', sans-serif;
+        }
+
+        .update-button:hover {
+            background-color: #5849b8;
+            transform: translateY(-2px);
+        }
+
+        .delete-button {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Pretendard', sans-serif;
+        }
+
+        .delete-button:hover {
+            background-color: #ff5252;
+            transform: translateY(-2px);
+        }
+
+        .page-nav {
+            padding: 8px;
+        }
+
+        .page-link {
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .page-link:hover {
+            color: #5849b8;
+        }
+
+        .nowPage a {
+            color: white;
+            background-color: var(--primary);
+            padding: 8px 12px;
+            border-radius: var(--radius);
+        }
+
+        .loading-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .admin-nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+    <script th:inline="javascript">
+    const TableManager = {
+      state: {
+        sortDirections: [], // 각 컬럼의 정렬 방향 ('asc' or 'desc')
+        sortName: [],       // 컬럼 이름 배열 (서버에서 쓰이는 컬럼명)
+        lastSorted: 0,		// 마지막으로 클릭된 컬럼 번호
+        page: 0,            // 현재 페이지 번호
+        limit: 20,          // 한 페이지에 몇 개를 보여줄지
+        order: "asc",       // 현재 정렬 방향
+        sort: "id",         // 현재 정렬 기준 컬럼
+        partial: false,		// 테이블 전체(컬럼)를 바꿀지 아니면 tbody만 바꿀지
+        boardName: null, // board 이름 받아서 생성
+        url: "users",		// 무엇에 관한 테이블인지
+        totalPageCount: -1	// 페이지 몇까지 있나, 초기화 -1
+      },
+
+      // admin.html 처음 들어올 때 초기화
+      init(url, sortNameArray) {
+        this.state.sortName = sortNameArray;
+        this.state.sortDirections = new Array(sortNameArray.length).fill("asc");
+        this.state.sort = sortNameArray[0];
+        this.state.order = "asc";
+        this.state.url = url;
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            this.bindDeleteButtons();
+        });
+      },
+      // 테이블 종류를 바꿀 때 동작 > ajax로 동작
+      set(url, sortNameArray) {
+        this.state.sortName = sortNameArray;
+        this.state.sortDirections = new Array(sortNameArray.length).fill("asc");
+        this.state.lastSorted = 0;
+        this.state.page = 0;
+        this.state.limit = 20;
+        this.state.order = "asc";
+        this.state.sort = sortNameArray[0];
+        this.state.url = url;
+        
+        this.pageAjax();
+      },
+      // select option 변경될 때
+      updateLimitSize(newsize) {
+            console.log("newsize: ", newsize);
+        if (newsize == 0) {
+            console.log("사이즈 변경 없음");
+            return false;
+        }
+        this.state.limit = newsize;
+        this.state.partial = true;
+        
+        this.pageAjax();
+      },
+      // 칼럼을 누르면 오름차순 내림차순 바뀜 > ajax
+      updateSort(col) {
+        this.state.lastSorted = col;
+        if (this.state.sortDirections[col] === "desc") {
+            this.state.sortDirections[col] = "asc";
+        } else if (this.state.sortDirections.includes("desc")) {
+            this.state.sortDirections = new Array(this.state.sortName.length).fill("asc");
+        } else {
+            this.state.sortDirections = new Array(this.state.sortName.length).fill("asc");
+            this.state.sortDirections[col] = "desc";
+        }
+        
+        this.state.partial = true;
+        this.state.sort = this.state.sortName[col];
+        this.state.order = this.state.sortDirections[col];
+
+        this.pageAjax();
+      },
+      // ajax 동작에 관한 함수 정보 받아오고 변수 정리
+      pageAjax() {
+        const { sort, order, page, limit, url, boardName } = this.state;
+        if (this.state.partial) {
+            fetch(`/admin/${url}/partial?sortby=${sort}&orderby=${order}&page=${page}&limit=${limit}&url=${url}`)
+              .then(res => res.text())
+              .then(html => {
+                document.querySelector("tbody").innerHTML = html;
+                this.state.totalPageCount = document.getElementById('totalPageCount').value;
+                this.state.partial = false;
+                this.bindDeleteButtons();
+                this.changeList(this.state.totalPageCount < 0 ? [[${totalPageCount}]] : this.state.totalPageCount);
+                this.bindUpdateButtons();
+                this.updateSortIcons();
+              });
+        } else {
+            fetch(`/admin/${url}`)
+              .then(res => res.text())
+              .then(html => {
+                document.querySelector("#listTableDiv").innerHTML = html;
+                this.state.totalPageCount = document.getElementById('totalPageCount').value;
+                this.state.partial = false;
+                this.bindDeleteButtons();
+                this.changeList(this.state.totalPageCount);
+                this.bindUpdateButtons();
+                this.updateSortIcons();
+              });
+        }
+      },
+      
+      // 게시판 생성 버튼 구현
+      createBoard() {
+          const container = document.getElementById("insertBoard")
+          const name = document.getElementById("boardName").value;
+            if (name.trim() === "") {
+              alert("게시판 이름을 입력해주세요!");
+              return;
+            }
+            const params = {
+                    sort: this.state.sort,
+                    order: this.state.order,
+                    page: this.state.page,
+                    limit: this.state.limit,
+                    url: this.state.url,
+                    boardName: name
+                  };
+
+                  for (const key in params) {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = key;
+                    input.value = params[key];
+                    container.appendChild(input);
+                  }
+            container.submit();
+      },
+        
+        // 삭제 버튼 이벤트 ajax 되면 다시 넣어줘야
+        bindDeleteButtons() {
+            document.querySelectorAll('.delete-button').forEach(button => {
+                button.addEventListener('click', function () {
+                    const form = button.closest('form'); 
+                    const id = form.querySelector('input[name="id"]').value;
+                    
+                    if (!confirm(`id가 ${id}인 항목을 삭제하시겠습니까?`)) {
+                        return; 
+                    }
+        
+                    const params = {
+                        sort: TableManager.state.sort,
+                        order: TableManager.state.order,
+                        page: TableManager.state.page,
+                        limit: TableManager.state.limit,
+                        url: TableManager.state.url,
+                        lastSorted: TableManager.state.lastSorted
+                    };
+        
+                    const paramsInput = form.querySelector('input[name="params"]');
+                    paramsInput.value = new URLSearchParams(params).toString();
+        
+                    form.submit();
+                });
+            });
+        },
+      
+      // 유저 등급 변경 메소드
+      bindUpdateButtons() {
+            document.querySelectorAll('.update-button').forEach(button => {
+                button.addEventListener('click', function () {
+                    const form = button.closest('form'); 
+                    const id = form.querySelector('input[name="id"]').value;
+                    
+                    const input = prompt(`${id}번 회원의 새로운 등급을 숫자(1~10)로 적어주세요`);
+
+                    if (input === null || input.trim() === "") {
+                      return;
+                    } else if (isNaN(input)) {
+                      alert("숫자만 입력해주세요.");
+                    } else if (!Number.isInteger(Number(input)) || input >10 || input < 1) {
+                      alert("정수(1~10)만 입력해주세요.");
+                    } else {
+                      const grade = parseInt(input);
+                      
+                      const params = {
+                          sort: TableManager.state.sort,
+                          order: TableManager.state.order,
+                          page: TableManager.state.page,
+                          limit: TableManager.state.limit,
+                          url: TableManager.state.url,
+                          lastSorted: TableManager.state.lastSorted
+                      };
+        
+                      const paramsInput = form.querySelector('input[name="params"]');
+                      paramsInput.value = new URLSearchParams(params).toString();
+                      
+                      form.querySelector('input[name="newGrade"]').value = grade;
+
+                      form.submit();
+                    }
+                });
+            });
+        },
+        // changeList, changePage, paging 페이지 관련 메소드
+        // 실제로 페이지 바를 만드는 메소드
+        changeList(pageCount) {
+            let pagingtr =  document.getElementById("paging");
+            
+            totalPageCount = pageCount;
+
+            let back = totalPageCount - 5 >= 1 ? totalPageCount - 5 : 1;
+            let front = totalPageCount + 5 <= totalPageCount ? totalPageCount + 5 : totalPageCount
+                    
+            let backTo = back - 1 >= 1 ? back - 1 : 1;
+            let frontTo = front + 1 <= totalPageCount ? front + 1 : totalPageCount;
+            
+            pagingtr.innerHTML = 
+                `<td class='page-nav'>
+                    <a onclick="TableManager.changePage(${backTo})" class="page-link">&lt;&lt;</a>
+                </td>` +
+                this.paging(back, front) + 
+                `<td class="page-nav">
+                    <a onclick="TableManager.changePage(${frontTo})" class="page-link">&gt;&gt;</a>
+                </td>`;
+        },
+        // 버든에 들어가는 메소드 페이지 번호에 따라 ajax 동작
+        changePage(movingPage) {
+            let page = document.getElementById("nowpage");
+            page.value = movingPage;
+            
+            this.state.page = movingPage - 1;
+            this.state.partial = true;
+            this.pageAjax();
+        },
+        // 페이지 버튼 반복 생성
+        paging(back, front) {
+            let page = "";
+            
+            for(let i = back; i <= front; i++) {
+                if(i == document.getElementById("nowpage").value) {
+                    page += `
+                          <td class="page-nav nowPage">
+                            <a onclick="TableManager.changePage(${i})" class="page-link">${i}</a>
+                          </td>
+                    `;
+                    continue;
+                }
+                page += `
+                  <td class="page-nav">
+                    <a onclick="TableManager.changePage(${i})" class="page-link">${i}</a>
+                  </td>
+                  `;
+            }
+            return page;
+        },
+        
+        updateSortIcons() {
+            const headers = document.querySelectorAll("thead th");
+              headers.forEach((th, index) => {
+                const direction = this.state.sortDirections?.[index]; // "asc", "desc" 또는 undefined
+                let icon = "";
+                if (index == this.state.lastSorted){
+                    if (direction === "asc") {
+                          icon = " 🔺"
+                        } else if (direction === "desc") {
+                          icon = " 🔻";
+                        }
+                } else {
+                    if (direction === "asc") {
+                      icon = " 🔼";
+                    } else if (direction === "desc") {
+                      icon = " 🔽";
+                    }
+                }
+        
+                // 정렬 아이콘 중복 방지를 위해 기존 텍스트에서 아이콘 제거 후 다시 추가
+                const baseText = th.textContent.replace(/[🔼🔽🔺🔻]/g, "").trim(); // 🔼, 🔽 제거
+                th.textContent = baseText + icon;
+              });
+        }
+    };
+    // 초기화
+    TableManager.init("users",["id", "nickname", "email", "reg_date", "last_access_date", "user_grade"]);
+    </script>
+</head>
+<body>
+    <div id="loadingModal" class="loading-modal" style="display: none;">
+        <div class="spinner"></div>
+    </div>
+
+    <header>
+        <nav>
+            <a href="/" class="logo">커뮤니티</a>
+            <div class="nav-links">
+                <a href="/"><i class="fas fa-home"></i> 홈</a>
+                <a href="/board/list"><i class="fas fa-list"></i> 게시판</a>
+                <a href="/login" th:if="${session.loginMember == null}"><i class="fas fa-sign-in-alt"></i> 로그인</a>
+                <a href="/register" th:if="${session.loginMember == null}"><i class="fas fa-user-plus"></i> 회원가입</a>
+                <a href="/logout" th:if="${session.loginMember != null}"><i class="fas fa-sign-out-alt"></i> 로그아웃</a>
+                <a href="/admin" class="active"><i class="fas fa-cog"></i> 관리자</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="admin-nav">
+            <a href="#" onclick="TableManager.set('users', ['id', 'nickname', 'email', 'reg_date', 'last_access_date', 'user_grade'])"><i class="fas fa-users"></i> 회원</a>
+            <a href="#" onclick="TableManager.set('boards', ['id', 'name', 'create_date', 'last_modified_date'])"><i class="fas fa-clipboard-list"></i> 게시판</a>
+            <a href="#" onclick="TableManager.set('notes', ['id', 'title', 'content', 'create_date', 'last_modified_date', 'board_id', 'user_id'])"><i class="fas fa-pen-fancy"></i> 게시글</a>
+            <a href="#" onclick="TableManager.set('comments', ['id', 'content', 'create_date', 'last_modified_date', 'comment_id', 'note_id', 'comment_author_id'])"><i class="fas fa-comments"></i> 댓글</a>
+            <a href="#" onclick="TableManager.set('files', ['id', 'filename', 'files', 'note_id'])"><i class="fas fa-file-upload"></i> 파일</a>
+        </div>
+
+        <div id="listTableDiv">
+            <h2 class="section-title"><i class="fas fa-users"></i> 회원 목록</h2>
+            <div class="control-bar">
+                <div></div>
+                <select id="pageLimitSelect" onchange="TableManager.updateLimitSize(this.value)">
+                    <option value="0" selected="selected" disabled="disabled">=== 정렬 개수 선택 ===</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+            </div>
+            <table>
+                <thead>
+                    <th onclick="TableManager.updateSort(0)">회원 번호</th>
+                    <th onclick="TableManager.updateSort(1)">이름</th>
+                    <th onclick="TableManager.updateSort(2)">이메일</th>
+                    <th onclick="TableManager.updateSort(3)">가입일</th>
+                    <th onclick="TableManager.updateSort(4)">마지막 접속일</th>
+                    <th onclick="TableManager.updateSort(5)">등급</th>
+                    <th>등급 변경</th>
+                    <th>삭제</th>
+                </thead>
+                <tbody>
+                    <tr th:each="item: ${users}">
+                        <td th:text="${item.id}"></td>
+                        <td th:text="${item.nickName}"></td>
+                        <td th:text="${item.email}"></td>
+                        <td th:text="${#temporals.format(item.regDate, 'yy-MM-dd HH:mm:ss')}"></td>
+                        <td th:text="${#temporals.format(item.lastAccessDate, 'yy-MM-dd HH:mm:ss')}"></td>
+                        <td th:text="${item.userGrade}"></td>
+                        <td>
+                            <form class="update-grade" action="/admin/users/updateGrade" method="post">
+                                <input type="hidden" name="id" th:value="${item.id}" />
+                                <input type="hidden" name="newGrade" />
+                                <input type="hidden" name="params"/>
+                                <button type="button" class="update-button">등급 변경</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form class="delete-form" action="/admin/users/delete" method="post">
+                                <input type="hidden" name="id" th:value="${item.id}" />
+                                <input type="hidden" name="params"/>
+                                <button type="button" class="delete-button">삭제</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <input id="nowpage" value=1 hidden="hidden">
+        <table>
+            <tr id="paging">
+            </tr>
+        </table>
+    </div>
+
+    <script th:inline="javascript">
+    TableManager.changeList([[${totalPageCount}]]);
+
+    // 삭제하고 돌아왔을 때 페이지 그대로 보이게 작동
+    window.onload = function() {
+        TableManager.updateSortIcons();
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        const defaultUrl = urlParams.get('url');
+        if (defaultUrl) {
+            if (defaultUrl === "users") {
+                TableManager.state.page = urlParams.get('page');
+                TableManager.state.limit = urlParams.get('limit');
+                TableManager.state.order = urlParams.get('order');
+                TableManager.state.sort = urlParams.get('sort');
+                TableManager.state.url = defaultUrl;
+                TableManager.set('users', ['id', 'nickname', 'email', 'reg_date', 'last_access_date', 'user_grade']);
+            } else if (defaultUrl === "boards") {
+                TableManager.state.page = urlParams.get('page');
+                TableManager.state.limit = urlParams.get('limit');
+                TableManager.state.order = urlParams.get('order');
+                TableManager.state.sort = urlParams.get('sort');
+                TableManager.state.url = defaultUrl;
+                TableManager.set('boards', ['id', 'name', 'create_date', 'last_modified_date']);
+            } else if (defaultUrl === "notes") {
+                TableManager.state.page = urlParams.get('page');
+                TableManager.state.limit = urlParams.get('limit');
+                TableManager.state.order = urlParams.get('order');
+                TableManager.state.sort = urlParams.get('sort');
+                TableManager.state.url = defaultUrl;
+                TableManager.set('notes', ['id', 'title', 'content', 'create_date', 'last_modified_date', 'board_id', 'user_id'])
+            } else if (defaultUrl === "comments") {
+                TableManager.state.page = urlParams.get('page');
+                TableManager.state.limit = urlParams.get('limit');
+                TableManager.state.order = urlParams.get('order');
+                TableManager.state.sort = urlParams.get('sort');
+                TableManager.state.url = defaultUrl;
+                TableManager.set('comments', ['id', 'content', 'create_date', 'last_modified_date', 'comment_id', 'note_id', 'comment_author_id'])
+            } else if (defaultUrl === "files") {
+                TableManager.state.page = urlParams.get('page');
+                TableManager.state.limit = urlParams.get('limit');
+                TableManager.state.order = urlParams.get('order');
+                TableManager.state.sort = urlParams.get('sort');
+                TableManager.state.url = defaultUrl;
+                TableManager.set('files', ['id', 'filename', 'files', 'note_id']);
+            } else {
+                confirm('url 확인 필요');
+            }
+        }
+    }
+    </script>
 </body>
 </html>

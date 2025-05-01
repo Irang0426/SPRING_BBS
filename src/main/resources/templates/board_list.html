@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -189,7 +189,7 @@
         <div class="spinner"></div>
     </div>
     <div class="container">
-        <!-- 1. 네비게이션 -->
+        1. 네비게이션
         <nav class="navbar navbar-expand-lg navbar-light bg-light rounded mb-4">
             <div class="container-fluid">
                 <div class="collapse navbar-collapse">
@@ -220,14 +220,14 @@
             </div>
         </nav>
         
-        <!-- 통합된 공간에 4가지 요소 배치 -->
+        통합된 공간에 4가지 요소 배치
         <div class="card shadow-sm">
-            <!-- 1. 게시글 목록 제목 -->
+            1. 게시글 목록 제목
             <div class="card-header bg-primary text-white">
                 <h2 class="mb-0 fs-4">게시글 목록</h2>
             </div>
             
-            <!-- 2. 유저 정보 -->
+            2. 유저 정보
             <div class="card-body pt-3 pb-3 border-bottom">
                 <div class="user-info-section">
                     <h5 class="mb-3 text-secondary">유저 정보</h5>
@@ -247,16 +247,16 @@
                 </div>
             </div>
             
-            <!-- 3. 글작성/검색/카테고리 설정 -->
+            3. 글작성/검색/카테고리 설정
             <div class="card-body pt-3 pb-3 border-bottom">
                 <div class="control-section">
                     <div class="row align-items-center">
-                        <!-- 글작성 버튼 (좌측) -->
+                        글작성 버튼 (좌측)
                         <div class="col-md-3">
                             <a th:onclick="newNote()" class="btn btn-primary write-btn">[글 작성]</a>
                         </div>
                         
-                        <!-- 검색 (중앙 - 60-70% 공간) -->
+                        검색 (중앙 - 60-70% 공간)
                         <div class="col-md-6">
                             <div class="search-container">
                                 <div class="search-input-group">
@@ -266,7 +266,7 @@
                             </div>
                         </div>
                         
-                        <!-- 보드 선택 (우측) -->
+                        보드 선택 (우측)
                         <div class="col-md-3 text-end">
                             <select id="boardList" name="boardList" th:onchange="changeList(1)" class="form-select float-end">
                                 <option th:each="board : ${boardList}"
@@ -279,7 +279,7 @@
                 </div>
             </div>
             
-            <!-- 4. 테이블 -->
+            4. 테이블
             <div class="card-body">
                 <div class="table-responsive">
                     <table id="notelist" class="table table-bordered table-hover">
@@ -513,5 +513,669 @@
         					+ " " + date.substring(11, 13) + ":" + date.substring(14, 16);
         }
     </script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>게시판</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #6A5ACD;
+      --primary-light: #E6E4FF;
+      --accent: #FF6B6B;
+      --background: #F9F9F9;
+      --card-bg: #FFFFFF;
+      --text: #333333;
+      --text-light: #666666;
+      --border: #E0E0E0;
+      --shadow: 0 4px 12px rgba(0,0,0,0.08);
+      --radius: 12px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Pretendard', sans-serif;
+      background-color: var(--background);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      background-color: var(--card-bg);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 5px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--text);
+      padding: 8px 16px;
+      border-radius: var(--radius);
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    nav a:hover {
+      background-color: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .active {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    /* 로딩 모달 */
+    #loadingModal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* 메인 컨텐츠 카드 */
+    .content-card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-bottom: 30px;
+    }
+
+    .card-header {
+      background-color: var(--primary);
+      color: white;
+      padding: 16px 24px;
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    .card-body {
+      padding: 20px;
+    }
+
+    /* 유저 정보 섹션 */
+    .user-info-section {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 15px;
+      margin-bottom: 20px;
+    }
+
+    .user-info-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .user-info-item {
+      padding: 0 15px;
+      margin-bottom: 10px;
+    }
+
+    .user-info-item strong {
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    /* 컨트롤 섹션 */
+    .control-section {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* 버튼 스타일 */
+    .btn {
+      padding: 8px 16px;
+      border-radius: var(--radius);
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: #5849b8;
+    }
+
+    .btn i {
+      margin-right: 8px;
+    }
+
+    /* 검색 컨테이너 */
+    .search-container {
+      flex-grow: 1;
+      max-width: 500px;
+      margin: 0 10px;
+    }
+
+    .search-input-group {
+      display: flex;
+      width: 100%;
+    }
+
+    .search-input {
+      flex-grow: 1;
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius) 0 0 var(--radius);
+      font-family: 'Pretendard', sans-serif;
+    }
+
+    .search-btn {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    /* 셀렉트 스타일 */
+    .select-container {
+      position: relative;
+    }
+
+    .custom-select {
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-family: 'Pretendard', sans-serif;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%236A5ACD' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+      background-size: 16px;
+      padding-right: 32px;
+      cursor: pointer;
+    }
+
+    /* 테이블 스타일 */
+    .table-container {
+      overflow-x: auto;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      background-color: var(--primary);
+      color: white;
+      text-align: left;
+      padding: 12px 15px;
+    }
+
+    td {
+      padding: 12px 15px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody tr {
+      transition: background-color 0.2s;
+      cursor: pointer;
+    }
+
+    tbody tr:hover {
+      background-color: var(--primary-light);
+    }
+
+    td p {
+      margin: 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* 페이지네이션 */
+    .pagination-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .page-nav-table {
+      border-collapse: separate;
+      border-spacing: 5px;
+    }
+
+    .page-nav a {
+      display: block;
+      padding: 8px 12px;
+      border-radius: var(--radius);
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.2s ease;
+    }
+
+    .page-nav a:hover {
+      background-color: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .page-nav.nowPage a {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    /* 반응형 디자인 */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .control-section {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .search-container {
+        width: 100%;
+        max-width: 100%;
+        order: 2;
+      }
+
+      .select-container {
+        width: 100%;
+        order: 3;
+      }
+
+      .btn-container {
+        width: 100%;
+        order: 1;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .user-info-row {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .table-container th:nth-child(3),
+      .table-container td:nth-child(3) {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body th:onload="changeList()">
+  <input id="nowpage" value=1 hidden="hidden">
+  <div id="loadingModal" style="display: none;">
+    <div class="spinner"></div>
+  </div>
+
+  <header>
+    <nav>
+      <a href="/" class="logo">커뮤니티</a>
+      <div class="nav-links">
+        <a href="/"><i class="fas fa-home"></i> 홈</a>
+        <a href="/board/list" class="active"><i class="fas fa-list"></i> 게시판</a>
+        <a href="/login" th:if="${session.loginMember == null}"><i class="fas fa-sign-in-alt"></i> 로그인</a>
+        <a href="/register" th:if="${session.loginMember == null}"><i class="fas fa-user-plus"></i> 회원가입</a>
+        <a href="/logout" th:if="${session.loginMember != null}"><i class="fas fa-sign-out-alt"></i> 로그아웃</a>
+        <a href="/admin" th:if="${session.loginMember != null && session.loginMember.userGradeString == 'ADMIN'}"><i class="fas fa-cog"></i> 관리자</a>
+      </div>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="content-card">
+      <div class="card-header">
+        <h2><i class="fas fa-list-alt"></i> 게시글 목록</h2>
+      </div>
+      
+      <!-- 유저 정보 섹션 -->
+      <div class="card-body">
+        <div class="user-info-section">
+          <h3 class="section-title"><i class="fas fa-user"></i> 유저 정보</h3>
+          <div class="user-info-row">
+            <div class="user-info-item">
+              <p><strong>이름:</strong> <span th:text="${loginMember.nickName}"></span></p>
+            </div>
+            <div class="user-info-item">
+              <p><strong>등급:</strong> <span th:text="${loginMember.userGradeString}"></span></p>
+            </div>
+            <div class="user-info-item">
+              <p><strong>최근 접속:</strong> <span th:text="${loginMember.lastAccessDate}"></span></p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 컨트롤 섹션 -->
+        <div class="control-section">
+          <div class="btn-container">
+            <a th:onclick="newNote()" class="btn btn-primary"><i class="fas fa-pen"></i> 글 작성</a>
+          </div>
+          
+          <div class="search-container">
+            <div class="search-input-group">
+              <input id="searchNote" class="search-input" placeholder="검색어를 입력하세요">
+              <button type="button" onclick="searchNote()" class="search-btn"><i class="fas fa-search"></i> 검색</button>
+            </div>
+          </div>
+          
+          <div class="select-container">
+            <select id="boardList" name="boardList" th:onchange="changeList(1)" class="custom-select">
+              <option th:each="board : ${boardList}"
+                      th:id="${board.id}"
+                      th:value="${board.id}"
+                      th:text="${board.name}"></option>
+            </select>
+          </div>
+        </div>
+        
+        <!-- 테이블 섹션 -->
+        <div class="table-container">
+          <table id="notelist">
+            <!-- 테이블 내용은 JavaScript로 채워짐 -->
+          </table>
+        </div>
+        
+        <!-- 페이지네이션 -->
+        <div class="pagination-container">
+          <table class="page-nav-table">
+            <tr id="paging">
+              <!-- 페이지네이션 버튼은 JavaScript로 채워짐 -->
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script type="text/javascript">
+    const changeList = (boardChange = 0) => {
+      console.log("Page : ", boardChange);
+      let page;
+      if(boardChange == 1) {
+        page = 1;
+        document.getElementById("searchNote").value = "";
+      }
+      else {
+        page = document.getElementById("nowpage").value;           
+      }
+      
+      let value = document.getElementById("boardList").value;
+      let source = document.getElementById("boardList");
+      let notetable = document.getElementById("notelist");
+      
+      notetable.innerHTML = "<tr><td colspan='4' class='text-center py-3'>작성된 글이 없습니다.</td></tr>";
+      
+      console.log("value : ", value);
+      
+      const formData = new URLSearchParams();
+      formData.append("boardPos", value);
+      formData.append("pagePos", page);
+      
+      fetch(
+        "/pagingtest/page",
+        {
+          method: "POST",
+          body: formData,
+        }
+      )
+      .then((response) => {
+        console.log("res: ", response);
+        if (response.ok) {
+          return response.json()
+        }
+      })
+      .then((data) => {
+        console.log("data: ", data);
+        const items = data.noteList;
+        const pageInfo = data.pageInfo;
+        page.value = pageInfo.page;
+        
+        let pagingtr = document.getElementById("paging");
+        if(items.length == 0) {
+          notetable.innerHTML = "<tr><td colspan='4' class='text-center py-3'>작성된 글이 없습니다.</td></tr>";
+          pagingtr.innerHTML = "";                  
+          return;
+        }
+        
+        notetable.innerHTML = `
+          <thead>
+            <tr>
+              <th class="col-1">번호</th>
+              <th class="col-2">제목</th>
+              <th class="col-7">내용</th>
+              <th class="col-2">작성일</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        `;
+        
+        const tbody = notetable.querySelector('tbody');
+        
+        for (i in items) {
+          console.log("item: ", items[i]);
+          const noteList = document.createElement("tr");
+          noteList.setAttribute("onclick", `goDetail(${items[i].board_id}, ${items[i].id})`);
+          noteList.innerHTML = `
+            <td class="col-1"><p>${items[i].id}</p></td>
+            <td class="col-2"><p>${items[i].title}</p></td>
+            <td class="col-7"><p>${items[i].content}</p></td>
+            <td class="col-2"><p>${changeDate(items[i].createDate)}</p></td>
+          `;
+          tbody.appendChild(noteList);
+        }
+        
+        let back = pageInfo.page - 5 >= 1 ? pageInfo.page - 5 : 1;
+        let front = pageInfo.page + 5 <= pageInfo.pageLen ? pageInfo.page + 5 : pageInfo.pageLen
+                
+        let backTo = back - 1 >= 1 ? back - 1 : 1;
+        let frontTo = front + 1 <= pageInfo.pageLen ? front + 1 : pageInfo.pageLen;
+        
+        
+        pagingtr.innerHTML = 
+          "<td class='page-nav'>" +
+            "<a onclick=" + `changePage(${backTo})` + ">&lt;&lt;</a>" +
+          "</td>" +
+          paging(back, front) + 
+          "<td class='page-nav'>" +
+            "<a onclick=" + `changePage(${frontTo})` + ">&gt;&gt;</a>" +
+          "</td>";
+      })
+    }
+    
+    const goDetail = (board, id) => {
+      console.log("datas: ", board, id);
+      let readNote = document.createElement("a");
+      let link = "/note/read?id=" + id;
+      
+      readNote.setAttribute("href", link);
+      readNote.click();
+    }
+    
+    const searchNote = (page = 1) => {
+      let value = document.getElementById("boardList").value;
+      let content = document.getElementById("searchNote").value;
+      let notetable = document.getElementById("notelist");
+      
+      showLoading();
+      
+      const formData = new URLSearchParams();
+      formData.append("boardPos", value);
+      formData.append("content", content);
+      
+      fetch(
+        "/pagingtest/noteSearch",
+        {
+          method: "POST",
+          body: formData,
+        }
+      )
+      .then((response) => {
+        console.log("res: ", response);
+        if (response.ok) {
+          return response.json()
+        }
+      })
+      .then((data) => {
+        console.log("DATA: ", data);
+        let pagingtr = document.getElementById("paging");
+        if(!data) {
+          notetable.innerHTML = "<tr><td colspan='4' class='text-center py-3'>작성된 글이 없습니다.</td></tr>";
+          pagingtr.innerHTML = "";                      
+          hideLoading();
+          return;
+        }
+        const items = data.noteList;
+        
+        pagingtr.innerHTML = ""
+        
+        
+        notetable.innerHTML = `
+          <thead>
+            <tr>
+              <th>번호</th>
+              <th>제목</th>
+              <th>내용</th>
+              <th>작성일</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        `;
+        
+        const tbody = notetable.querySelector('tbody');
+        
+        for (i in items) {
+          console.log("item: ", items[i]);
+          const noteList = document.createElement("tr");
+          noteList.innerHTML = `
+            <td>${items[i].id}</td>
+            <td>${items[i].title}</td>
+            <td>${items[i].content}</td>
+            <td>${changeDate(items[i].createDate)}</td>
+          `;
+          tbody.appendChild(noteList);
+        }
+        
+        hideLoading();
+        
+      })
+    }
+    
+    const changePage = (movingPage) => {
+      let page = document.getElementById("nowpage");
+      page.value = movingPage;
+      
+      changeList();
+    }
+    
+    const paging = (back, front) => {
+      let page = "";
+      
+      for(let i = back; i <= front; i++) {
+        if(i == document.getElementById("nowpage").value) {
+          page += "<td class='page-nav nowPage'>" + "<a onclick=" + `changePage(${i})` + ">" + `${i}` + "</a></td>";
+          continue;
+        }
+        page += "<td class='page-nav'>" + "<a onclick=" + `changePage(${i})` + ">" + `${i}` + "</a></td>";
+      }
+      
+      return page;
+    }
+    
+    function showLoading() {
+      document.getElementById('loadingModal').style.display = 'flex';
+    }
+
+    function hideLoading() {
+      document.getElementById('loadingModal').style.display = 'none';
+    }
+    
+    const newNote = () => {
+      let value = document.getElementById("boardList").value;
+      
+      href = "/note/register?boardId=" + value;
+      location.href = href;
+    }
+    
+    const changeDate = (date) => {
+      return date = date.substring(0, 4) + "-" + date.substring(5, 7) + "-" + date.substring(8, 10)
+              + " " + date.substring(11, 13) + ":" + date.substring(14, 16);
+    }
+  </script>
 </body>
 </html>
