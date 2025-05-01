@@ -711,8 +711,7 @@ $(document).ready(function() {
       <!-- 버튼 그룹 -->
       <div class="action-buttons">
         <a th:if="${session.loginMember.id == note.userId or session.loginMember.userGradeString == 'ADMIN'}" th:href="@{|/note/modify?id=${note.id}|}" class="btn btn-outline"><i class="fas fa-edit"></i> 수정</a>
-        <a th:if="${session.loginMember.id != note.userId and session.loginMember.userGradeString != 'ADMIN'}" class="btn btn-outline" onclick="alertUser()"><i class="fas fa-edit"></i> 수정</a>
-        <a href="#" onclick="deleteNote();" class="btn btn-danger"><i class="fas fa-trash-alt"></i> 삭제</a>
+        <a th:if="${session.loginMember.id == note.userId or session.loginMember.userGradeString == 'ADMIN'}" href="#" onclick="deleteNote();" class="btn btn-danger"><i class="fas fa-trash-alt"></i> 삭제</a>
         <a href="/board/list" class="btn btn-primary"><i class="fas fa-list"></i> 목록</a>
       </div>
     </div>
@@ -790,6 +789,19 @@ $(document).ready(function() {
   function renderComment(comment, depth = 0) {
       const isReply = depth > 0;
       const padding = isReply ? 'style="margin-left:30px;"' : '';
+      let comment_button = "";
+      let loginuser = [[${session.loginMember.id}]];
+      let notewriter = [[${note.userId}]];
+      let isadmin = '[[${session.loginMember.userGradeString}]]';
+      
+      
+      if(loginuser == notewriter || isadmin == 'ADMIN') {
+    	  comment_button = `
+			      <button class="comment-button edit-btn"><i class="fas fa-edit"></i> 수정</button>
+			      <button class="comment-button delete-btn"><i class="fas fa-trash"></i> 삭제</button>    	  
+    	  					`
+      } 
+
       let html = `<li ${padding} class="comment-item" data-id="${comment.id}" ${isReply ? 'data-reply="true"' : ''}>
           <div class="comment-content">
               <div class="comment-header">
@@ -801,8 +813,7 @@ $(document).ready(function() {
               <p class="comment-text">${comment.content}</p>
               
               <div class="comment-actions">
-                  <button class="comment-button edit-btn"><i class="fas fa-edit"></i> 수정</button>
-                  <button class="comment-button delete-btn"><i class="fas fa-trash"></i> 삭제</button>
+              ` + comment_button + `  
                   ${!isReply ? `<button class="comment-button reply-toggle-btn"><i class="fas fa-reply"></i> 답글쓰기</button>` : ''}
               </div>
           </div>
