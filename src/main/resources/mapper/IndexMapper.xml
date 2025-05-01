@@ -27,13 +27,13 @@
     
     <select id="newUser" parameterType="int" resultType="com.bbs.demo.domain.Users">
         SELECT id, nickname, email, reg_date as regDate, last_access_date as lastAccessDate, user_grade as userGrade
-        		from users where id >= (#{count} - 5) order by id limit 1;
+        		from users where id >= (#{count} - 5) order by id desc limit 1;
     </select>
     
     <select id="newNotes" parameterType="int" resultType="com.bbs.demo.domain.Notes">
         SELECT id, title, content, create_date as createDate,
         	last_modified_date as lastModifiedDate, board_id as boardId,
-        	user_id as userId from notes where id >= (#{count} - 5) order by id limit 2;
+        	user_id as userId from notes where id >= (#{count} - 5) order by id desc limit 2;
     </select>
 
 </mapper>
