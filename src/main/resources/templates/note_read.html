@@ -891,6 +891,10 @@ $(document).ready(function() {
       $(document).on('submit', '.comment-form', function(e) {
           e.preventDefault();
           const formData = new FormData(this);
+          if(formData.get('content').length == 0){
+        	  alert("내용을 입력해 주세요!");
+        	  return false;
+          }
           if(validateForm(formData)) {
               submitForm('/comments/ajax/add', formData);
               
@@ -923,6 +927,10 @@ $(document).ready(function() {
           const content = formData.get('content');
           if(content.length > 300) {
               alert('300자 이내로 입력해주세요');
+              return false;
+          }
+          if(content.length = 0) {
+              alert('내용을 입력해주세요');
               return false;
           }
           return true;
