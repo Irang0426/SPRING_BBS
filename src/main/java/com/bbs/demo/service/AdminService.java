@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bbs.demo.domain.Admin;
+import com.bbs.demo.domain.Boards;
+import com.bbs.demo.domain.Comments;
+import com.bbs.demo.domain.Files;
 import com.bbs.demo.domain.Notes;
 import com.bbs.demo.domain.Users;
 import com.bbs.demo.mapper.AdminMapper;
@@ -55,28 +58,45 @@ public class AdminService {
     }
     
     public Object getUsers(Map<String, String> params) {
-        return adminMapper.findAllUserByPage(isUniqueColumn(params));
+    	List<Users> users = adminMapper.findAllUserByPage(isUniqueColumn(params));
+    	for (int i=0; i < users.size(); i++) {
+    		users.get(i).setNickName(shortContent(users.get(i).getNickName()));
+    	}
+        return users; 
     }
 
     public Object getBoards(Map<String, String> params) {
-        return adminMapper.findAllBoardByPage(isUniqueColumn(params));
+    	List<Boards> boards = adminMapper.findAllBoardByPage(isUniqueColumn(params));
+    	for (int i=0; i < boards.size(); i++) {
+    		boards.get(i).setName(shortContent(boards.get(i).getName()));
+    	}
+        return boards;
     }
 
     public Object getNotes(Map<String, String> params) {
     	List<Notes> notes = adminMapper.findAllNoteByPage(isUniqueColumn(params));
     	
     	for (int i=0; i< notes.size(); i++) {
+    		notes.get(i).setTitle(shortContent(notes.get(i).getTitle()));
     		notes.get(i).setContent(shortContent(notes.get(i).getContent()));
     	}
         return notes;
     }
 
     public Object getComments(Map<String, String> params) {
-        return adminMapper.findAllCommentByPage(isUniqueColumn(params));
+    	List<Comments> comments = adminMapper.findAllCommentByPage(isUniqueColumn(params));
+    	for (int i=0; i < comments.size(); i++) {
+    		comments.get(i).setContent(shortContent(comments.get(i).getContent()));
+    	}
+        return comments;
     }
 
     public Object getFiles(Map<String, String> params) {
-        return adminMapper.findAllFileByPage(isUniqueColumn(params));
+    	List<Files> files = adminMapper.findAllFileByPage(isUniqueColumn(params));
+    	for (int i=0; i < files.size(); i++) {
+    		files.get(i).setFilename(shortContent(files.get(i).getFilename()));
+    	}
+        return files;
     }
     
     public void updateUserGrade(int id, int newGrade) {

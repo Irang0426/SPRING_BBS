@@ -43,6 +43,7 @@ public class AdminController {
 	public String users(@RequestParam Map<String, String> params, Model model) {
 		model.addAttribute("users", adminS.getUsers(params));
 		model.addAttribute("totalPageCount", adminS.createPageCondition(params).getTotalPageCount());
+		System.out.println("----------------------페이지 총 개수: "+adminS.createPageCondition(params).getTotalPageCount());
 		return "admin_tables :: usertable";
 	}
 	
@@ -50,6 +51,7 @@ public class AdminController {
 	public String boards(@RequestParam Map<String, String> params, Model model) {
 		model.addAttribute("boards", adminS.getBoards(params));
 		model.addAttribute("totalPageCount", adminS.createPageCondition(params).getTotalPageCount());
+		System.out.println("----------------------페이지 총 개수: "+adminS.createPageCondition(params).getTotalPageCount());
 		return "admin_tables :: boardtable";
 	}
 	
@@ -57,13 +59,16 @@ public class AdminController {
 	public String notes(@RequestParam Map<String, String> params, Model model) {
 		model.addAttribute("notes", adminS.getNotes(params));
 		model.addAttribute("totalPageCount", adminS.createPageCondition(params).getTotalPageCount());
+		System.out.println("----------------------페이지 총 개수: "+adminS.createPageCondition(params).getTotalPageCount());
 		return "admin_tables :: notetable";
 	}
 	
 	@GetMapping("/comments")
 	public String comments(@RequestParam Map<String, String> params, Model model) {
 	    model.addAttribute("comments", adminS.getComments(params));
+		System.out.println("----------------------들어가는 파라미터: "+params);
 		model.addAttribute("totalPageCount", adminS.createPageCondition(params).getTotalPageCount());
+		System.out.println("----------------------페이지 총 개수: "+adminS.createPageCondition(params).getTotalPageCount());
 		return "admin_tables :: commenttable";
 	}
 	
