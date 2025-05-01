@@ -12,6 +12,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Controller
@@ -50,8 +53,17 @@ public class FileController {
             return ResponseEntity.notFound().build();
         }
 
+        String originalFilename = file.getFilename();
+
+        // RFC 5987 방식으로 UTF-8 인코딩
+        String encodedFilename = URLEncoder.encode(originalFilename, StandardCharsets.UTF_8)
+                .replaceAll("\\+", "%20");
+
+        // ISO-8859-1 인코딩 시도는 피하고 filename*= 만 사용 (중요)
+        String contentDisposition = "attachment; filename*=UTF-8''" + encodedFilename;
+
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(file.getFiles());
     }
